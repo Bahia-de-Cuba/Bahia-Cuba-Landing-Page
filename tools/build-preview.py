@@ -8,7 +8,12 @@ No forma parte del sitio: el sitio real usa archivos separados.
 """
 import base64, os, re
 
-MIME = {".webp": "image/webp", ".png": "image/png", ".woff2": "font/woff2"}
+MIME = {
+    ".webp": "image/webp",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".woff2": "font/woff2",
+}
 
 
 def data_uri(path):

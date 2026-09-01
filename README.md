@@ -114,12 +114,15 @@ visitante pulsa «Ver mapa».
 
 | | Antes | Ahora |
 |---|---|---|
-| Imágenes | 6.7 MB | 1.0 MB (WebP, 2 anchos) |
-| CSS | Tailwind CDN (~300 KB de JS que compila en el navegador) | 58 KB estáticos (~10 KB gzip) |
-| Iconos | Font Awesome completo (~300 KB con fuentes) | Sprite SVG de 14 KB |
-| Tipografías | 3 familias desde Google Fonts | 2 familias variables propias (105 KB) |
+| Fotos (todas) | 6.7 MB | 1.2 MB (WebP, dos anchos con `srcset`) |
+| CSS | Tailwind CDN: ~300 KB de JS que compila en el navegador | 58 KB estáticos (10 KB gzip) |
+| Iconos | Font Awesome completo (~300 KB con fuentes) | sprite SVG de 14 KB, incrustado |
+| Tipografías | 3 familias desde Google Fonts | 2 familias variables propias, 102 KB |
 | Peticiones a terceros | 3 dominios | 0 |
-| Primera carga | ~7.5 MB | ~240 KB |
+
+Primera visita, ya comprimido: **~140 KB** de HTML, CSS, JS y tipografías, más
+las fotos que el navegador decida traer de entrada — en móvil unos 170 KB, en
+escritorio unos 340 KB. Antes rondaba los 7.5 MB.
 
 ---
 
