@@ -1,0 +1,84 @@
+<!-- ============================ UBICACIÓN ============================ -->
+<section id="ubicacion" class="py-16 sm:py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+      <div class="lg:col-span-5 space-y-6" data-reveal="left">
+        <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-widest text-sunset-600">Cómo llegar</span>
+        <h2 class="font-heading text-[1.75rem] xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-night-900 leading-tight">
+          A pasos de <br><span class="text-gradient">Playa Tuquillo</span>
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-[15px] leading-relaxed text-pretty">
+          Conocida como «la piscina del Pacífico» por su oleaje calmo y su arena fina.
+          Estamos en Huarmey, Áncash, a unas 4 horas de Lima por la Panamericana Norte.
+        </p>
+        <ul class="pt-2 space-y-4">
+          <li class="flex items-center gap-4">
+            <svg class="icon text-xl text-sunset-500" aria-hidden="true"><use href="#i-walk"/></svg>
+            <span class="text-sm text-night-900 font-medium">A 200 metros caminando de la orilla.</span>
+          </li>
+          <li class="flex items-center gap-4">
+            <svg class="icon text-xl text-gold-500" aria-hidden="true"><use href="#i-car"/></svg>
+            <span class="text-sm text-night-900 font-medium">Estacionamiento privado y seguro.</span>
+          </li>
+          <li class="flex items-center gap-4">
+            <svg class="icon text-xl text-eco-500" aria-hidden="true"><use href="#i-route"/></svg>
+            <span class="text-sm text-night-900 font-medium">Acceso directo por la Panamericana Norte.</span>
+          </li>
+        </ul>
+        <address style="font-style:normal" class="rounded-2xl bg-sand-50 border border-slate-100 p-4 space-y-1">
+          <p class="text-sm font-bold text-night-900">Hotel Bahía de Cuba</p>
+          <p class="text-sm text-slate-600">Playa Tuquillo s/n, Huarmey 02651 — Áncash, Perú</p>
+          <p class="text-[11px] text-slate-500">
+            Plus Code <span class="font-semibold text-slate-700">57X3XRM5+M7</span>
+            · <span class="font-semibold text-slate-700">-10.0158125, -78.1918125</span>
+          </p>
+        </address>
+
+        <div class="flex flex-wrap items-center gap-5">
+          <a href="https://maps.app.goo.gl/VjK2jiX3JxyvwxtC9"
+             target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 text-sm font-bold text-sunset-600 hover:text-sunset-700 transition">
+            <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg> Abrir en Google Maps
+          </a>
+          <a href="https://www.google.com/maps/dir/?api=1&amp;destination=-10.0158125%2C-78.1918125"
+             target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 text-sm font-bold text-sunset-600 hover:text-sunset-700 transition">
+            <svg class="icon text-eco-500" aria-hidden="true"><use href="#i-route"/></svg> Cómo llegar
+          </a>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-5 gap-4" data-reveal="right">
+
+        <!-- Foto de referencia: lo que el huésped ve al llegar -->
+        <figure class="sm:col-span-2 relative rounded-3xl overflow-hidden h-64 sm:h-[400px] shadow-sm">
+          <img src="assets/img/fachada.webp"
+               srcset="assets/img/fachada-sm.webp 660w, assets/img/fachada.webp 1200w"
+               sizes="(min-width:1024px) 300px, (min-width:640px) 40vw, 100vw"
+               width="1200" height="1328" loading="lazy" decoding="async"
+               alt="Fachada del Hotel Bahía de Cuba al atardecer, con el letrero amarillo sobre la entrada"
+               class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-linear-to-t from-night-950/90 via-night-950/10 to-transparent"></div>
+          <figcaption class="absolute bottom-0 inset-x-0 p-5">
+            <span class="text-[10px] uppercase tracking-widest text-gold-400 font-bold">Al llegar</span>
+            <span class="block text-white font-bold text-sm mt-1 leading-snug">
+              Búscanos por el letrero amarillo
+            </span>
+          </figcaption>
+        </figure>
+
+        <!-- El mapa se carga solo al pulsar: ahorra ~700 KB en la primera visita -->
+        <div id="mapShell" class="sm:col-span-3 map-shell rounded-3xl overflow-hidden h-[300px] sm:h-[400px] shadow-sm border border-slate-100">
+          <button type="button" id="btnLoadMap"
+                  class="absolute inset-0 w-full h-full flex flex-col items-center justify-center gap-3 text-white group">
+            <span class="size-14 rounded-full bg-sunset-500 flex items-center justify-center text-2xl shadow-lg transition-transform group-hover:scale-110">
+              <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
+            </span>
+            <span class="font-bold text-sm">Ver la ubicación exacta del hotel</span>
+            <span class="text-[11px] text-white/60">Se carga solo cuando lo pides</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

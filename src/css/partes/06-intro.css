@@ -1,0 +1,105 @@
+/* --------------------------------------------------------------------------
+   6. INTRO CINEMATOGRÁFICA
+   -------------------------------------------------------------------------- */
+#welcomeCinema {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 65%, #241429 0%, #100b1a 45%, #05060a 100%);
+  overflow: hidden;
+}
+
+.logo-3d {
+  width: clamp(96px, 20vw, 132px);
+  height: clamp(96px, 20vw, 132px);
+  border-radius: 26%;
+  object-fit: cover;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 0 70px rgb(255 42 42 / 0.45), 0 0 150px rgb(255 42 42 / 0.25);
+  animation: sunRise 1s var(--ease-out-soft) both;
+}
+@keyframes sunRise {
+  from {
+    transform: translateY(90px) scale(0.7);
+    opacity: 0;
+  }
+}
+
+.cinema-waves {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 35vh;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.cinema-text {
+  position: relative;
+  z-index: 4;
+  text-align: center;
+  margin-top: 22px;
+}
+.cinema-title {
+  font-family: var(--font-heading);
+  font-size: clamp(30px, 8vw, 62px);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  animation: cinemaIn 0.6s var(--ease-out-soft) 0.28s both;
+}
+.cinema-subtitle {
+  margin-top: 10px;
+  font-size: clamp(11px, 3vw, 14px);
+  color: rgb(255 255 255 / 0.72);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  animation: cinemaIn 0.55s ease-out 0.5s both;
+}
+.cinema-skip {
+  margin-top: 26px;
+  animation: cinemaIn 0.5s ease-out 0.7s both;
+}
+@keyframes cinemaIn {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+
+.cinema-skip button {
+  padding: 11px 30px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, rgb(255 42 42 / 0.85), rgb(243 179 64 / 0.85));
+  border: 1px solid rgb(255 255 255 / 0.25);
+  box-shadow: 0 10px 30px rgb(255 42 42 / 0.3);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s var(--ease-out-soft), box-shadow 0.3s ease;
+}
+.cinema-skip button:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 15px 40px rgb(255 42 42 / 0.45);
+}
+
+#welcomeCinema.is-leaving {
+  animation: cinemaOut 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  pointer-events: none;
+}
+@keyframes cinemaOut {
+  to {
+    opacity: 0;
+    transform: scale(1.12);
+    filter: blur(14px);
+  }
+}

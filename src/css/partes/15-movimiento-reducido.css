@@ -1,0 +1,27 @@
+/* --------------------------------------------------------------------------
+   15. MOVIMIENTO REDUCIDO
+   Si el sistema pide menos animación, la página se vuelve estática pero
+   sigue siendo 100% funcional.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  .marquee-track {
+    animation: none;
+  }
+  .turbine-blade {
+    animation: none;
+  }
+}

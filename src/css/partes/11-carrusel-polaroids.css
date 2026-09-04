@@ -1,0 +1,29 @@
+/* --------------------------------------------------------------------------
+   11. CARRUSEL DE POLAROIDS (comunidad)
+   -------------------------------------------------------------------------- */
+@keyframes marquee-x {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-x 48s linear infinite;
+}
+.marquee-wrap:hover .marquee-track,
+.marquee-wrap:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+.polaroid {
+  background: #fff;
+  padding: 10px 10px 32px;
+  border-radius: 3px;
+  box-shadow: 0 10px 25px -8px rgb(0 0 0 / 0.35);
+  transition: transform 0.35s var(--ease-out-soft), box-shadow 0.35s ease;
+}
+.polaroid:hover {
+  transform: translateY(-8px) rotate(0deg) scale(1.03) !important;
+  box-shadow: 0 22px 40px -14px rgb(0 0 0 / 0.45);
+  z-index: 10;
+}

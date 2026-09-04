@@ -1,0 +1,52 @@
+/* --------------------------------------------------------------------------
+   1. TEMA — paleta, tipografías y breakpoints de la marca
+   -------------------------------------------------------------------------- */
+@theme {
+  --breakpoint-xs: 375px;
+
+  /* Rojo atardecer — color principal de marca */
+  --color-sunset-50: #fff7f3;
+  --color-sunset-100: #ffede4;
+  --color-sunset-200: #ffd9c8;
+  --color-sunset-300: #ffb99e;
+  --color-sunset-400: #f88c6c;
+  --color-sunset-500: #ff2a2a;
+  --color-sunset-600: #e61919;
+  --color-sunset-700: #bf1212;
+  --color-sunset-800: #991010;
+  --color-sunset-900: #7a1111;
+
+  /* Dorado — acentos y vida nocturna */
+  --color-gold-200: #fce4b0;
+  --color-gold-300: #f9d080;
+  --color-gold-400: #f7c35f;
+  --color-gold-500: #f3b340;
+  --color-gold-600: #d99826;
+
+  /* Azul noche — fondos oscuros */
+  --color-night-700: #1a2d3f;
+  --color-night-800: #142433;
+  --color-night-900: #0c1722;
+  --color-night-950: #070e16;
+
+  /* Verde eco — sostenibilidad */
+  --color-eco-50: #edf7f2;
+  --color-eco-100: #d4eddf;
+  --color-eco-300: #8fc9ae;
+  --color-eco-400: #4a9e78;
+  --color-eco-500: #2e6b52;
+  --color-eco-600: #23533f;
+  --color-eco-700: #1b4031;
+
+  /* Arena — fondos claros */
+  --color-sand-50: #fdfbf7;
+  --color-sand-100: #f9f4eb;
+  --color-sand-200: #f2eadb;
+
+  --font-heading: "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+
+  /* Curva de animación usada en toda la página */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}

@@ -1,0 +1,42 @@
+<!-- ============================ HEADER ============================ -->
+<header id="siteHeader" class="sticky top-0 z-40 bg-sand-50/90 backdrop-blur-xl border-b border-amber-900/10">
+  <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+
+    <a href="#inicio" class="header-logo flex items-center gap-3 group py-1">
+      <img src="assets/img/logo.webp" width="320" height="320" alt="Hotel Bahía de Cuba"
+           class="h-10 w-10 sm:h-12 sm:w-12 rounded-xl object-cover shadow-sm transition-transform group-hover:scale-105">
+      <span class="flex flex-col">
+        <span class="font-heading text-lg sm:text-2xl font-bold text-night-900 leading-none tracking-tight transition-colors group-hover:text-sunset-600">Bahía de Cuba</span>
+        <span class="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-slate-500 mt-1">Eco Hotel • Tuquillo</span>
+      </span>
+    </a>
+
+    <nav id="primaryNav" aria-label="Navegación principal"
+         class="hidden lg:flex items-center gap-6 xl:gap-8 text-xs xl:text-sm font-semibold text-slate-700">
+      <a href="#inicio" class="nav-link">Inicio</a>
+      <a href="#habitaciones" class="nav-link">Habitaciones</a>
+      <a href="#rooftop" class="nav-link flex items-center gap-1.5">
+        Rooftop Bar
+        <span class="px-1.5 py-0.5 text-[9px] font-bold bg-gold-500 text-night-900 rounded-full leading-none">NOCHE</span>
+      </a>
+      <a href="#eco-tech" class="nav-link flex items-center gap-1.5">
+        Eco-Energía
+        <span class="px-1.5 py-0.5 text-[9px] font-bold bg-eco-100 text-eco-700 rounded-full leading-none">100%</span>
+      </a>
+      <a href="#huespedes" class="nav-link">Comunidad</a>
+      <a href="#ubicacion" class="nav-link">Ubicación</a>
+      <a href="#faq" class="nav-link">Preguntas</a>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      <a href="#reserva" class="hidden sm:inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm text-white bg-linear-to-r from-sunset-500 to-sunset-600 shadow-md transition-all hover:from-sunset-600 hover:to-sunset-700 hover:-translate-y-0.5">
+        <svg class="icon" aria-hidden="true"><use href="#i-calculator"/></svg>
+        Cotizar tarifa
+      </a>
+      <button type="button" id="btnOpenDrawer" aria-label="Abrir menú" aria-expanded="false" aria-controls="sideDrawer"
+              class="lg:hidden size-10 rounded-xl text-night-800 bg-sand-100 hover:bg-sand-200 transition flex items-center justify-center text-lg">
+        <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</header>

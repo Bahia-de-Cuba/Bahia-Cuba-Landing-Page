@@ -3,13 +3,13 @@
 Optimiza las fotos del hotel: redimensiona a los tamanos que realmente
 se muestran y exporta WebP (2 anchos por imagen para srcset).
 
-Uso:  python3 tools/optimize-images.py
-Entrada:  assets/originals/*.jpg   Salida:  assets/img/*.webp
+Uso:  npm run build:img   (o: python tools/optimize-images.py)
+Entrada:  media/originals/*.jpg   Salida:  assets/img/*.webp
 """
 import os
 from PIL import Image, ImageOps
 
-SRC = "assets/originals"
+SRC = "media/originals"
 OUT = "assets/img"
 
 # nombre -> (caja maxima del tamano grande, calidad)

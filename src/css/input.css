@@ -1,0 +1,29 @@
+/* ==========================================================================
+   Hotel Bahía de Cuba — hoja de estilos fuente
+   Punto de entrada de Tailwind. Cada bloque vive en src/css/partes/.
+   Se compila a assets/css/styles.css:   npm run build:css
+   No edites assets/css/styles.css a mano.
+   ========================================================================== */
+
+@import "tailwindcss";
+
+@import "./partes/00-tipografias.css";
+@import "./partes/01-tema.css";
+@import "./partes/02-base.css";
+@import "./partes/03-iconos.css";
+@import "./partes/04-utilidades-marca.css";
+@import "./partes/05-barra-progreso.css";
+@import "./partes/06-intro.css";
+@import "./partes/07-header.css";
+@import "./partes/08-menu-movil.css";
+@import "./partes/09-revelados.css";
+@import "./partes/10-tarjetas-y-galerias.css";
+@import "./partes/11-carrusel-polaroids.css";
+@import "./partes/12-faq.css";
+@import "./partes/13-mapa.css";
+@import "./partes/14-acciones-flotantes.css";
+@import "./partes/15-movimiento-reducido.css";
+
+/* Archivos que Tailwind escanea para generar solo las clases que se usan */
+@source "../html";
+@source "../js";

@@ -1,0 +1,29 @@
+<!-- ============================ ACCIONES FLOTANTES ============================ -->
+<!-- Móvil: barra fija con las dos acciones que más convierten -->
+<div class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200 px-3 py-2.5 flex gap-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
+  <a href="#reserva" class="flex-1 py-3 rounded-xl font-bold text-xs text-white bg-linear-to-r from-sunset-500 to-sunset-600 flex items-center justify-center gap-2">
+    <svg class="icon" aria-hidden="true"><use href="#i-calculator"/></svg> Cotizar
+  </a>
+  <a href="https://wa.me/51941677501?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20deseo%20informaci%C3%B3n"
+     target="_blank" rel="noopener"
+     class="flex-1 py-3 rounded-xl font-bold text-xs text-white bg-eco-500 flex items-center justify-center gap-2">
+    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> WhatsApp
+  </a>
+</div>
+
+<!-- Escritorio: burbuja de WhatsApp -->
+<a href="https://wa.me/51941677501?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20deseo%20informaci%C3%B3n"
+   target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"
+   class="hidden sm:flex fixed bottom-6 right-6 z-40 group">
+  <span class="wa-pulse relative bg-eco-500 hover:bg-eco-600 text-white size-14 rounded-full flex items-center justify-center text-2xl shadow-xl shadow-eco-500/40 transition-all duration-300 hover:scale-105">
+    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg>
+  </span>
+  <span class="absolute right-[68px] top-1/2 -translate-y-1/2 px-3.5 py-1.5 rounded-xl bg-night-900 text-white text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-xl pointer-events-none">
+    ¿Consultas? Escríbenos
+  </span>
+</a>
+
+<button type="button" id="backToTop" data-state="hidden" aria-label="Volver arriba"
+        class="hidden sm:flex fixed bottom-24 right-6 z-40 size-11 rounded-full bg-night-900/90 text-white items-center justify-center shadow-lg backdrop-blur-sm hover:bg-night-800">
+  <svg class="icon" aria-hidden="true"><use href="#i-up"/></svg>
+</button>

@@ -1,0 +1,48 @@
+/* --------------------------------------------------------------------------
+   10. TARJETAS, GALERÍAS Y EFECTOS
+   -------------------------------------------------------------------------- */
+.card-tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease-out, box-shadow 0.3s ease;
+}
+.card-tilt .tilt-content {
+  transform: translateZ(22px);
+}
+
+.turbine-blade {
+  transform-origin: 50% 50%;
+  animation: spinTurbine 5s linear infinite;
+}
+@keyframes spinTurbine {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tarjeta de habitación: la foto respira al pasar el cursor */
+.room-item {
+  transition: opacity 0.35s ease, transform 0.35s var(--ease-out-soft);
+}
+.room-item[hidden] {
+  display: none;
+}
+.room-media img {
+  transition: transform 0.7s var(--ease-out-soft), filter 0.7s ease;
+}
+.room-item:hover .room-media img,
+.gallery-card:hover img {
+  transform: scale(1.06);
+  filter: grayscale(0);
+}
+
+.room-filter-btn {
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+}
+.room-filter-btn[aria-pressed="true"] {
+  background-image: linear-gradient(
+    to right,
+    var(--color-sunset-500),
+    var(--color-sunset-600)
+  );
+  color: #fff;
+}

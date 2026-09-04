@@ -1,0 +1,31 @@
+/* --------------------------------------------------------------------------
+   4. UTILIDADES DE MARCA
+   -------------------------------------------------------------------------- */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-sunset-500), var(--color-gold-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Velo del hero: oscurece lo justo para que el texto se lea, deja respirar la
+   foto en el centro y funde con el color de la sección siguiente. */
+.hero-veil {
+  background: linear-gradient(
+    to bottom,
+    rgb(7 14 22 / 0.78) 0%,
+    rgb(12 23 34 / 0.38) 38%,
+    rgb(12 23 34 / 0.28) 68%,
+    rgb(253 251 247 / 0.55) 90%,
+    var(--color-sand-50) 100%
+  );
+}

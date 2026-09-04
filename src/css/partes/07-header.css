@@ -1,0 +1,68 @@
+/* --------------------------------------------------------------------------
+   7. HEADER — estado compacto al hacer scroll + enlace activo (scrollspy)
+   -------------------------------------------------------------------------- */
+#siteHeader {
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+#siteHeader.is-stuck {
+  box-shadow: 0 6px 26px -14px rgb(12 23 34 / 0.4);
+}
+#siteHeader .header-inner {
+  transition: height 0.3s var(--ease-out-soft);
+}
+#siteHeader.is-stuck .header-inner {
+  height: 3.75rem;
+}
+#siteHeader .header-logo {
+  transition: transform 0.3s var(--ease-out-soft);
+}
+#siteHeader.is-stuck .header-logo {
+  transform: scale(0.88);
+  transform-origin: left center;
+}
+
+.nav-link {
+  position: relative;
+  padding-block: 0.35rem;
+  transition: color 0.25s ease;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s var(--ease-out-soft);
+}
+.nav-link:hover,
+.nav-link.is-active {
+  color: var(--color-sunset-600);
+}
+.nav-link:hover::after,
+.nav-link.is-active::after {
+  transform: scaleX(1);
+}
+
+/* Enlace "saltar al contenido" para lectores de pantalla y teclado */
+.skip-link {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  translate: -50% -150%;
+  z-index: 200;
+  padding: 0.65rem 1.25rem;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background: var(--color-night-950);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: translate 0.25s ease;
+}
+.skip-link:focus {
+  translate: -50% 0;
+}

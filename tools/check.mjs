@@ -37,7 +37,10 @@ await new Promise((r) => server.listen(PORT, r));
 
 mkdirSync("tools/shots", { recursive: true });
 
-const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+// PW_CHROMIUM permite apuntar a un Chromium propio; si no, se usa el de Playwright
+const browser = await chromium.launch(
+  process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}
+);
 const errores = [];
 const fallos = [];
 let bytes = 0;

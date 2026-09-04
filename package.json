@@ -4,12 +4,16 @@
   "private": true,
   "description": "Landing page del Hotel Bahía de Cuba — Playa Tuquillo, Huarmey (Áncash, Perú)",
   "scripts": {
-    "build:css": "tailwindcss -i src/input.css -o styles.css --minify",
+    "build": "npm run build:icons && npm run build:html && npm run build:js && npm run build:css",
     "build:icons": "node tools/build-icons.mjs",
-    "build:img": "python3 tools/optimize-images.py",
-    "build": "npm run build:icons && npm run build:css",
-    "dev": "tailwindcss -i src/input.css -o styles.css --watch",
-    "serve": "python3 -m http.server 8080"
+    "build:html": "node tools/build-html.mjs",
+    "build:js": "node tools/build-js.mjs",
+    "build:css": "tailwindcss -i src/css/input.css -o assets/css/styles.css --minify",
+    "build:img": "python tools/optimize-images.py",
+    "dev": "tailwindcss -i src/css/input.css -o assets/css/styles.css --watch",
+    "check": "node tools/check.mjs",
+    "preview": "python tools/build-preview.py",
+    "serve": "python -m http.server 8080"
   },
   "devDependencies": {
     "@fontsource-variable/playfair-display": "^5.3.0",

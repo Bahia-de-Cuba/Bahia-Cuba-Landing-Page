@@ -1,0 +1,39 @@
+/* --------------------------------------------------------------------------
+   2. BASE
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* El header pegajoso no debe tapar el título de la sección al saltar */
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+    /* `clip` (y no `hidden`) recorta el menú lateral cerrado sin crear un
+       contenedor de scroll, que rompería el header pegajoso. */
+    overflow-x: clip;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: clip;
+  }
+
+  /* Foco visible y consistente para teclado (sin molestar al mouse) */
+  :focus-visible {
+    outline: 3px solid var(--color-sunset-500);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* En iOS un input < 16px provoca zoom automático al enfocarlo */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Evita saltos de layout mientras cargan las fotos */
+  img {
+    height: auto;
+  }
+}

@@ -1,0 +1,15 @@
+<!-- Hoja de estilos compilada (Tailwind + estilos propios). Fuente en src/css/ -->
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<!-- Tipografías alojadas en el propio sitio: sin peticiones a terceros -->
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/plus-jakarta-sans-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-display-latin.woff2" crossorigin>
+
+<!-- La foto del hero es el elemento más grande: la pedimos cuanto antes -->
+<link rel="preload" as="image" href="assets/img/fondo.webp"
+      imagesrcset="assets/img/fondo-sm.webp 880w, assets/img/fondo.webp 1600w" imagesizes="100vw">
+
+<!-- Marca que hay JavaScript: sin él, las animaciones de entrada se desactivan
+     y todo el contenido se ve igual (nada queda invisible). -->
+<script>document.documentElement.classList.add("js");</script>
+<script src="assets/js/main.js" defer></script>

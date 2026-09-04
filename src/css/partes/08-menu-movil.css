@@ -1,0 +1,38 @@
+/* --------------------------------------------------------------------------
+   8. MENÚ LATERAL MÓVIL
+   -------------------------------------------------------------------------- */
+#sideDrawer {
+  transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+}
+#sideDrawer[data-state="closed"] {
+  transform: translateX(100%);
+  visibility: hidden;
+}
+#sideDrawer[data-state="open"] {
+  transform: translateX(0);
+  visibility: visible;
+}
+#drawerOverlay {
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+#drawerOverlay[data-state="closed"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+#drawerOverlay[data-state="open"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Los ítems del menú entran escalonados al abrir */
+#sideDrawer[data-state="open"] .drawer-item {
+  animation: drawerItemIn 0.4s var(--ease-out-soft) both;
+  animation-delay: calc(var(--i, 0) * 40ms + 90ms);
+}
+@keyframes drawerItemIn {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}

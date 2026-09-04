@@ -23,16 +23,16 @@ def data_uri(path):
 
 
 html = open("index.html", encoding="utf-8").read()
-css = open("styles.css", encoding="utf-8").read()
-js = open("main.js", encoding="utf-8").read()
+css = open("assets/css/styles.css", encoding="utf-8").read()
+js = open("assets/js/main.js", encoding="utf-8").read()
 
 # Fuentes dentro del CSS
 for name in os.listdir("assets/fonts"):
-    css = css.replace(f"assets/fonts/{name}", data_uri(f"assets/fonts/{name}"))
+    css = css.replace(f"../fonts/{name}", data_uri(f"assets/fonts/{name}"))
 
 # Enlaces a hojas/scripts -> contenido incrustado
-html = re.sub(r'<link rel="stylesheet" href="styles\.css">', f"<style>{css}</style>", html)
-html = re.sub(r'<script src="main\.js" defer></script>', f"<script>{js}</script>", html)
+html = re.sub(r'<link rel="stylesheet" href="assets/css/styles\.css">', f"<style>{css}</style>", html)
+html = re.sub(r'<script src="assets/js/main\.js" defer></script>', f"<script>{js}</script>", html)
 html = re.sub(r'\s*<link rel="preload" as="font"[^>]*>', "", html)
 html = re.sub(r'\s*<link rel="preload" as="image"[^>]*>', "", html)
 

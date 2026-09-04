@@ -1,0 +1,10 @@
+/* --------------------------------------------------------------------------
+   3. ICONOS — sustituyen a Font Awesome (sprite SVG inline en el HTML)
+   -------------------------------------------------------------------------- */
+.icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.125em;
+  flex: none;
+}

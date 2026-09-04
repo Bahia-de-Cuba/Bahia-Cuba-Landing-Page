@@ -1,0 +1,35 @@
+/* --------------------------------------------------------------------------
+   5. BARRA DE PROGRESO DE SCROLL
+   -------------------------------------------------------------------------- */
+#scrollBar {
+  position: fixed;
+  inset: 0 auto auto 0;
+  height: 3px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(
+    90deg,
+    var(--color-sunset-500),
+    var(--color-gold-500),
+    var(--color-eco-400)
+  );
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* Navegadores con scroll-driven animations: cero JavaScript para esta barra */
+@supports (animation-timeline: scroll()) {
+  #scrollBar {
+    animation: growProgress linear;
+    animation-timeline: scroll(root block);
+  }
+  @keyframes growProgress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}

@@ -1,6 +1,8 @@
 /* ==========================================================================
    Hotel Bahía de Cuba — comportamiento de la landing
    Sin dependencias. Todo se degrada con elegancia si algo no está disponible.
+
+   Archivo generado por tools/build-js.mjs a partir de src/js/ — no editar.
    ========================================================================== */
 (function () {
   "use strict";

@@ -1,0 +1,54 @@
+<!-- ============================ MENÚ MÓVIL ============================ -->
+<div id="drawerOverlay" data-state="closed" class="fixed inset-0 bg-night-950/70 backdrop-blur-md z-50 lg:hidden"></div>
+<aside id="sideDrawer" data-state="closed" role="dialog" aria-modal="true" aria-label="Menú de navegación"
+       class="fixed top-0 right-0 bottom-0 w-[85vw] max-w-sm bg-white z-50 shadow-2xl p-6 flex flex-col justify-between lg:hidden overflow-y-auto">
+  <div>
+    <div class="flex items-center justify-between pb-5 border-b border-slate-100">
+      <div class="flex items-center gap-3">
+        <img src="assets/img/logo.webp" width="320" height="320" alt="" class="size-10 rounded-lg object-cover">
+        <span class="font-heading font-bold text-night-900 text-lg leading-none">Bahía de Cuba</span>
+      </div>
+      <button type="button" id="btnCloseDrawer" aria-label="Cerrar menú"
+              class="size-9 rounded-xl bg-slate-100 text-slate-600 hover:bg-sunset-50 hover:text-sunset-600 flex items-center justify-center transition text-lg">
+        <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+    </div>
+
+    <nav class="mt-6 flex flex-col space-y-1" aria-label="Navegación móvil">
+      <a href="#inicio" style="--i:0" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
+        <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-house"/></svg> Inicio
+      </a>
+      <a href="#habitaciones" style="--i:1" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
+        <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-bed"/></svg> Habitaciones
+      </a>
+      <a href="#rooftop" style="--i:2" class="drawer-item flex items-center justify-between px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
+        <span class="flex items-center gap-3">
+          <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-martini"/></svg> Rooftop Bar
+        </span>
+        <span class="px-2 py-0.5 text-[9px] font-bold bg-gold-500 text-night-900 rounded-full">NOCHE</span>
+      </a>
+      <a href="#eco-tech" style="--i:3" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
+        <svg class="icon text-eco-500 text-lg" aria-hidden="true"><use href="#i-solar"/></svg> Energía renovable
+      </a>
+      <a href="#huespedes" style="--i:4" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
+        <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-images"/></svg> Comunidad
+      </a>
+      <a href="#ubicacion" style="--i:5" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
+        <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-pin"/></svg> Ubicación
+      </a>
+      <a href="#faq" style="--i:6" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
+        <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-help"/></svg> Preguntas frecuentes
+      </a>
+    </nav>
+  </div>
+
+  <div class="pt-6 border-t border-slate-100 space-y-3">
+    <a href="#reserva" style="--i:7" class="drawer-item w-full py-3 px-4 rounded-xl font-bold text-sm text-white bg-sunset-500 hover:bg-sunset-600 shadow-md flex items-center justify-center gap-2 transition">
+      <svg class="icon" aria-hidden="true"><use href="#i-calculator"/></svg> Cotizar ahora
+    </a>
+    <a href="https://wa.me/51941677501" target="_blank" rel="noopener" style="--i:8"
+       class="drawer-item w-full py-3 px-4 rounded-xl font-bold text-sm text-eco-600 bg-eco-50 hover:bg-eco-100 flex items-center justify-center gap-2 transition">
+      <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> Escríbenos
+    </a>
+  </div>
+</aside>

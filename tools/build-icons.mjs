@@ -2,12 +2,13 @@
  * Genera el sprite SVG inline que reemplaza a Font Awesome.
  * Toma solo los iconos que la landing usa realmente (~34 en vez de 2000+).
  *
- *   node tools/build-icons.mjs        -> escribe tools/icons-sprite.html
+ *   node tools/build-icons.mjs   -> src/html/02-generado/sprite-iconos.html
  *
- * El contenido se pega dentro de <body> en index.html y se usa asi:
+ * El fragmento lo recoge tools/build-html.mjs al ensamblar index.html. Se usa asi:
  *   <svg class="icon" aria-hidden="true"><use href="#i-leaf"/></svg>
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 
 // id en el sprite -> archivo de lucide (iconos de trazo)
 const LINE = {
@@ -83,20 +84,9 @@ const out =
   parts.join("\n  ") +
   `\n</svg>\n`;
 
-// Se inyecta directamente en index.html, entre los marcadores
-const START = "<!-- icons:start -->";
-const END = "<!-- icons:end -->";
-const html = readFileSync("index.html", "utf8");
-const a = html.indexOf(START);
-const b = html.indexOf(END);
+// Se guarda como fragmento; tools/build-html.mjs lo inserta al ensamblar
+const DESTINO = "src/html/02-generado/sprite-iconos.html";
+mkdirSync(dirname(DESTINO), { recursive: true });
+writeFileSync(DESTINO, out);
 
-if (a === -1 || b === -1) {
-  throw new Error(`No encuentro los marcadores ${START} / ${END} en index.html`);
-}
-
-writeFileSync(
-  "index.html",
-  html.slice(0, a + START.length) + "\n" + out + html.slice(b)
-);
-
-console.log(`${parts.length} iconos inyectados en index.html (${(out.length / 1024).toFixed(1)} KB)`);
+console.log(`${parts.length} iconos -> ${DESTINO} (${(out.length / 1024).toFixed(1)} KB)`);

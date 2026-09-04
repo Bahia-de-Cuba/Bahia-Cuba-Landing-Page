@@ -1,0 +1,144 @@
+<!-- ============================ HABITACIONES ============================ -->
+<section id="habitaciones" class="py-16 sm:py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12" data-reveal="up">
+      <div>
+        <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-widest text-sunset-600">Catálogo de confort</span>
+        <h2 class="font-heading text-[1.75rem] xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-night-900 mt-2 leading-tight">
+          Nuestras habitaciones
+        </h2>
+      </div>
+
+      <div class="flex flex-wrap gap-2" role="group" aria-label="Filtrar habitaciones">
+        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="todas" aria-pressed="true">Todas</button>
+        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="solo" aria-pressed="false">Individual</button>
+        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="parejas" aria-pressed="false">Parejas</button>
+        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="familias" aria-pressed="false">Familias</button>
+      </div>
+    </div>
+
+    <p class="lg:hidden flex items-center gap-2 text-[11px] font-semibold text-slate-400 mb-3" data-reveal="up">
+      <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
+      Desliza para ver todas las habitaciones
+      <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+    </p>
+
+    <div id="gridHabitaciones"
+         class="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-4 -mx-4 px-4 no-scrollbar lg:mx-0 lg:px-0 lg:pb-0 lg:overflow-visible lg:grid lg:grid-cols-2 lg:gap-8">
+
+      <!-- Individual -->
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-full snap-center relative rounded-3xl overflow-hidden group"
+               data-category="solo" data-room="Individual" data-reveal="up">
+        <div class="room-media">
+          <img src="assets/img/hab-individual.webp"
+               srcset="assets/img/hab-individual-sm.webp 528w, assets/img/hab-individual.webp 960w"
+               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
+               width="960" height="1280" loading="lazy" decoding="async"
+               alt="Habitación individual del Hotel Bahía de Cuba"
+               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
+        </div>
+        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
+        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
+          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">1 persona</span>
+          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
+        </div>
+        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
+          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Individual</h3>
+          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Silenciosa y cómoda para descansar o trabajar frente al mar.</p>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
+            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 1.5 plazas</span>
+            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Matrimonial -->
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-full snap-center relative rounded-3xl overflow-hidden group"
+               data-category="parejas" data-room="Matrimonial" data-reveal="up" style="--reveal-delay:80">
+        <div class="room-media">
+          <img src="assets/img/hab-matrimonial.webp"
+               srcset="assets/img/hab-matrimonial-sm.webp 577w, assets/img/hab-matrimonial.webp 1050w"
+               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
+               width="1050" height="1400" loading="lazy" decoding="async"
+               alt="Habitación matrimonial con cama de dos plazas"
+               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
+        </div>
+        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
+        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
+          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">2 personas</span>
+          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-gold-500 text-night-900 flex items-center gap-1">
+            <svg class="icon text-[9px]" aria-hidden="true"><use href="#i-star"/></svg> Más solicitada
+          </span>
+        </div>
+        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
+          <div class="flex items-center gap-2 mb-1">
+            <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Matrimonial</h3>
+            <span class="js-precio text-[11px] font-bold text-gold-300"></span>
+          </div>
+          <p class="text-slate-200 text-xs sm:text-sm mt-1 leading-relaxed max-w-xs">Ambiente cálido y acogedor para desconectarse en pareja.</p>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
+            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 2 plazas</span>
+            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Doble -->
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-full snap-center relative rounded-3xl overflow-hidden group"
+               data-category="familias" data-room="Doble" data-reveal="up">
+        <div class="room-media">
+          <img src="assets/img/hab-doble.webp"
+               srcset="assets/img/hab-doble-sm.webp 577w, assets/img/hab-doble.webp 1050w"
+               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
+               width="1050" height="1400" loading="lazy" decoding="async"
+               alt="Habitación doble con cama de dos plazas y camarote"
+               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
+        </div>
+        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
+        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
+          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">3–4 personas</span>
+          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
+        </div>
+        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
+          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Habitación doble</h3>
+          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Excelente distribución para compartir cómodamente en grupo.</p>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
+            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 2 plazas + camarote</span>
+            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Familiar -->
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-full snap-center relative rounded-3xl overflow-hidden group"
+               data-category="familias" data-room="Familiar" data-reveal="up" style="--reveal-delay:80">
+        <div class="room-media">
+          <img src="assets/img/hab-familiar.webp"
+               srcset="assets/img/hab-familiar-sm.webp 660w, assets/img/hab-familiar.webp 1200w"
+               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
+               width="1200" height="900" loading="lazy" decoding="async"
+               alt="Habitación familiar con dos camarotes"
+               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
+        </div>
+        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
+        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
+          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">4–6 personas</span>
+          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
+        </div>
+        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
+          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Familiar</h3>
+          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Máxima capacidad para que toda la familia descanse unida.</p>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
+            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 2 camarotes confortables</span>
+            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado amplio</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <p id="roomsEmpty" hidden class="text-center text-sm text-slate-500 py-10">
+      No hay habitaciones en esa categoría.
+    </p>
+  </div>
+</section>
