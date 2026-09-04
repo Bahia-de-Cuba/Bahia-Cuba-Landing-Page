@@ -6,7 +6,13 @@
 <title>Hotel Bahía de Cuba | Eco Hotel & Rooftop Bar en Playa Tuquillo, Huarmey</title>
 <meta name="description" content="Hotel ecológico y pet friendly a 200 m de Playa Tuquillo, Huarmey (Áncash). Energía 100% renovable, rooftop bar nocturno con billar, sapito y dardos, y cotización directa por WhatsApp sin comisiones.">
 <meta name="theme-color" content="#0c1722">
-<link rel="canonical" href="https://bahia-de-cuba.github.io/Landing-Page/">
+
+<!-- Ubicación exacta del hotel: Playa Tuquillo, Huarmey (Áncash) -->
+<meta name="geo.region" content="PE-ANC">
+<meta name="geo.placename" content="Playa Tuquillo, Huarmey, Áncash">
+<meta name="geo.position" content="-10.0158125;-78.1918125">
+<meta name="ICBM" content="-10.0158125, -78.1918125">
+<link rel="canonical" href="https://bahia-de-cuba.github.io/Bahia-Cuba-Landing-Page/">
 
 <!-- Redes sociales -->
 <meta property="og:type" content="website">
@@ -14,8 +20,8 @@
 <meta property="og:site_name" content="Hotel Bahía de Cuba">
 <meta property="og:title" content="Hotel Bahía de Cuba | Eco Hotel & Rooftop Bar en Playa Tuquillo">
 <meta property="og:description" content="A 200 m de Playa Tuquillo, Huarmey. Energía 100% renovable, pet friendly y rooftop bar nocturno. Cotiza directo por WhatsApp.">
-<meta property="og:url" content="https://bahia-de-cuba.github.io/Landing-Page/">
-<meta property="og:image" content="https://bahia-de-cuba.github.io/Landing-Page/assets/img/og.jpg">
+<meta property="og:url" content="https://bahia-de-cuba.github.io/Bahia-Cuba-Landing-Page/">
+<meta property="og:image" content="https://bahia-de-cuba.github.io/Bahia-Cuba-Landing-Page/assets/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Fachada del Hotel Bahía de Cuba al atardecer">
@@ -46,18 +52,25 @@
   "@type": "Hotel",
   "name": "Hotel Bahía de Cuba",
   "description": "Eco hotel pet friendly a 200 m de Playa Tuquillo, en Huarmey (Áncash, Perú). Energía 100% renovable y rooftop bar nocturno.",
-  "url": "https://bahia-de-cuba.github.io/Landing-Page/",
-  "image": "https://bahia-de-cuba.github.io/Landing-Page/assets/img/og.jpg",
+  "url": "https://bahia-de-cuba.github.io/Bahia-Cuba-Landing-Page/",
+  "image": "https://bahia-de-cuba.github.io/Bahia-Cuba-Landing-Page/assets/img/og.jpg",
   "telephone": "+51941677501",
   "priceRange": "S/ 180 - S/ 350",
   "petsAllowed": true,
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Playa Tuquillo",
+    "streetAddress": "Playa Tuquillo s/n",
     "addressLocality": "Huarmey",
     "addressRegion": "Áncash",
+    "postalCode": "02651",
     "addressCountry": "PE"
   },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -10.0158125,
+    "longitude": -78.1918125
+  },
+  "hasMap": "https://maps.app.goo.gl/VjK2jiX3JxyvwxtC9",
   "checkinTime": "14:00",
   "checkoutTime": "12:00",
   "amenityFeature": [
@@ -660,11 +673,27 @@
             <span class="text-sm text-night-900 font-medium">Acceso directo por la Panamericana Norte.</span>
           </li>
         </ul>
-        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Bah%C3%ADa+de+Cuba+Tuquillo+Huarmey"
-           target="_blank" rel="noopener"
-           class="inline-flex items-center gap-2 text-sm font-bold text-sunset-600 hover:text-sunset-700 transition">
-          <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg> Abrir en Google Maps
-        </a>
+        <address style="font-style:normal" class="rounded-2xl bg-sand-50 border border-slate-100 p-4 space-y-1">
+          <p class="text-sm font-bold text-night-900">Hotel Bahía de Cuba</p>
+          <p class="text-sm text-slate-600">Playa Tuquillo s/n, Huarmey 02651 — Áncash, Perú</p>
+          <p class="text-[11px] text-slate-500">
+            Plus Code <span class="font-semibold text-slate-700">57X3XRM5+M7</span>
+            · <span class="font-semibold text-slate-700">-10.0158125, -78.1918125</span>
+          </p>
+        </address>
+
+        <div class="flex flex-wrap items-center gap-5">
+          <a href="https://maps.app.goo.gl/VjK2jiX3JxyvwxtC9"
+             target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 text-sm font-bold text-sunset-600 hover:text-sunset-700 transition">
+            <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg> Abrir en Google Maps
+          </a>
+          <a href="https://www.google.com/maps/dir/?api=1&amp;destination=-10.0158125%2C-78.1918125"
+             target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 text-sm font-bold text-sunset-600 hover:text-sunset-700 transition">
+            <svg class="icon text-eco-500" aria-hidden="true"><use href="#i-route"/></svg> Cómo llegar
+          </a>
+        </div>
       </div>
 
       <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-5 gap-4" data-reveal="right">
@@ -693,7 +722,7 @@
             <span class="size-14 rounded-full bg-sunset-500 flex items-center justify-center text-2xl shadow-lg transition-transform group-hover:scale-110">
               <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
             </span>
-            <span class="font-bold text-sm">Ver mapa de Playa Tuquillo</span>
+            <span class="font-bold text-sm">Ver la ubicación exacta del hotel</span>
             <span class="text-[11px] text-white/60">Se carga solo cuando lo pides</span>
           </button>
         </div>
@@ -962,7 +991,9 @@
         <ul class="space-y-2.5 text-xs">
           <li class="flex items-start gap-2">
             <svg class="icon mt-0.5 text-sunset-400" aria-hidden="true"><use href="#i-pin"/></svg>
-            <span>Huarmey, Áncash — a 200 m de Playa Tuquillo</span>
+            <a href="https://maps.app.goo.gl/VjK2jiX3JxyvwxtC9" target="_blank" rel="noopener" class="hover:text-gold-400 transition">
+              Playa Tuquillo s/n, Huarmey 02651<br>Áncash, Perú — a 200 m de la orilla
+            </a>
           </li>
           <li class="flex items-start gap-2">
             <svg class="icon mt-0.5 text-eco-400" aria-hidden="true"><use href="#i-phone"/></svg>
