@@ -1,17 +1,31 @@
 <main>
 
 <!-- ============================ HERO ============================ -->
-<section id="inicio" class="relative min-h-[78svh] sm:min-h-[86svh] flex items-center justify-center pt-6 pb-16 sm:pb-24 overflow-hidden">
-  <div class="absolute inset-0 z-0 bg-night-900">
-    <img id="heroBackground" src="assets/img/fondo.webp"
-         srcset="assets/img/fondo-sm.webp 880w, assets/img/fondo.webp 1600w" sizes="100vw"
-         width="1600" height="964" fetchpriority="high" decoding="async"
-         alt="Fachada del Hotel Bahía de Cuba al atardecer, frente a Playa Tuquillo"
-         class="w-full h-full object-cover object-center scale-105 opacity-80 will-change-transform">
-    <div class="hero-veil absolute inset-0"></div>
+<section id="inicio" class="hero relative min-h-[76svh] sm:min-h-[88svh] flex items-center justify-center pt-6 pb-28 sm:pb-44 overflow-hidden">
+
+  <!-- Cielo de atardecer de Tuquillo, con los colores de la marca -->
+  <div class="hero-cielo" aria-hidden="true">
+    <span class="hero-sol"></span>
+    <span class="hero-nube hero-nube--a"></span>
+    <span class="hero-nube hero-nube--b"></span>
+    <span class="hero-nube hero-nube--c"></span>
   </div>
 
-  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+  <!-- El hotel recortado: es el sujeto del hero, emerge del banco de niebla -->
+  <img id="heroHotel" src="assets/img/hotel-recorte.webp"
+       srcset="assets/img/hotel-recorte-sm.webp 622w, assets/img/hotel-recorte.webp 1130w"
+       sizes="(min-width:1130px) 1130px, 112vw"
+       width="1130" height="714" fetchpriority="high" decoding="async"
+       alt="Fachada del Hotel Bahía de Cuba al atardecer, frente a Playa Tuquillo"
+       class="hero-hotel">
+
+  <!-- Velo: mantiene legible el texto sobre el cielo -->
+  <div class="hero-veil" aria-hidden="true"></div>
+
+  <!-- Banco de niebla marina: envuelve la base del hotel y enlaza con la sección siguiente -->
+  <div id="heroNiebla" class="hero-niebla" aria-hidden="true"></div>
+
+  <div id="heroContenido" class="hero-contenido relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mb-6 sm:mb-8" data-reveal="up">
       <span class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold bg-white/95 text-night-900 shadow-sm backdrop-blur-md flex items-center gap-1.5 border border-white/60">
         <svg class="icon text-sunset-500" aria-hidden="true"><use href="#i-umbrella"/></svg>
@@ -46,7 +60,7 @@
   </div>
 
   <a href="#confianza" aria-label="Bajar al contenido"
-     class="hidden sm:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-10 size-10 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md animate-bounce hover:bg-white/20 transition">
+     class="hidden sm:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-10 size-10 items-center justify-center rounded-full border border-night-900/15 bg-white/70 text-night-900 backdrop-blur-md animate-bounce hover:bg-white transition">
     <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
   </a>
 </section>

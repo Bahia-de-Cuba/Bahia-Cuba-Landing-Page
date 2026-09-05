@@ -6,7 +6,7 @@
   (function scrollUI() {
     var header = $("#siteHeader");
     var bar = $("#scrollBar");
-    var heroBg = $("#heroBackground");
+    var hero = $("#inicio");
     var toTop = $("#backToTop");
     var navLinks = $$("#primaryNav .nav-link");
 
@@ -20,7 +20,6 @@
       })
       .filter(Boolean);
 
-    var esTactil = window.matchMedia("(hover: none)").matches;
     var pendiente = false;
 
     function actualizar() {
@@ -36,8 +35,11 @@
 
       if (toTop) toTop.dataset.state = y > window.innerHeight ? "shown" : "hidden";
 
-      if (heroBg && !reduceMotion && !esTactil && y < window.innerHeight) {
-        heroBg.style.transform = "translate3d(0," + y * 0.25 + "px,0) scale(1.05)";
+      // Hero: un solo valor 0..1 que el CSS reparte entre cielo, hotel,
+      // niebla y texto. Se deja de calcular al salir del hero.
+      if (hero && !reduceMotion && y < hero.offsetHeight * 1.1) {
+        var avance = Math.min(Math.max(y / (hero.offsetHeight * 0.85), 0), 1);
+        hero.style.setProperty("--hero-p", avance.toFixed(4));
       }
 
       // Scrollspy: la sección activa es la última cuyo inicio ya pasó el header

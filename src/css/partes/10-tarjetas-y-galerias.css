@@ -46,3 +46,33 @@
   );
   color: #fff;
 }
+
+/* --------------------------------------------------------------------------
+   MARCOS
+   Un mismo borde y una misma sombra para todo lo que enmarca una foto, para
+   que habitaciones, galería, polaroids y mapa se lean como un solo sistema.
+
+   La sombra va teñida de sunset-900 en lugar de negra: sobre el fondo arena
+   una sombra neutra se ve gris y apaga la paleta. La línea es un box-shadow
+   interior, no un border, para no alterar el tamaño de ninguna tarjeta.
+   -------------------------------------------------------------------------- */
+:root {
+  --marco-linea: color-mix(in srgb, var(--color-night-900) 14%, transparent);
+  --marco-sombra:
+    0 1px 2px rgb(122 17 17 / 0.05),
+    0 18px 38px -24px rgb(122 17 17 / 0.42);
+  --marco-sombra-alta:
+    0 2px 5px rgb(122 17 17 / 0.07),
+    0 30px 60px -28px rgb(122 17 17 / 0.52);
+}
+
+.room-item,
+.gallery-card,
+.map-shell {
+  box-shadow: inset 0 0 0 1px var(--marco-linea), var(--marco-sombra);
+  transition: box-shadow 0.35s ease, transform 0.35s var(--ease-out-soft);
+}
+.room-item:hover,
+.gallery-card:hover {
+  box-shadow: inset 0 0 0 1px var(--marco-linea), var(--marco-sombra-alta);
+}

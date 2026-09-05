@@ -24,4 +24,16 @@
   .turbine-blade {
     animation: none;
   }
+  /* El hero se queda en su estado inicial, que ya es el legible */
+  .hero-nube {
+    animation: none;
+  }
+  .hero-hotel {
+    transform: translate3d(-50%, 0, 0) !important;
+  }
+  .hero-niebla,
+  .hero-contenido {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
