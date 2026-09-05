@@ -65,17 +65,27 @@ archivo lo mueve de sitio y no hace falta mantener ninguna lista aparte.
 
 ```bash
 npm install        # solo la primera vez
-npm run build      # iconos + HTML + JS + CSS
+npm run build      # iconos + JS + CSS + HTML
 npm run dev        # recompila el CSS al guardar, mientras trabajas
 ```
 
 | Comando | Qué hace | De dónde | A dónde |
 |---|---|---|---|
 | `npm run build:icons` | Empaqueta el sprite SVG | `node_modules` (Lucide, Simple Icons) | `src/html/02-generado/` |
-| `npm run build:html` | Une los fragmentos | `src/html/` | `index.html` |
 | `npm run build:js` | Une las partes | `src/js/` | `assets/js/main.js` |
 | `npm run build:css` | Compila Tailwind | `src/css/` | `assets/css/styles.css` |
+| `npm run build:html` | Une los fragmentos y versiona los assets | `src/html/` | `index.html` |
 | `npm run build:img` | Optimiza las fotos | `media/originals/` | `assets/img/` |
+
+**`build:html` va el último a propósito.** Además de unir los fragmentos, pone un
+`?v=<hash del contenido>` en el CSS y el JS, así que necesita esos dos archivos
+ya compilados. Si no los encuentra, falla con un mensaje que explica el orden.
+
+Ese hash no es cosmético: GitHub Pages sirve los assets con
+`Cache-Control: max-age=600`, y el HTML y el CSS se cachean por separado. Sin él,
+tras un despliegue un visitante puede quedarse con el HTML nuevo y el CSS viejo
+—y como el hero depende del CSS para posicionar sus capas, la página se rompe
+entera en vez de degradarse. Con el hash, un asset distinto es una URL distinta.
 
 `build:img` va aparte porque solo hace falta cuando cambian las fotos, y tarda.
 
