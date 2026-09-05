@@ -4,7 +4,7 @@
   "private": true,
   "description": "Landing page del Hotel Bahía de Cuba — Playa Tuquillo, Huarmey (Áncash, Perú)",
   "scripts": {
-    "build": "npm run build:icons && npm run build:html && npm run build:js && npm run build:css",
+    "build": "npm run build:icons && npm run build:js && npm run build:css && npm run build:html",
     "build:icons": "node tools/build-icons.mjs",
     "build:html": "node tools/build-html.mjs",
     "build:js": "node tools/build-js.mjs",
