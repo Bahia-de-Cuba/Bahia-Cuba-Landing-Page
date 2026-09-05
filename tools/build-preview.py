@@ -31,8 +31,8 @@ for name in os.listdir("assets/fonts"):
     css = css.replace(f"../fonts/{name}", data_uri(f"assets/fonts/{name}"))
 
 # Enlaces a hojas/scripts -> contenido incrustado
-html = re.sub(r'<link rel="stylesheet" href="assets/css/styles\.css">', f"<style>{css}</style>", html)
-html = re.sub(r'<script src="assets/js/main\.js" defer></script>', f"<script>{js}</script>", html)
+html = re.sub(r'<link rel="stylesheet" href="assets/css/styles\.css[^"]*">', f"<style>{css}</style>", html)
+html = re.sub(r'<script src="assets/js/main\.js[^"]*" defer></script>', f"<script>{js}</script>", html)
 html = re.sub(r'\s*<link rel="preload" as="font"[^>]*>', "", html)
 html = re.sub(r'\s*<link rel="preload" as="image"[^>]*>', "", html)
 
