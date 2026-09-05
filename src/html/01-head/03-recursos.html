@@ -5,9 +5,10 @@
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/plus-jakarta-sans-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-display-latin.woff2" crossorigin>
 
-<!-- La foto del hero es el elemento más grande: la pedimos cuanto antes -->
-<link rel="preload" as="image" href="assets/img/fondo.webp"
-      imagesrcset="assets/img/fondo-sm.webp 880w, assets/img/fondo.webp 1600w" imagesizes="100vw">
+<!-- El hotel recortado es el elemento más grande del hero: lo pedimos cuanto antes -->
+<link rel="preload" as="image" href="assets/img/hotel-recorte.webp"
+      imagesrcset="assets/img/hotel-recorte-sm.webp 622w, assets/img/hotel-recorte.webp 1130w"
+      imagesizes="(min-width:1130px) 1130px, 112vw">
 
 <!-- Marca que hay JavaScript: sin él, las animaciones de entrada se desactivan
      y todo el contenido se ve igual (nada queda invisible). -->

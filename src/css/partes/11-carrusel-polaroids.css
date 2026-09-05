@@ -19,11 +19,11 @@
   background: #fff;
   padding: 10px 10px 32px;
   border-radius: 3px;
-  box-shadow: 0 10px 25px -8px rgb(0 0 0 / 0.35);
+  box-shadow: 0 10px 25px -10px rgb(122 17 17 / 0.42);
   transition: transform 0.35s var(--ease-out-soft), box-shadow 0.35s ease;
 }
 .polaroid:hover {
   transform: translateY(-8px) rotate(0deg) scale(1.03) !important;
-  box-shadow: 0 22px 40px -14px rgb(0 0 0 / 0.45);
+  box-shadow: 0 22px 42px -16px rgb(122 17 17 / 0.5);
   z-index: 10;
 }

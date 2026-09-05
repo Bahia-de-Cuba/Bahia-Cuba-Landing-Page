@@ -44,7 +44,7 @@ a propósito, para que GitHub Pages no necesite ningún paso de build.
 │   │   ├── input.css           Entrada de Tailwind: importa las partes
 │   │   └── partes/             Un bloque de estilos por archivo
 │   └── js/                     Una función de la página por archivo
-├── media/originals/            Fotos originales sin tocar (no se publican)
+├── media/originals/            Fotos originales y el recorte del hotel (no se publican)
 ├── tools/                      Scripts de build y revisión
 ├── package.json
 └── README.md
@@ -101,6 +101,29 @@ El resultado sigue siendo **un único archivo sin dependencias**.
 
 ---
 
+## El hero
+
+El hero no es una foto de fondo: es una escena por capas, de atrás hacia
+delante **cielo → hotel recortado → velo → banco de niebla → texto**.
+
+- El **cielo** es un degradado hecho solo con tokens de la paleta
+  (`night-950` arriba → `sunset` → `gold` → `sand` en el horizonte): es el
+  atardecer de Tuquillo y pesa 0 KB.
+- El **hotel** es un PNG recortado (`assets/img/hotel-recorte.webp`) con una
+  máscara CSS que funde los lados y la base, para que salga de la niebla en vez
+  de quedar pegado encima como un rectángulo.
+- El **velo** va por delante del hotel a propósito: garantiza el contraste del
+  texto y deja el edificio como silueta a contraluz.
+- Todo el movimiento cuelga de una sola variable, **`--hero-p`** (0 arriba del
+  todo, 1 al salir del hero), que escribe el único rAF de scroll de
+  `src/js/02-scroll.js`; el CSS la reparte entre hotel, niebla y texto. Con
+  `prefers-reduced-motion` no se anima nada y el hero se queda en su estado
+  inicial, que ya es el legible.
+
+Los estilos están en `src/css/partes/04-utilidades-marca.css`.
+
+---
+
 ## Dónde se cambia cada dato
 
 | Qué | Dónde |
@@ -129,7 +152,13 @@ nunca quedan desfasados.
    fragmento HTML que la muestra.
 
 Para añadir una foto nueva, agrégala también al diccionario `PLAN` de
-`tools/optimize-images.py`.
+`tools/optimize-images.py`. Si lleva transparencia, añádela además a `CON_ALFA`
+y déjala en `.png`: se exporta a WebP conservando el canal alfa.
+
+`media/originals/hotel-recorte.png` se obtuvo levantando la máscara de un
+recorte de fondo hecho sobre `fondo.jpg`: como el recorte venía a 644 px, se
+reescaló su canal alfa a la resolución del original y se compuso sobre él, en
+vez de usar la versión pequeña. Si hay que rehacerlo, se parte de `fondo.jpg`.
 
 `media/originals/` está fuera de `assets/` a propósito: son ~8 MB de JPG que no
 tiene sentido publicar, pero sí conservar para poder reoptimizar.

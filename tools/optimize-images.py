@@ -14,9 +14,9 @@ OUT = "assets/img"
 
 # nombre -> (caja maxima del tamano grande, calidad)
 PLAN = {
-    "fondo":             ((1800, 1200), 72),
     "logo":              ((320, 320),   88),
     "hab-individual":    ((1400, 1400), 78),
+    "hotel-recorte":     ((1400, 1400), 82),
     "hab-matrimonial":   ((1400, 1400), 78),
     "hab-doble":         ((1400, 1400), 78),
     "hab-familiar":      ((1200, 1200), 70),
@@ -37,9 +37,13 @@ CROP = {
     "fachada": (0.0, 0.17, 1.0, 1.0),
 }
 
+# imagenes con canal alfa: se guardan en WebP con transparencia (PNG de origen)
+CON_ALFA = {"hotel-recorte"}
+
 # imagenes que ademas necesitan una variante chica para moviles
-SMALL = {"fondo", "hab-individual", "hab-matrimonial", "hab-doble",
-         "hab-familiar", "terraza-parrilla", "terraza-billar", "fachada"}
+SMALL = {"hab-individual", "hab-matrimonial", "hab-doble",
+         "hab-familiar", "terraza-parrilla", "terraza-billar", "fachada",
+         "hotel-recorte"}
 
 
 def save_webp(im, path, quality):
@@ -53,15 +57,18 @@ def main():
     rows = []
 
     for name, (box, q) in PLAN.items():
-        src = os.path.join(SRC, f"{name}.jpg")
-        if not os.path.exists(src):
-            print(f"  !! falta {src}")
+        src = next((c for c in (os.path.join(SRC, f"{name}.jpg"),
+                                os.path.join(SRC, f"{name}.png"))
+                    if os.path.exists(c)), None)
+        if src is None:
+            print(f"  !! falta {name} en {SRC}")
             continue
         size_in = os.path.getsize(src)
         total_in += size_in
 
         im = Image.open(src)
-        im = ImageOps.exif_transpose(im).convert("RGB")
+        im = ImageOps.exif_transpose(im)
+        im = im.convert("RGBA" if name in CON_ALFA else "RGB")
 
         if name in CROP:
             l, t, r, b = CROP[name]

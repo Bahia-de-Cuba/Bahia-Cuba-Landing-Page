@@ -17,15 +17,164 @@
   display: none;
 }
 
-/* Velo del hero: oscurece lo justo para que el texto se lea, deja respirar la
-   foto en el centro y funde con el color de la sección siguiente. */
-.hero-veil {
+/* --------------------------------------------------------------------------
+   HERO — atardecer de Tuquillo
+
+   Capas, de atrás hacia delante:
+     cielo (degradado de marca) -> hotel recortado -> velo -> niebla -> texto
+
+   El velo va por DELANTE del hotel a propósito: garantiza el contraste del
+   texto sobre el cielo y deja el edificio como silueta a contraluz, que es
+   como se ve de verdad a esa hora. La niebla va por delante de todo menos del
+   texto: envuelve la base del hotel y funde con la sección siguiente.
+
+   Todo el movimiento cuelga de --hero-p (0 arriba del todo, 1 al salir del
+   hero), que actualiza el único rAF de scroll en src/js/02-scroll.js.
+   -------------------------------------------------------------------------- */
+.hero {
+  --hero-p: 0;
+}
+
+.hero-cielo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
   background: linear-gradient(
     to bottom,
-    rgb(7 14 22 / 0.78) 0%,
-    rgb(12 23 34 / 0.38) 38%,
-    rgb(12 23 34 / 0.28) 68%,
-    rgb(253 251 247 / 0.55) 90%,
-    var(--color-sand-50) 100%
+    var(--color-night-950) 0%,
+    var(--color-night-900) 15%,
+    var(--color-night-800) 27%,
+    color-mix(in oklab, var(--color-night-800) 55%, var(--color-sunset-800)) 41%,
+    var(--color-sunset-700) 55%,
+    var(--color-sunset-500) 69%,
+    var(--color-gold-400) 86%,
+    var(--color-sand-100) 100%
   );
+}
+
+/* El sol bajo, justo detrás del hotel */
+.hero-sol {
+  position: absolute;
+  left: 50%;
+  bottom: 19%;
+  width: min(560px, 96%);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-gold-300) 92%, transparent) 0 16%,
+    color-mix(in srgb, var(--color-gold-400) 50%, transparent) 33%,
+    transparent 67%
+  );
+  filter: blur(6px);
+}
+
+/* Nubes altas: manchas muy suaves que dan profundidad al cielo */
+.hero-nube {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-sand-50) 58%, transparent),
+    transparent
+  );
+  filter: blur(16px);
+  animation: heroDeriva 90s ease-in-out infinite alternate;
+}
+.hero-nube--a { left: -14%; bottom: 27%; width: 54%; height: 15%; opacity: 0.5; }
+.hero-nube--b { right: -10%; bottom: 36%; width: 46%; height: 12%; opacity: 0.36; animation-duration: 120s; animation-direction: alternate-reverse; }
+.hero-nube--c { left: 24%; bottom: 46%; width: 36%; height: 9%; opacity: 0.26; animation-duration: 150s; }
+
+@keyframes heroDeriva {
+  from { transform: translate3d(-3%, 0, 0); }
+  to   { transform: translate3d(3%, 0, 0); }
+}
+
+.hero-hotel {
+  position: absolute;
+  left: 50%;
+  bottom: 2%;
+  z-index: 1;
+  /* En móvil manda el ANCHO (si no, se ve un trozo ampliado del edificio);
+     a partir de sm manda la ALTURA, para que el cielo respire por arriba. */
+  width: min(520px, 104vw);
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+  filter: brightness(1.14) saturate(1.1);
+  /* El recorte es un rectángulo: se funden los lados y la base para que el
+     edificio salga de la niebla en vez de estar pegado encima de ella. */
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%),
+    linear-gradient(to bottom, #000 70%, transparent 99%);
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%),
+    linear-gradient(to bottom, #000 70%, transparent 99%);
+  -webkit-mask-composite: source-in;
+  transform-origin: 50% 100%;
+  will-change: transform;
+  transform:
+    translate3d(-50%, calc(var(--hero-p) * -13%), 0)
+    scale(calc(1 + var(--hero-p) * 0.4));
+}
+
+/* Velo: oscurece lo justo para que el texto se lea; se abre abajo para que la
+   niebla quede luminosa. */
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    rgb(7 14 22 / 0.62) 0%,
+    rgb(7 14 22 / 0.34) 32%,
+    rgb(12 23 34 / 0.16) 50%,
+    transparent 66%
+  );
+}
+
+.hero-niebla {
+  position: absolute;
+  right: -10%;
+  bottom: -1px;
+  left: -10%;
+  z-index: 3;
+  height: 26%;
+  pointer-events: none;
+  background:
+    radial-gradient(30% 52% at 12% 78%, var(--color-sand-50) 0 40%, transparent 74%),
+    radial-gradient(26% 62% at 34% 66%, var(--color-sand-50) 0 42%, transparent 76%),
+    radial-gradient(30% 56% at 58% 74%, var(--color-sand-50) 0 40%, transparent 74%),
+    radial-gradient(26% 60% at 80% 68%, var(--color-sand-50) 0 40%, transparent 74%),
+    radial-gradient(24% 50% at 96% 80%, var(--color-sand-50) 0 38%, transparent 72%),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      color-mix(in srgb, var(--color-sand-50) 45%, transparent) 58%,
+      color-mix(in srgb, var(--color-sand-50) 92%, transparent) 82%,
+      var(--color-sand-50) 96%
+    );
+  filter: blur(3px);
+  transform-origin: 50% 100%;
+  will-change: transform;
+  transform:
+    translate3d(0, calc(var(--hero-p) * -10%), 0)
+    scale(calc(1 + var(--hero-p) * 0.28));
+}
+
+/* El texto se va antes que el edificio: deja el hotel solo contra el cielo */
+.hero-contenido {
+  will-change: transform;
+  opacity: calc(1 - var(--hero-p) * 1.35);
+  transform: translate3d(0, calc(var(--hero-p) * -38px), 0);
+}
+
+@media (min-width: 640px) {
+  .hero-hotel { width: auto; height: 40svh; }
+}
+@media (min-width: 1024px) {
+  .hero-hotel { width: auto; height: 48svh; }
 }
