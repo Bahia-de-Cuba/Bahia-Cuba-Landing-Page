@@ -10,6 +10,9 @@
   /** Número de WhatsApp del hotel (formato internacional, sin signos). */
   var WHATSAPP = "51941677501";
 
+  /** Sistema de reservas. Es el único sitio donde se reserva de verdad. */
+  var URL_RESERVAS = "https://bahia-cuba-app.netlify.app/es/reservar";
+
   var $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
   var $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
 
@@ -346,31 +349,32 @@
       form.addEventListener(ev, recalcular);
     });
 
+    /* El cotizador ya no manda a WhatsApp: lleva al sistema de reservas con lo
+       elegido puesto. Aquí no se sabe qué noches están vendidas —eso vive en la
+       base—, así que las fechas viajan como propuesta y el calendario de allá
+       las descarta si pisan una reserva. */
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
       if (!inEl.value || !outEl.value || !noches()) {
-        aviso("Elige las fechas de check-in y check-out para cotizar.");
+        aviso("Elige las fechas de check-in y check-out para continuar.");
         inEl.focus();
         return;
       }
-      var msg =
-        "¡Hola Hotel Bahía de Cuba! 🌊\n" +
-        "Deseo cotizar:\n" +
-        "• Habitación: " + roomEl.value + "\n" +
-        "• Huéspedes: " + guestsEl.options[guestsEl.selectedIndex].text + "\n" +
-        "• Check-in: " + inEl.value + "\n" +
-        "• Check-out: " + outEl.value + " (" + noches() + " noches)\n" +
-        "• Tarifa web: S/ " + totalEl.textContent + "\n" +
-        "¿Tienen disponibilidad?";
-      window.open("https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg), "_blank", "noopener");
+      var q =
+        "?tipo=" + encodeURIComponent(roomEl.value.toLowerCase()) +
+        "&checkin=" + encodeURIComponent(inEl.value) +
+        "&checkout=" + encodeURIComponent(outEl.value);
+      window.location.href = URL_RESERVAS + q;
     });
 
-    // Fechas por defecto: hoy y mañana
-    var hoy = new Date();
-    var manana = new Date(hoy.getTime() + UN_DIA);
-    inEl.min = iso(hoy);
-    inEl.value = iso(hoy);
-    outEl.value = iso(manana);
+    // Fechas por defecto: mañana y pasado. La llegada más temprana que admite
+    // el sistema de reservas es mañana, así que ofrecer hoy solo llevaría a
+    // que allá rechazasen las fechas nada más llegar.
+    var manana = new Date(Date.now() + UN_DIA);
+    var pasado = new Date(Date.now() + 2 * UN_DIA);
+    inEl.min = iso(manana);
+    inEl.value = iso(manana);
+    outEl.value = iso(pasado);
     recalcular();
   })();
 

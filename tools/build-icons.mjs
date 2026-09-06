@@ -43,6 +43,7 @@ const LINE = {
   up: "arrow-up",
   phone: "phone",
   drop: "droplets",
+  book: "book-open",
 };
 
 // id en el sprite -> archivo de simple-icons (iconos de relleno)
