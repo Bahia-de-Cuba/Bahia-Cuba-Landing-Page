@@ -1,0 +1,21 @@
+# ===========================================================================
+# Cabeceras de seguridad de la landing (Tarea 5)
+#
+# Netlify lee este archivo desde el directorio publicado y lo aplica a todo lo
+# que sirve. La landing es estática y no carga scripts de terceros: las fuentes
+# son propias y lo único externo es la lectura de tarifas contra Supabase, así
+# que la política puede ser cerrada.
+#
+# `unsafe-inline` en script-src cubre los <script> en línea del index (incluido
+# el JSON-LD de schema.org). Sin ellos la página no arranca; el resto de la
+# política sigue en pie.
+# ===========================================================================
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://xahrwafxzymxnuphpacl.supabase.co; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-XSS-Protection: 1; mode=block
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
