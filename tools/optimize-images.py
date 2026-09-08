@@ -19,6 +19,7 @@ PLAN = {
     "hotel-recorte":     ((1400, 1400), 82),
     "hab-matrimonial":   ((1400, 1400), 78),
     "hab-doble":         ((1400, 1400), 78),
+    "hab-triple":        ((1400, 1400), 78),
     "hab-familiar":      ((1200, 1200), 70),
     "fachada":           ((1200, 1400), 78),
     "terraza-parrilla":  ((1400, 1400), 78),
@@ -35,13 +36,16 @@ PLAN = {
 CROP = {
     # quita cielo de mas para que el letrero del hotel gane presencia
     "fachada": (0.0, 0.17, 1.0, 1.0),
+    # la foto viene en vertical de movil (9:16) y el resto del catalogo es 3:4.
+    # Se recorta techo, que no aporta nada, y quedan las dos camas.
+    "hab-triple": (0.0, 0.25, 1.0, 1.0),
 }
 
 # imagenes con canal alfa: se guardan en WebP con transparencia (PNG de origen)
 CON_ALFA = {"hotel-recorte"}
 
 # imagenes que ademas necesitan una variante chica para moviles
-SMALL = {"hab-individual", "hab-matrimonial", "hab-doble",
+SMALL = {"hab-individual", "hab-matrimonial", "hab-doble", "hab-triple",
          "hab-familiar", "terraza-parrilla", "terraza-billar", "fachada",
          "hotel-recorte"}
 

@@ -18,17 +18,17 @@
       </div>
     </div>
 
-    <p class="lg:hidden flex items-center gap-2 text-[11px] font-semibold text-slate-400 mb-3" data-reveal="up">
+    <p class="flex items-center gap-2 text-[11px] font-semibold text-slate-400 mb-3" data-reveal="up">
       <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
       Desliza para ver todas las habitaciones
       <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
     </p>
 
     <div id="gridHabitaciones"
-         class="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-4 -mx-4 px-4 no-scrollbar lg:mx-0 lg:px-0 lg:pb-0 lg:overflow-visible lg:grid lg:grid-cols-2 lg:gap-8">
+         class="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-4 -mx-4 px-4 no-scrollbar lg:mx-0 lg:px-0">
 
       <!-- Individual -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-full snap-center relative rounded-3xl overflow-hidden group"
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-center relative rounded-3xl overflow-hidden group"
                data-category="solo" data-room="Individual" data-reveal="up">
         <div class="room-media">
           <img src="assets/img/hab-individual.webp"
@@ -59,7 +59,7 @@
       </article>
 
       <!-- Matrimonial -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-full snap-center relative rounded-3xl overflow-hidden group"
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-center relative rounded-3xl overflow-hidden group"
                data-category="parejas" data-room="Matrimonial" data-reveal="up" style="--reveal-delay:80">
         <div class="room-media">
           <img src="assets/img/hab-matrimonial.webp"
@@ -95,7 +95,7 @@
       </article>
 
       <!-- Doble -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-full snap-center relative rounded-3xl overflow-hidden group"
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-center relative rounded-3xl overflow-hidden group"
                data-category="familias" data-room="Doble" data-reveal="up">
         <div class="room-media">
           <img src="assets/img/hab-doble.webp"
@@ -107,7 +107,7 @@
         </div>
         <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
         <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">3–4 personas</span>
+          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">Hasta 3 personas</span>
           <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
         </div>
         <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
@@ -125,8 +125,40 @@
         </div>
       </article>
 
+
+      <!-- Triple -->
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-center relative rounded-3xl overflow-hidden group"
+               data-category="familias" data-room="Triple" data-reveal="up" style="--reveal-delay:80">
+        <div class="room-media">
+          <img src="assets/img/hab-triple.webp"
+               srcset="assets/img/hab-triple-sm.webp 495w, assets/img/hab-triple.webp 900w"
+               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
+               width="900" height="1200" loading="lazy" decoding="async"
+               alt="Habitaci&oacute;n triple del Hotel Bah&iacute;a de Cuba"
+               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
+        </div>
+        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
+        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
+          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">Hasta 4 personas</span>
+          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
+        </div>
+        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
+          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Habitaci&oacute;n triple</h3>
+          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Tres camas individuales, ideal para grupos de amigos o familias peque&ntilde;as.</p>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
+            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 3 camas individuales</span>
+            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Ba&ntilde;o privado</span>
+          </div>
+
+          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=triple"
+             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
+            Reservar
+          </a>
+        </div>
+      </article>
+
       <!-- Familiar -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-full snap-center relative rounded-3xl overflow-hidden group"
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-center relative rounded-3xl overflow-hidden group"
                data-category="familias" data-room="Familiar" data-reveal="up" style="--reveal-delay:80">
         <div class="room-media">
           <img src="assets/img/hab-familiar.webp"
@@ -138,7 +170,7 @@
         </div>
         <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
         <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">4–6 personas</span>
+          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">Hasta 6 personas</span>
           <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
         </div>
         <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
