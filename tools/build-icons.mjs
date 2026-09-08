@@ -46,6 +46,19 @@ const LINE = {
   book: "book-open",
 };
 
+// id en el sprite -> archivo propio en src/iconos/ (siluetas de relleno)
+//
+// Son siluetas de Openclipart, dominio publico, ya limpias de metadatos. No
+// vienen de un paquete npm porque ni lucide ni simple-icons traen siluetas de
+// animales: lucide es de trazo y simple-icons son logos de marca.
+//
+// Cada una conserva su propio viewBox, por eso no se puede reutilizar el bucle
+// de arriba, que asume 0 0 24 24.
+const SILUETAS = {
+  perro: "perro",
+  gato: "gato",
+};
+
 // id en el sprite -> archivo de simple-icons (iconos de relleno)
 const BRAND = {
   whatsapp: "whatsapp",
@@ -76,6 +89,16 @@ for (const [id, file] of Object.entries(BRAND)) {
   const svg = readFileSync(`node_modules/simple-icons/icons/${file}.svg`, "utf8");
   parts.push(
     `<symbol id="i-${id}" viewBox="0 0 24 24" fill="currentColor" stroke="none">${inner(svg)}</symbol>`
+  );
+}
+
+for (const [id, file] of Object.entries(SILUETAS)) {
+  const svg = readFileSync(`src/iconos/${file}.svg`, "utf8");
+  const viewBox = /viewBox="([^"]+)"/.exec(svg)?.[1];
+  if (!viewBox) throw new Error(`src/iconos/${file}.svg no tiene viewBox`);
+  parts.push(
+    `<symbol id="i-${id}" viewBox="${viewBox}" fill="currentColor" stroke="none">` +
+      `${inner(svg)}</symbol>`
   );
 }
 
