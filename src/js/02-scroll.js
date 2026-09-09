@@ -21,6 +21,8 @@
       .filter(Boolean);
 
     var pendiente = false;
+    // Se recuerda cuál estaba activa para no tocar el DOM sin necesidad
+    var activaAnterior;
 
     function actualizar() {
       pendiente = false;
@@ -48,8 +50,17 @@
       for (var i = 0; i < secciones.length; i++) {
         if (secciones[i].el.offsetTop <= limite) activa = secciones[i];
       }
-      navLinks.forEach(function (a) { a.classList.remove("is-active"); });
-      if (activa) activa.link.classList.add("is-active");
+      // Solo se toca el DOM si la seccion activa CAMBIA.
+      //
+      // Antes se quitaba y se volvia a poner `is-active` en cada fotograma,
+      // aunque la seccion fuera la misma. El subrayado tiene una transicion de
+      // 0,3 s, asi que se reiniciaba sesenta veces por segundo mientras la
+      // pagina se desplazaba: eso era el parpadeo al volver a Inicio.
+      if (activa !== activaAnterior) {
+        navLinks.forEach(function (a) { a.classList.remove("is-active"); });
+        if (activa) activa.link.classList.add("is-active");
+        activaAnterior = activa;
+      }
     }
 
     function onScroll() {
