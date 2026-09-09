@@ -76,18 +76,50 @@
     /** Pixeles por segundo. Lento: es un catalogo, no un ticker. */
     var VELOCIDAD = 34;
 
+    /**
+     * Duplica el catalogo tantas veces como haga falta.
+     *
+     * Con una sola copia basta mientras el juego de tarjetas sea mas ancho que
+     * la ventana, pero eso deja de cumplirse al filtrar por un tipo o en
+     * pantallas muy anchas: el carril se acaba antes de llegar a la costura, el
+     * navegador recorta el desplazamiento y aparece el hueco en blanco a la
+     * derecha. Duplicando hasta cubrir costura + ventana, ese hueco no puede
+     * existir por construccion.
+     */
     function crearClones() {
       if (clones.length) return;
-      originales.forEach(function (t) {
-        var copia = t.cloneNode(true);
-        copia.setAttribute("aria-hidden", "true");
-        copia.dataset.clon = "1";
-        $$("a, button, input", copia).forEach(function (el) {
-          el.setAttribute("tabindex", "-1");
+      var visibles = originales.filter(function (t) { return !t.hidden; });
+      if (!visibles.length) return;
+
+      var hueco = parseFloat(getComputedStyle(grid).columnGap) || 20;
+      var anchoDeUnJuego = visibles.reduce(function (suma, t) {
+        return suma + t.getBoundingClientRect().width + hueco;
+      }, 0);
+      if (anchoDeUnJuego <= 0) return;
+
+      // Cuantos juegos extra para que tras la costura siga habiendo tarjetas
+      var copiasNecesarias = Math.max(
+        1,
+        Math.ceil((grid.clientWidth + anchoDeUnJuego) / anchoDeUnJuego)
+      );
+
+      for (var c = 0; c < copiasNecesarias; c++) {
+        originales.forEach(function (t) {
+          var copia = t.cloneNode(true);
+          copia.setAttribute("aria-hidden", "true");
+          copia.dataset.clon = "1";
+          // Las copias no esperan: si su imagen llegase tarde se verian en
+          // blanco justo al dar la vuelta, que es el hueco que hay que evitar.
+          $$("img", copia).forEach(function (img) {
+            img.setAttribute("loading", "eager");
+          });
+          $$("a, button, input", copia).forEach(function (el) {
+            el.setAttribute("tabindex", "-1");
+          });
+          grid.appendChild(copia);
+          clones.push(copia);
         });
-        grid.appendChild(copia);
-        clones.push(copia);
-      });
+      }
     }
 
     function quitarClones() {
@@ -96,7 +128,9 @@
     }
 
     function sincronizarClones() {
-      clones.forEach(function (c, i) { c.hidden = originales[i].hidden; });
+      clones.forEach(function (c, i) {
+        c.hidden = originales[i % originales.length].hidden;
+      });
     }
 
     /** Ancho del juego original: donde esta la costura. */
@@ -127,6 +161,12 @@
         posicion += VELOCIDAD * Math.min(delta, 0.05);
         ajustarCostura();
         grid.scrollLeft = posicion;
+        // Si el navegador recorto —el carril se quedo corto—, se vuelve al
+        // principio en vez de quedarse mirando el final vacio.
+        if (Math.abs(grid.scrollLeft - posicion) > 2) {
+          posicion = grid.scrollLeft;
+          if (posicion >= anchoJuego) { posicion -= anchoJuego; grid.scrollLeft = posicion; }
+        }
       }
       animacion = requestAnimationFrame(paso);
     }
@@ -163,6 +203,15 @@
 
       anchoJuego = medirJuego();
       posicion = grid.scrollLeft;
+
+      /* Cuando lo visible no llega a llenar el ancho —al filtrar por un tipo
+         del que solo hay una habitacion— las tarjetas se quedaban pegadas a la
+         izquierda y sobraba un palmo de blanco a la derecha, que se ve como si
+         faltara contenido. Centrarlas lo convierte en margen a los dos lados,
+         que es lo que se espera de una fila corta. */
+      var llena = grid.scrollWidth > grid.clientWidth + 2;
+      grid.classList.toggle("justify-center", !llena);
+
       if (controles) controles.hidden = !deberia;
       if (anterior) anterior.disabled = false;
       if (siguiente) siguiente.disabled = false;
