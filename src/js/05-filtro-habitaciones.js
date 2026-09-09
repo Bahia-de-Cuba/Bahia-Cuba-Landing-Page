@@ -31,24 +31,19 @@
     });
   })();
   /* ------------------------------------------------------------------
-     5b. CARRUSEL DE HABITACIONES, DESLIZAMIENTO CONTINUO
+     5b. CARRUSEL DE HABITACIONES
 
-     Antes avanzaba a saltos de dos tarjetas y al llegar al final tenia que
-     reenganchar, lo que se veia como un parpadeo. Dos causas:
+     Se mueve a pasos: quieto un rato, desliza una tarjeta, quieto otra vez.
+     Nunca llega al final —siempre hay otra habitacion detras— y se puede
+     arrastrar con el raton.
 
-     - El contenedor llevaba `scroll-snap-type: mandatory`. Cada vez que se
-       movia el desplazamiento a mano, el motor de anclaje recolocaba, y ese
-       reajuste se ve.
-     - El reenganche ocurria en medio de una animacion suave del navegador.
+     El parpadeo de las versiones anteriores venia de recolocar el carril en
+     mitad de una animacion. Aqui el reenganche se hace SIEMPRE con el
+     carrusel parado, en la pausa entre dos pasos: nada se esta moviendo, el
+     contenido que entra es identico al que sale y el corte no existe.
 
-     Ahora no hay saltos ni anclaje: el desplazamiento avanza unos pocos
-     pixeles por fotograma, de forma continua. El juego de tarjetas esta
-     duplicado, asi que al pasar del original se descuenta su ancho; como lo
-     que se ve es identico y el movimiento no se interrumpe, el corte es
-     invisible.
-
-     Las copias van con aria-hidden y fuera del tabulador: un lector de
-     pantalla no debe leer el catalogo dos veces.
+     El catalogo se duplica las veces necesarias para que detras de la costura
+     siempre queden tarjetas; asi no puede aparecer un hueco en blanco.
      ------------------------------------------------------------------ */
   (function carruselHabitaciones() {
     var grid = $("#gridHabitaciones");
@@ -63,53 +58,35 @@
     var clones = [];
     var anchoJuego = 0;
     var enBucle = false;
-    var animacion = null;
-    var enPausa = false;
-    var ultimoInstante = 0;
+    var reloj = null;
+    var arrastrando = false;
 
-    /* La posicion se lleva aparte, en decimales.
-       `scrollLeft` redondea a enteros: a 34 px/s tocan 0,57 px por fotograma,
-       que al redondear se pierden y el carrusel se queda clavado. Acumulando
-       en una variable propia y escribiendo el total, el avance es real. */
-    var posicion = 0;
+    /** Cuanto se queda quieta antes de pasar a la siguiente. */
+    var PAUSA = 3000;
 
-    /** Pixeles por segundo. Lento: es un catalogo, no un ticker. */
-    var VELOCIDAD = 34;
+    /* ---------------------------------------------------------------- copias */
 
-    /**
-     * Duplica el catalogo tantas veces como haga falta.
-     *
-     * Con una sola copia basta mientras el juego de tarjetas sea mas ancho que
-     * la ventana, pero eso deja de cumplirse al filtrar por un tipo o en
-     * pantallas muy anchas: el carril se acaba antes de llegar a la costura, el
-     * navegador recorta el desplazamiento y aparece el hueco en blanco a la
-     * derecha. Duplicando hasta cubrir costura + ventana, ese hueco no puede
-     * existir por construccion.
-     */
     function crearClones() {
       if (clones.length) return;
       var visibles = originales.filter(function (t) { return !t.hidden; });
       if (!visibles.length) return;
 
       var hueco = parseFloat(getComputedStyle(grid).columnGap) || 20;
-      var anchoDeUnJuego = visibles.reduce(function (suma, t) {
+      var unJuego = visibles.reduce(function (suma, t) {
         return suma + t.getBoundingClientRect().width + hueco;
       }, 0);
-      if (anchoDeUnJuego <= 0) return;
+      if (unJuego <= 0) return;
 
-      // Cuantos juegos extra para que tras la costura siga habiendo tarjetas
-      var copiasNecesarias = Math.max(
-        1,
-        Math.ceil((grid.clientWidth + anchoDeUnJuego) / anchoDeUnJuego)
-      );
+      // Suficientes para que tras la costura siga habiendo catalogo
+      var copias = Math.max(1, Math.ceil((grid.clientWidth + unJuego) / unJuego));
 
-      for (var c = 0; c < copiasNecesarias; c++) {
+      for (var c = 0; c < copias; c++) {
         originales.forEach(function (t) {
           var copia = t.cloneNode(true);
           copia.setAttribute("aria-hidden", "true");
           copia.dataset.clon = "1";
-          // Las copias no esperan: si su imagen llegase tarde se verian en
-          // blanco justo al dar la vuelta, que es el hueco que hay que evitar.
+          // Sin carga diferida: si la imagen llegase tarde, la copia se veria
+          // en blanco justo al dar la vuelta.
           $$("img", copia).forEach(function (img) {
             img.setAttribute("loading", "eager");
           });
@@ -133,7 +110,6 @@
       });
     }
 
-    /** Ancho del juego original: donde esta la costura. */
     function medirJuego() {
       var visibles = originales.filter(function (t) { return !t.hidden; });
       if (!visibles.length) return 0;
@@ -143,55 +119,132 @@
       }, 0);
     }
 
-    /** Devuelve el recorrido al primer juego cuando se pasa de la costura. */
-    function ajustarCostura() {
-      if (!anchoJuego) return;
-      if (posicion >= anchoJuego) posicion -= anchoJuego;
-      else if (posicion < 0) posicion += anchoJuego;
+    /* -------------------------------------------------------------- costura */
+
+    /**
+     * Devuelve el carril al primer juego.
+     *
+     * Se llama solo con el carrusel parado. Si se hiciera durante un
+     * desplazamiento suave, el navegador seguiria animando hacia la posicion
+     * vieja y se veria el tiron: eso era el parpadeo.
+     */
+    function reenganchar() {
+      if (!enBucle || !anchoJuego) return;
+      var antes = grid.style.scrollBehavior;
+      grid.style.scrollBehavior = "auto";
+      if (grid.scrollLeft >= anchoJuego) grid.scrollLeft -= anchoJuego;
+      else if (grid.scrollLeft < 0) grid.scrollLeft += anchoJuego;
+      grid.style.scrollBehavior = antes;
     }
 
-    function paso(instante) {
-      if (!enBucle) { animacion = null; return; }
-      if (!ultimoInstante) ultimoInstante = instante;
-      var delta = (instante - ultimoInstante) / 1000;
-      ultimoInstante = instante;
+    /* ---------------------------------------------------------------- pasos */
 
-      if (!enPausa) {
-        // Un tope por si la pestana estuvo detenida y el salto es enorme
-        posicion += VELOCIDAD * Math.min(delta, 0.05);
-        ajustarCostura();
-        grid.scrollLeft = posicion;
-        // Si el navegador recorto —el carril se quedo corto—, se vuelve al
-        // principio en vez de quedarse mirando el final vacio.
-        if (Math.abs(grid.scrollLeft - posicion) > 2) {
-          posicion = grid.scrollLeft;
-          if (posicion >= anchoJuego) { posicion -= anchoJuego; grid.scrollLeft = posicion; }
+    function posicionDe(t) {
+      return (
+        t.getBoundingClientRect().left -
+        grid.getBoundingClientRect().left +
+        grid.scrollLeft
+      );
+    }
+
+    /** Un paso = una tarjeta, alineando su borde con el del contenedor. */
+    function paso(direccion) {
+      reenganchar(); // parado: es el momento seguro
+
+      var tarjetas = $$(".room-item:not([hidden])", grid);
+      if (!tarjetas.length) return;
+
+      var actual = grid.scrollLeft;
+      var margen = 4;
+      var destino = null;
+
+      if (direccion > 0) {
+        for (var i = 0; i < tarjetas.length; i++) {
+          var p = posicionDe(tarjetas[i]);
+          if (p > actual + margen) { destino = p; break; }
+        }
+      } else {
+        for (var j = tarjetas.length - 1; j >= 0; j--) {
+          var q = posicionDe(tarjetas[j]);
+          if (q < actual - margen) { destino = q; break; }
         }
       }
-      animacion = requestAnimationFrame(paso);
+
+      if (destino === null) return;
+      grid.scrollTo({ left: destino, behavior: "smooth" });
     }
+
+    /* -------------------------------------------------------------- automatico */
 
     function arrancar() {
-      if (animacion || !enBucle || reduceMotion) return;
-      ultimoInstante = 0;
-      animacion = requestAnimationFrame(paso);
+      if (reloj || !enBucle || reduceMotion) return;
+      reloj = setInterval(function () {
+        if (!arrastrando) paso(1);
+      }, PAUSA);
     }
     function detener() {
-      if (!animacion) return;
-      cancelAnimationFrame(animacion);
-      animacion = null;
+      if (!reloj) return;
+      clearInterval(reloj);
+      reloj = null;
     }
 
-    /** Las flechas mueven una tarjeta; el deslizamiento sigue despues. */
-    function empujar(direccion) {
-      var visible = grid.querySelector(".room-item:not([hidden])");
-      if (!visible) return;
-      var hueco = parseFloat(getComputedStyle(grid).columnGap) || 20;
-      var avance = visible.getBoundingClientRect().width + hueco;
-      posicion = grid.scrollLeft + direccion * avance;
-      ajustarCostura();
-      grid.scrollLeft = posicion;
+    /* --------------------------------------------------------------- arrastre */
+
+    var inicioX = 0;
+    var inicioScroll = 0;
+    var movido = 0;
+
+    function empezarArrastre(ev) {
+      // Solo boton principal; los enlaces siguen funcionando
+      if (ev.button !== undefined && ev.button !== 0) return;
+      arrastrando = true;
+      movido = 0;
+      inicioX = ev.clientX;
+      inicioScroll = grid.scrollLeft;
+      grid.style.scrollBehavior = "auto";
+      grid.classList.add("cursor-grabbing");
+      detener();
     }
+
+    function moverArrastre(ev) {
+      if (!arrastrando) return;
+      var delta = ev.clientX - inicioX;
+      movido = Math.abs(delta);
+      grid.scrollLeft = inicioScroll - delta;
+      // Al arrastrar tambien hay que dar la vuelta, o se topa con el final
+      if (anchoJuego) {
+        if (grid.scrollLeft >= anchoJuego) {
+          grid.scrollLeft -= anchoJuego;
+          inicioScroll -= anchoJuego;
+        } else if (grid.scrollLeft <= 0) {
+          grid.scrollLeft += anchoJuego;
+          inicioScroll += anchoJuego;
+        }
+      }
+    }
+
+    function soltarArrastre() {
+      if (!arrastrando) return;
+      arrastrando = false;
+      grid.style.scrollBehavior = "";
+      grid.classList.remove("cursor-grabbing");
+      arrancar();
+    }
+
+    grid.addEventListener("pointerdown", empezarArrastre);
+    window.addEventListener("pointermove", moverArrastre, { passive: true });
+    window.addEventListener("pointerup", soltarArrastre);
+    window.addEventListener("pointercancel", soltarArrastre);
+
+    // Un arrastre no debe acabar abriendo el enlace de la tarjeta
+    grid.addEventListener("click", function (ev) {
+      if (movido > 8) { ev.preventDefault(); ev.stopPropagation(); movido = 0; }
+    }, true);
+
+    // Arrastrar una imagen es lo que hace el navegador por defecto; estorba
+    $$("img", grid).forEach(function (img) { img.draggable = false; });
+
+    /* ----------------------------------------------------------------- estado */
 
     function refrescar() {
       var visibles = originales.filter(function (t) { return !t.hidden; }).length;
@@ -202,15 +255,11 @@
       if (enBucle) sincronizarClones();
 
       anchoJuego = medirJuego();
-      posicion = grid.scrollLeft;
 
-      /* Cuando lo visible no llega a llenar el ancho —al filtrar por un tipo
-         del que solo hay una habitacion— las tarjetas se quedaban pegadas a la
-         izquierda y sobraba un palmo de blanco a la derecha, que se ve como si
-         faltara contenido. Centrarlas lo convierte en margen a los dos lados,
-         que es lo que se espera de una fila corta. */
-      var llena = grid.scrollWidth > grid.clientWidth + 2;
-      grid.classList.toggle("justify-center", !llena);
+      // Con poco que enseniar, centrado: si no, quedaria un palmo de blanco a
+      // la derecha que parece contenido que falta.
+      grid.classList.toggle("justify-center", grid.scrollWidth <= grid.clientWidth + 2);
+      grid.classList.toggle("cursor-grab", deberia);
 
       if (controles) controles.hidden = !deberia;
       if (anterior) anterior.disabled = false;
@@ -219,34 +268,29 @@
       if (enBucle) arrancar(); else detener();
     }
 
-    if (anterior) anterior.addEventListener("click", function () { empujar(-1); });
-    if (siguiente) siguiente.addEventListener("click", function () { empujar(1); });
+    if (anterior) anterior.addEventListener("click", function () { detener(); paso(-1); arrancar(); });
+    if (siguiente) siguiente.addEventListener("click", function () { detener(); paso(1); arrancar(); });
 
-    // Mientras se mira, se lee o se navega con teclado, el catalogo se queda
-    // quieto. No se cancela la animacion: solo deja de avanzar, para que al
-    // soltar retome sin tiron.
-    function pausar() { enPausa = true; }
-    function reanudar() { enPausa = false; }
-    ["mouseenter", "focusin", "touchstart", "pointerdown"].forEach(function (ev) {
-      grid.addEventListener(ev, pausar, { passive: true });
-      if (controles) controles.addEventListener(ev, pausar, { passive: true });
+    // Mientras se mira o se navega con teclado, no avanza solo
+    ["mouseenter", "focusin"].forEach(function (ev) {
+      grid.addEventListener(ev, detener, { passive: true });
+      if (controles) controles.addEventListener(ev, detener, { passive: true });
     });
-    ["mouseleave", "focusout", "touchend", "pointerup"].forEach(function (ev) {
-      grid.addEventListener(ev, reanudar, { passive: true });
-      if (controles) controles.addEventListener(ev, reanudar, { passive: true });
+    ["mouseleave", "focusout"].forEach(function (ev) {
+      grid.addEventListener(ev, arrancar, { passive: true });
+      if (controles) controles.addEventListener(ev, arrancar, { passive: true });
     });
-
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) detener(); else arrancar();
     });
 
-    // Si el visitante desliza con el dedo o la rueda, manda el: se toma su
-    // posicion como buena para que al reanudar no haya tiron.
+    // Deslizar con el dedo tambien tiene que dar la vuelta; se espera a que
+    // pare para no recolocar en marcha.
+    var esperaDedo = null;
     grid.addEventListener("scroll", function () {
-      if (!enPausa) return;
-      posicion = grid.scrollLeft;
-      ajustarCostura();
-      if (posicion !== grid.scrollLeft) grid.scrollLeft = posicion;
+      if (arrastrando) return;
+      clearTimeout(esperaDedo);
+      esperaDedo = setTimeout(reenganchar, 180);
     }, { passive: true });
 
     window.addEventListener("resize", refrescar);
