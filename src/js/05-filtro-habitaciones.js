@@ -31,28 +31,31 @@
     });
   })();
   /* ------------------------------------------------------------------
-     5b. CARRUSEL DE HABITACIONES, EN BUCLE
+     5b. CARRUSEL DE HABITACIONES, DESLIZAMIENTO CONTINUO
 
-     Dos problemas que resuelve:
+     Antes avanzaba a saltos de dos tarjetas y al llegar al final tenia que
+     reenganchar, lo que se veia como un parpadeo. Dos causas:
 
-     1. El contenedor lleva `no-scrollbar`, asi que en escritorio no habia
-        barra ni forma evidente de avanzar: con raton solo quedaba
-        shift+rueda. De ahi las flechas.
-     2. Al llegar al final habia que volver de un salto al principio, que se
-        ve mal. Aqui se duplica el juego de tarjetas: cuando el recorrido
-        pasa del primer juego, se descuenta su ancho de golpe y sin
-        animacion. Como lo que se ve es identico, el ojo no percibe el corte
-        y el carrusel parece infinito.
+     - El contenedor llevaba `scroll-snap-type: mandatory`. Cada vez que se
+       movia el desplazamiento a mano, el motor de anclaje recolocaba, y ese
+       reajuste se ve.
+     - El reenganche ocurria en medio de una animacion suave del navegador.
 
-     Las copias son decorativas: van con aria-hidden y fuera del tabulador,
-     para que un lector de pantalla no lea el catalogo dos veces.
+     Ahora no hay saltos ni anclaje: el desplazamiento avanza unos pocos
+     pixeles por fotograma, de forma continua. El juego de tarjetas esta
+     duplicado, asi que al pasar del original se descuenta su ancho; como lo
+     que se ve es identico y el movimiento no se interrumpe, el corte es
+     invisible.
+
+     Las copias van con aria-hidden y fuera del tabulador: un lector de
+     pantalla no debe leer el catalogo dos veces.
      ------------------------------------------------------------------ */
   (function carruselHabitaciones() {
     var grid = $("#gridHabitaciones");
     var controles = $("#habControles");
     var anterior = $("#habAnterior");
     var siguiente = $("#habSiguiente");
-    if (!grid || !controles || !anterior || !siguiente) return;
+    if (!grid) return;
 
     var originales = $$(".room-item", grid);
     if (originales.length < 2) return;
@@ -60,28 +63,18 @@
     var clones = [];
     var anchoJuego = 0;
     var enBucle = false;
-    var temporizador = null;
-    var PAUSA = 4500;
+    var animacion = null;
+    var enPausa = false;
+    var ultimoInstante = 0;
 
-    /** Un salto = lo que se ve, para no dejar tarjetas cortadas. */
-    function salto() {
-      var visible = grid.querySelector(".room-item:not([hidden])");
-      if (!visible) return grid.clientWidth;
-      var ancho = visible.getBoundingClientRect().width;
-      var hueco = parseFloat(getComputedStyle(grid).columnGap) || 20;
-      var caben = Math.max(1, Math.round(grid.clientWidth / (ancho + hueco)));
-      return caben * (ancho + hueco);
-    }
+    /* La posicion se lleva aparte, en decimales.
+       `scrollLeft` redondea a enteros: a 34 px/s tocan 0,57 px por fotograma,
+       que al redondear se pierden y el carrusel se queda clavado. Acumulando
+       en una variable propia y escribiendo el total, el avance es real. */
+    var posicion = 0;
 
-    /** Ancho del juego original, para saber donde reenganchar. */
-    function medirJuego() {
-      var visibles = originales.filter(function (t) { return !t.hidden; });
-      if (!visibles.length) return 0;
-      var hueco = parseFloat(getComputedStyle(grid).columnGap) || 20;
-      return visibles.reduce(function (suma, t) {
-        return suma + t.getBoundingClientRect().width + hueco;
-      }, 0);
-    }
+    /** Pixeles por segundo. Lento: es un catalogo, no un ticker. */
+    var VELOCIDAD = 34;
 
     function crearClones() {
       if (clones.length) return;
@@ -89,7 +82,6 @@
         var copia = t.cloneNode(true);
         copia.setAttribute("aria-hidden", "true");
         copia.dataset.clon = "1";
-        // Nada dentro de una copia debe ser alcanzable con el tabulador
         $$("a, button, input", copia).forEach(function (el) {
           el.setAttribute("tabindex", "-1");
         });
@@ -103,165 +95,111 @@
       clones = [];
     }
 
-    /** Las copias siguen al original al filtrar. */
     function sincronizarClones() {
-      clones.forEach(function (c, i) {
-        c.hidden = originales[i].hidden;
-      });
+      clones.forEach(function (c, i) { c.hidden = originales[i].hidden; });
     }
 
-    /* --- bucle ------------------------------------------------------- */
-
-    /** Mueve el recorrido sin animacion; el contenido es identico y no se nota. */
-    function saltar(delta) {
-      grid.style.scrollBehavior = "auto";
-      grid.scrollLeft += delta;
-      // Se fuerza el recalculo antes de devolver el desplazamiento suave, o el
-      // navegador funde las dos operaciones en una sola animacion visible.
-      void grid.offsetWidth;
-      grid.style.scrollBehavior = "";
+    /** Ancho del juego original: donde esta la costura. */
+    function medirJuego() {
+      var visibles = originales.filter(function (t) { return !t.hidden; });
+      if (!visibles.length) return 0;
+      var hueco = parseFloat(getComputedStyle(grid).columnGap) || 20;
+      return visibles.reduce(function (suma, t) {
+        return suma + t.getBoundingClientRect().width + hueco;
+      }, 0);
     }
 
-    /**
-     * Reengancha ANTES de desplazar, nunca durante.
-     *
-     * Hacerlo desde el evento `scroll` parecia lo natural, pero saltaba a mitad
-     * del desplazamiento suave: el navegador seguia animando hacia la posicion
-     * vieja y el carrusel daba tumbones. Colocandose antes, la animacion nunca
-     * cruza la costura.
-     */
-    function normalizar(haciaAtras) {
-      if (!enBucle || !anchoJuego) return;
-      // Solo se descuenta cuando ya se ha pasado el juego original. Entrar en
-      // las copias es lo normal y no se nota: son identicas. Adelantarse a la
-      // costura restaba el juego entero desde una posicion menor, el recorrido
-      // se iba a negativo, el navegador lo recortaba a cero y el carrusel
-      // volvia al principio de golpe.
-      if (grid.scrollLeft >= anchoJuego) saltar(-anchoJuego);
-      else if (haciaAtras && grid.scrollLeft <= 0) saltar(anchoJuego);
+    /** Devuelve el recorrido al primer juego cuando se pasa de la costura. */
+    function ajustarCostura() {
+      if (!anchoJuego) return;
+      if (posicion >= anchoJuego) posicion -= anchoJuego;
+      else if (posicion < 0) posicion += anchoJuego;
     }
 
-    /** Posicion de una tarjeta dentro del contenido desplazable. */
-    function posicionDe(tarjeta) {
-      return (
-        tarjeta.getBoundingClientRect().left -
-        grid.getBoundingClientRect().left +
-        grid.scrollLeft
-      );
-    }
+    function paso(instante) {
+      if (!enBucle) { animacion = null; return; }
+      if (!ultimoInstante) ultimoInstante = instante;
+      var delta = (instante - ultimoInstante) / 1000;
+      ultimoInstante = instante;
 
-    /**
-     * Desplaza hasta el borde de una tarjeta, no una cantidad de pixeles.
-     *
-     * El contenedor lleva `scroll-snap-type: x mandatory`, y con el un
-     * `scrollBy` a media tarjeta no llega a ninguna parte: el motor de anclaje
-     * cancela la animacion y devuelve el carrusel a donde estaba. Cuadrando el
-     * destino con un borde de tarjeta —que con `snap-start` es exactamente un
-     * punto de anclaje— el anclaje coopera en vez de estorbar.
-     */
-    function irHacia(direccion) {
-      var tarjetas = $$(".room-item:not([hidden])", grid);
-      if (!tarjetas.length) return;
-
-      var actual = grid.scrollLeft;
-      var margen = 8;
-      var destino = null;
-
-      if (direccion > 0) {
-        for (var i = 0; i < tarjetas.length; i++) {
-          var p = posicionDe(tarjetas[i]);
-          // La primera que empiece mas adelante de lo que ya se ve
-          if (p > actual + grid.clientWidth - margen) { destino = p; break; }
-        }
-      } else {
-        for (var j = tarjetas.length - 1; j >= 0; j--) {
-          var q = posicionDe(tarjetas[j]);
-          if (q < actual - margen) {
-            // Retrocede una pantalla completa, sin dejar tarjetas cortadas
-            destino = Math.max(0, q - grid.clientWidth + tarjetas[j].getBoundingClientRect().width);
-            break;
-          }
-        }
+      if (!enPausa) {
+        // Un tope por si la pestana estuvo detenida y el salto es enorme
+        posicion += VELOCIDAD * Math.min(delta, 0.05);
+        ajustarCostura();
+        grid.scrollLeft = posicion;
       }
-
-      if (destino === null) return;
-      grid.scrollTo({ left: destino, behavior: "smooth" });
-    }
-
-    function avanzar() {
-      normalizar(false);
-      irHacia(1);
-    }
-
-    /** Para el deslizamiento con el dedo, que no pasa por los botones. */
-    var esperaReenganche = null;
-    function reengancharTrasDeslizar() {
-      clearTimeout(esperaReenganche);
-      esperaReenganche = setTimeout(function () {
-        if (!enBucle || !anchoJuego) return;
-        if (grid.scrollLeft >= anchoJuego) saltar(-anchoJuego);
-        else if (grid.scrollLeft <= 0) saltar(anchoJuego);
-      }, 160);
+      animacion = requestAnimationFrame(paso);
     }
 
     function arrancar() {
-      if (temporizador || !enBucle || reduceMotion) return;
-      temporizador = setInterval(avanzar, PAUSA);
+      if (animacion || !enBucle || reduceMotion) return;
+      ultimoInstante = 0;
+      animacion = requestAnimationFrame(paso);
     }
-    function parar() {
-      if (!temporizador) return;
-      clearInterval(temporizador);
-      temporizador = null;
+    function detener() {
+      if (!animacion) return;
+      cancelAnimationFrame(animacion);
+      animacion = null;
     }
 
-    /* --- estado ------------------------------------------------------ */
+    /** Las flechas mueven una tarjeta; el deslizamiento sigue despues. */
+    function empujar(direccion) {
+      var visible = grid.querySelector(".room-item:not([hidden])");
+      if (!visible) return;
+      var hueco = parseFloat(getComputedStyle(grid).columnGap) || 20;
+      var avance = visible.getBoundingClientRect().width + hueco;
+      posicion = grid.scrollLeft + direccion * avance;
+      ajustarCostura();
+      grid.scrollLeft = posicion;
+    }
 
     function refrescar() {
       var visibles = originales.filter(function (t) { return !t.hidden; }).length;
-      // Solo tiene sentido el bucle si sobran tarjetas para desbordar
-      var deberia = visibles > 1 && grid.scrollWidth > grid.clientWidth + 2;
+      var deberia = visibles > 1;
 
-      if (deberia && !enBucle) {
-        crearClones();
-        enBucle = true;
-      } else if (!deberia && enBucle) {
-        quitarClones();
-        enBucle = false;
-        parar();
-      }
+      if (deberia && !enBucle) { crearClones(); enBucle = true; }
+      else if (!deberia && enBucle) { quitarClones(); enBucle = false; detener(); }
       if (enBucle) sincronizarClones();
 
       anchoJuego = medirJuego();
-      controles.hidden = !(grid.scrollWidth > grid.clientWidth + 2);
+      posicion = grid.scrollLeft;
+      if (controles) controles.hidden = !deberia;
+      if (anterior) anterior.disabled = false;
+      if (siguiente) siguiente.disabled = false;
 
-      // En bucle nunca hay extremos, asi que las flechas no se desactivan
-      anterior.disabled = false;
-      siguiente.disabled = false;
-
-      if (enBucle) arrancar(); else parar();
+      if (enBucle) arrancar(); else detener();
     }
 
-    anterior.addEventListener("click", function () {
-      normalizar(true);
-      irHacia(-1);
-    });
-    siguiente.addEventListener("click", avanzar);
+    if (anterior) anterior.addEventListener("click", function () { empujar(-1); });
+    if (siguiente) siguiente.addEventListener("click", function () { empujar(1); });
 
-    // Mientras se mira o se navega con teclado, el carrusel no se mueve solo
-    ["mouseenter", "focusin", "touchstart"].forEach(function (ev) {
-      grid.addEventListener(ev, parar, { passive: true });
-      controles.addEventListener(ev, parar, { passive: true });
+    // Mientras se mira, se lee o se navega con teclado, el catalogo se queda
+    // quieto. No se cancela la animacion: solo deja de avanzar, para que al
+    // soltar retome sin tiron.
+    function pausar() { enPausa = true; }
+    function reanudar() { enPausa = false; }
+    ["mouseenter", "focusin", "touchstart", "pointerdown"].forEach(function (ev) {
+      grid.addEventListener(ev, pausar, { passive: true });
+      if (controles) controles.addEventListener(ev, pausar, { passive: true });
     });
-    ["mouseleave", "focusout"].forEach(function (ev) {
-      grid.addEventListener(ev, arrancar);
-      controles.addEventListener(ev, arrancar);
+    ["mouseleave", "focusout", "touchend", "pointerup"].forEach(function (ev) {
+      grid.addEventListener(ev, reanudar, { passive: true });
+      if (controles) controles.addEventListener(ev, reanudar, { passive: true });
     });
-    // En una pestana oculta no tiene sentido seguir desplazando
+
     document.addEventListener("visibilitychange", function () {
-      if (document.hidden) parar(); else arrancar();
+      if (document.hidden) detener(); else arrancar();
     });
 
-    grid.addEventListener("scroll", reengancharTrasDeslizar, { passive: true });
+    // Si el visitante desliza con el dedo o la rueda, manda el: se toma su
+    // posicion como buena para que al reanudar no haya tiron.
+    grid.addEventListener("scroll", function () {
+      if (!enPausa) return;
+      posicion = grid.scrollLeft;
+      ajustarCostura();
+      if (posicion !== grid.scrollLeft) grid.scrollLeft = posicion;
+    }, { passive: true });
+
     window.addEventListener("resize", refrescar);
     $$(".room-filter-btn").forEach(function (b) {
       b.addEventListener("click", function () { setTimeout(refrescar, 60); });
