@@ -33,7 +33,21 @@
         bar.style.transform = "scaleX(" + (alto > 0 ? Math.min(y / alto, 1) : 0) + ")";
       }
 
-      if (header) header.classList.toggle("is-stuck", y > 12);
+      /* Histeresis, no un umbral unico.
+         `is-stuck` encoge el encabezado de 80 px a 60 px, y como es `sticky`
+         ocupa sitio en el documento: al encogerse, el contenido sube 20 px y
+         la posicion de scroll vuelve a cruzar el umbral. Con un solo limite en
+         12 px eso entra en bucle y el encabezado tiembla mientras se anima su
+         altura durante 0,3 s.
+         Con dos limites separados 60 px —mas que el salto de 20— cruzar uno no
+         puede devolverte al otro, y la oscilacion desaparece. */
+      if (header) {
+        if (!header.classList.contains("is-stuck")) {
+          if (y > 80) header.classList.add("is-stuck");
+        } else if (y < 20) {
+          header.classList.remove("is-stuck");
+        }
+      }
 
       if (toTop) toTop.dataset.state = y > window.innerHeight ? "shown" : "hidden";
 
