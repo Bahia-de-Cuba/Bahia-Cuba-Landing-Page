@@ -30,11 +30,15 @@
 
     function precioNoche() {
       var opt = roomEl.options[roomEl.selectedIndex];
-      return parseInt((opt && opt.dataset.precio) || "0", 10);
+      return Number((opt && opt.dataset.precio) || "0");
     }
 
-    /** Avisa (sin bloquear) si hay más huéspedes que la capacidad del cuarto. */
-    var CAPACIDAD = { Individual: 1, Matrimonial: 2, Doble: 4, Familiar: 6 };
+    /** La capacidad vigente se valida antes de continuar a la reserva. */
+    var CAPACIDAD = { Individual: 1, Matrimonial: 2, Doble: 3, Triple: 4, Familiar: 6 };
+    function capacidad() {
+      var opt = roomEl.options[roomEl.selectedIndex];
+      return Number(opt && opt.dataset.capacidad) || CAPACIDAD[roomEl.value];
+    }
 
     function recalcular() {
       // El check-out siempre debe ser al menos un día después del check-in
@@ -53,7 +57,7 @@
         ? n + (n === 1 ? " noche" : " noches") + " × S/ " + precio
         : "Elige tus fechas para ver el total";
 
-      var cap = CAPACIDAD[roomEl.value];
+      var cap = capacidad();
       var huespedes = parseInt(guestsEl.value, 10);
       aviso(cap && huespedes > cap
         ? "La habitación " + roomEl.value + " admite hasta " + cap +
@@ -71,9 +75,14 @@
        las descarta si pisan una reserva. */
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
-      if (!inEl.value || !outEl.value || !noches()) {
+      if (!inEl.value || !outEl.value || !noches() || noches()>365 || inEl.value<inEl.min) {
         aviso("Elige las fechas de check-in y check-out para continuar.");
         inEl.focus();
+        return;
+      }
+      if (Number(guestsEl.value)>capacidad()) {
+        aviso("El número de huéspedes supera la capacidad de esta habitación. Elige otra habitación o consulta al hotel.");
+        guestsEl.focus();
         return;
       }
       var q =
@@ -86,8 +95,10 @@
     // Fechas por defecto: mañana y pasado. La llegada más temprana que admite
     // el sistema de reservas es mañana, así que ofrecer hoy solo llevaría a
     // que allá rechazasen las fechas nada más llegar.
-    var manana = new Date(Date.now() + UN_DIA);
-    var pasado = new Date(Date.now() + 2 * UN_DIA);
+    // Perú es UTC-5 todo el año; no usar el día UTC ni el del visitante.
+    var hoyLima = new Date(Date.now() - 5 * 3600000).toISOString().slice(0,10);
+    var manana = new Date(Date.parse(hoyLima + "T00:00:00Z") + UN_DIA);
+    var pasado = new Date(manana.getTime() + UN_DIA);
     inEl.min = iso(manana);
     inEl.value = iso(manana);
     outEl.value = iso(pasado);

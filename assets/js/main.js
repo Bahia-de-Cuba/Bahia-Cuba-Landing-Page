@@ -603,11 +603,15 @@
 
     function precioNoche() {
       var opt = roomEl.options[roomEl.selectedIndex];
-      return parseInt((opt && opt.dataset.precio) || "0", 10);
+      return Number((opt && opt.dataset.precio) || "0");
     }
 
-    /** Avisa (sin bloquear) si hay más huéspedes que la capacidad del cuarto. */
-    var CAPACIDAD = { Individual: 1, Matrimonial: 2, Doble: 4, Familiar: 6 };
+    /** La capacidad vigente se valida antes de continuar a la reserva. */
+    var CAPACIDAD = { Individual: 1, Matrimonial: 2, Doble: 3, Triple: 4, Familiar: 6 };
+    function capacidad() {
+      var opt = roomEl.options[roomEl.selectedIndex];
+      return Number(opt && opt.dataset.capacidad) || CAPACIDAD[roomEl.value];
+    }
 
     function recalcular() {
       // El check-out siempre debe ser al menos un día después del check-in
@@ -626,7 +630,7 @@
         ? n + (n === 1 ? " noche" : " noches") + " × S/ " + precio
         : "Elige tus fechas para ver el total";
 
-      var cap = CAPACIDAD[roomEl.value];
+      var cap = capacidad();
       var huespedes = parseInt(guestsEl.value, 10);
       aviso(cap && huespedes > cap
         ? "La habitación " + roomEl.value + " admite hasta " + cap +
@@ -644,9 +648,14 @@
        las descarta si pisan una reserva. */
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
-      if (!inEl.value || !outEl.value || !noches()) {
+      if (!inEl.value || !outEl.value || !noches() || noches()>365 || inEl.value<inEl.min) {
         aviso("Elige las fechas de check-in y check-out para continuar.");
         inEl.focus();
+        return;
+      }
+      if (Number(guestsEl.value)>capacidad()) {
+        aviso("El número de huéspedes supera la capacidad de esta habitación. Elige otra habitación o consulta al hotel.");
+        guestsEl.focus();
         return;
       }
       var q =
@@ -659,8 +668,10 @@
     // Fechas por defecto: mañana y pasado. La llegada más temprana que admite
     // el sistema de reservas es mañana, así que ofrecer hoy solo llevaría a
     // que allá rechazasen las fechas nada más llegar.
-    var manana = new Date(Date.now() + UN_DIA);
-    var pasado = new Date(Date.now() + 2 * UN_DIA);
+    // Perú es UTC-5 todo el año; no usar el día UTC ni el del visitante.
+    var hoyLima = new Date(Date.now() - 5 * 3600000).toISOString().slice(0,10);
+    var manana = new Date(Date.parse(hoyLima + "T00:00:00Z") + UN_DIA);
+    var pasado = new Date(manana.getTime() + UN_DIA);
     inEl.min = iso(manana);
     inEl.value = iso(manana);
     outEl.value = iso(pasado);
@@ -797,9 +808,7 @@
         }
       });
 
-      if (!cambio) return;
-
-      $$(".room-item").forEach(function (card) {
+      if (cambio) $$(".room-item").forEach(function (card) {
         var span = $(".js-precio", card);
         var opt = select.querySelector('option[value="' + card.dataset.room + '"]');
         if (span && opt) span.textContent = "Desde S/ " + opt.dataset.precio;
@@ -814,7 +823,7 @@
       return tipo.charAt(0).toUpperCase() + tipo.slice(1);
     }
 
-    fetch(SUPABASE_URL + "/rest/v1/habitaciones?select=tipo,precio_noche", {
+    fetch(SUPABASE_URL + "/rest/v1/habitaciones?select=tipo,precio_noche,capacidad_max", {
       headers: { apikey: SUPABASE_ANON, Authorization: "Bearer " + SUPABASE_ANON },
     })
       .then(function (r) {
@@ -825,8 +834,11 @@
         if (!Array.isArray(filas) || filas.length === 0) return;
         var tarifas = {};
         filas.forEach(function (f) {
-          var n = Math.round(Number(f.precio_noche));
-          if (n > 0) tarifas[aEtiqueta(f.tipo)] = n;
+          if (typeof f.tipo !== "string" || !/^(individual|matrimonial|doble|triple|familiar)$/.test(f.tipo)) return;
+          var n = Number(f.precio_noche);
+          if (Number.isFinite(n) && n > 0) tarifas[aEtiqueta(f.tipo)] = n;
+          var opt = select.querySelector('option[value="' + aEtiqueta(f.tipo) + '"]');
+          if (opt && Number.isInteger(f.capacidad_max) && f.capacidad_max>0) opt.dataset.capacidad = f.capacidad_max;
         });
         aplicar(tarifas);
       })
