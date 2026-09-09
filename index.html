@@ -31,7 +31,7 @@
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
 
 <!-- Hoja de estilos compilada (Tailwind + estilos propios). Fuente en src/css/ -->
-<link rel="stylesheet" href="assets/css/styles.css?v=c8294114">
+<link rel="stylesheet" href="assets/css/styles.css?v=9317ec78">
 
 <!-- Tipografías alojadas en el propio sitio: sin peticiones a terceros -->
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/plus-jakarta-sans-latin.woff2" crossorigin>
@@ -45,7 +45,7 @@
 <!-- Marca que hay JavaScript: sin él, las animaciones de entrada se desactivan
      y todo el contenido se ve igual (nada queda invisible). -->
 <script>document.documentElement.classList.add("js");</script>
-<script src="assets/js/main.js?v=9b53b4e1" defer></script>
+<script src="assets/js/main.js?v=f631f659" defer></script>
 
 <script type="application/ld+json">
 {
@@ -408,7 +408,7 @@
       <p class="flex items-center gap-2 text-[11px] font-semibold text-slate-400">
         <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
         <span class="lg:hidden">Desliza para ver todas las habitaciones</span>
-        <span class="hidden lg:inline">Hay m&aacute;s habitaciones: usa las flechas</span>
+        <span class="hidden lg:inline">Cinco habitaciones en total: usa las flechas o espera</span>
       </p>
 
       <!-- Controles del carrusel. La barra de desplazamiento va oculta
@@ -431,7 +431,7 @@
          class="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-4 -mx-4 px-4 no-scrollbar lg:mx-0 lg:px-0">
 
       <!-- Individual -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-center relative rounded-3xl overflow-hidden group"
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-start relative rounded-3xl overflow-hidden group"
                data-category="solo" data-room="Individual" data-reveal="up">
         <div class="room-media">
           <img src="assets/img/hab-individual.webp"
@@ -462,7 +462,7 @@
       </article>
 
       <!-- Matrimonial -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-center relative rounded-3xl overflow-hidden group"
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-start relative rounded-3xl overflow-hidden group"
                data-category="parejas" data-room="Matrimonial" data-reveal="up" style="--reveal-delay:80">
         <div class="room-media">
           <img src="assets/img/hab-matrimonial.webp"
@@ -498,7 +498,7 @@
       </article>
 
       <!-- Doble -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-center relative rounded-3xl overflow-hidden group"
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-start relative rounded-3xl overflow-hidden group"
                data-category="familias" data-room="Doble" data-reveal="up">
         <div class="room-media">
           <img src="assets/img/hab-doble.webp"
@@ -530,7 +530,7 @@
 
 
       <!-- Triple -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-center relative rounded-3xl overflow-hidden group"
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-start relative rounded-3xl overflow-hidden group"
                data-category="familias" data-room="Triple" data-reveal="up" style="--reveal-delay:80">
         <div class="room-media">
           <img src="assets/img/hab-triple.webp"
@@ -561,7 +561,7 @@
       </article>
 
       <!-- Familiar -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-center relative rounded-3xl overflow-hidden group"
+      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[48%] lg:w-[calc(50%-0.625rem)] snap-start relative rounded-3xl overflow-hidden group"
                data-category="familias" data-room="Familiar" data-reveal="up" style="--reveal-delay:80">
         <div class="room-media">
           <img src="assets/img/hab-familiar.webp"
@@ -688,7 +688,7 @@
               <svg width="70" height="90" viewBox="0 0 100 130" class="mx-auto" role="img" aria-label="Aerogenerador">
                 <line x1="50" y1="50" x2="50" y2="130" stroke="#23533f" stroke-width="4" stroke-linecap="round"/>
                 <g class="turbine-blade">
-                  <circle cx="50" cy="50" r="8" fill="#ff2a2a"/>
+                  <circle cx="50" cy="50" r="7" fill="#23533f"/>
                   <path d="M50 50 L50 10 C53 10 56 30 50 50 Z" fill="#2e6b52"/>
                   <path d="M50 50 L85 70 C83 73 65 65 50 50 Z" fill="#2e6b52"/>
                   <path d="M50 50 L15 70 C17 73 35 65 50 50 Z" fill="#2e6b52"/>

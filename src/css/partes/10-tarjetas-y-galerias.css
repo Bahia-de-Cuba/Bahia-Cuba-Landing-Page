@@ -9,9 +9,17 @@
   transform: translateZ(22px);
 }
 
+/* Las aspas giran sobre el buje, que en el viewBox esta en (50, 50).
+   Con `transform-origin: 50% 50%` el porcentaje se resolvia contra la caja del
+   propio grupo —que va de y=10 a y=73, o sea centro en y=41— y las aspas
+   orbitaban alrededor de un punto por encima del eje en vez de girar sobre el.
+   `transform-box: view-box` hace que el origen se mida en las coordenadas del
+   SVG, y ahi 50px 50px es exactamente el buje. */
 .turbine-blade {
-  transform-origin: 50% 50%;
-  animation: spinTurbine 5s linear infinite;
+  transform-box: view-box;
+  transform-origin: 50px 50px;
+  animation: spinTurbine 6s linear infinite;
+  will-change: transform;
 }
 @keyframes spinTurbine {
   to {

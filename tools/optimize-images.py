@@ -19,7 +19,9 @@ PLAN = {
     "hotel-recorte":     ((1400, 1400), 82),
     "hab-matrimonial":   ((1400, 1400), 78),
     "hab-doble":         ((1400, 1400), 78),
-    "hab-triple":        ((1400, 1400), 78),
+    # El estampado de la colcha tiene mucho detalle fino y comprime peor que
+    # el resto: a calidad 78 pesaba 175 KB frente a los ~105 KB de las demas.
+    "hab-triple":        ((1200, 1200), 68),
     "hab-familiar":      ((1200, 1200), 70),
     "fachada":           ((1200, 1400), 78),
     "terraza-parrilla":  ((1400, 1400), 78),
