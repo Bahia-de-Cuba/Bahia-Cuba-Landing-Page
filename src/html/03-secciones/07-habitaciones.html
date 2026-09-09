@@ -18,11 +18,28 @@
       </div>
     </div>
 
-    <p class="flex items-center gap-2 text-[11px] font-semibold text-slate-400 mb-3" data-reveal="up">
-      <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
-      Desliza para ver todas las habitaciones
-      <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-    </p>
+    <div class="flex items-center justify-between gap-4 mb-3" data-reveal="up">
+      <p class="flex items-center gap-2 text-[11px] font-semibold text-slate-400">
+        <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+        <span class="lg:hidden">Desliza para ver todas las habitaciones</span>
+        <span class="hidden lg:inline">Hay m&aacute;s habitaciones: usa las flechas</span>
+      </p>
+
+      <!-- Controles del carrusel. La barra de desplazamiento va oculta
+           (no-scrollbar), asi que sin esto en escritorio no hay manera de
+           avanzar salvo shift+rueda, que casi nadie conoce. El script los
+           esconde solo si todas las tarjetas caben. -->
+      <div id="habControles" class="flex gap-2 shrink-0" hidden>
+        <button type="button" id="habAnterior" aria-label="Ver habitaciones anteriores"
+                class="size-10 rounded-xl border border-slate-200 bg-white text-night-900 flex items-center justify-center transition hover:border-sunset-500 hover:text-sunset-600 disabled:opacity-30 disabled:pointer-events-none">
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
+        </button>
+        <button type="button" id="habSiguiente" aria-label="Ver m&aacute;s habitaciones"
+                class="size-10 rounded-xl border border-slate-200 bg-white text-night-900 flex items-center justify-center transition hover:border-sunset-500 hover:text-sunset-600 disabled:opacity-30 disabled:pointer-events-none">
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+        </button>
+      </div>
+    </div>
 
     <div id="gridHabitaciones"
          class="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-4 -mx-4 px-4 no-scrollbar lg:mx-0 lg:px-0">

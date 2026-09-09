@@ -275,6 +275,64 @@
   })();
 
   /* ------------------------------------------------------------------
+     5b. CARRUSEL DE HABITACIONES
+
+     El contenedor lleva `no-scrollbar`, asi que en escritorio no hay barra
+     de desplazamiento ni forma evidente de avanzar: con raton solo queda
+     shift+rueda. Estas flechas resuelven eso.
+
+     En movil no hacen falta —se desliza con el dedo— pero tampoco estorban,
+     y se ocultan solas cuando todas las tarjetas caben en pantalla, por
+     ejemplo al filtrar por un solo tipo.
+     ------------------------------------------------------------------ */
+  (function carruselHabitaciones() {
+    var grid = $("#gridHabitaciones");
+    var controles = $("#habControles");
+    var anterior = $("#habAnterior");
+    var siguiente = $("#habSiguiente");
+    if (!grid || !controles || !anterior || !siguiente) return;
+
+    /** Un salto = lo que se ve, para que no queden tarjetas a medias. */
+    function salto() {
+      var tarjeta = grid.querySelector(".room-item:not([hidden])");
+      if (!tarjeta) return grid.clientWidth;
+      var ancho = tarjeta.getBoundingClientRect().width;
+      var hueco = parseFloat(getComputedStyle(grid).columnGap) || 20;
+      var caben = Math.max(1, Math.round(grid.clientWidth / (ancho + hueco)));
+      return caben * (ancho + hueco);
+    }
+
+    function refrescar() {
+      // 2px de margen: los navegadores redondean scrollLeft y sin holgura el
+      // boton se queda desactivado al llegar al final.
+      var desborda = grid.scrollWidth > grid.clientWidth + 2;
+      controles.hidden = !desborda;
+      if (!desborda) return;
+      anterior.disabled = grid.scrollLeft <= 2;
+      siguiente.disabled =
+        grid.scrollLeft >= grid.scrollWidth - grid.clientWidth - 2;
+    }
+
+    anterior.addEventListener("click", function () {
+      grid.scrollBy({ left: -salto(), behavior: "smooth" });
+    });
+    siguiente.addEventListener("click", function () {
+      grid.scrollBy({ left: salto(), behavior: "smooth" });
+    });
+
+    grid.addEventListener("scroll", refrescar, { passive: true });
+    window.addEventListener("resize", refrescar);
+    // Tras filtrar cambia cuantas tarjetas hay, y puede dejar de desbordar
+    $$(".room-filter-btn").forEach(function (b) {
+      b.addEventListener("click", function () {
+        setTimeout(refrescar, 50);
+      });
+    });
+
+    refrescar();
+  })();
+
+  /* ------------------------------------------------------------------
      6. PRECIOS DE LAS TARJETAS
      Se leen del propio cotizador para que nunca queden desfasados:
      la tarifa se edita en un solo lugar (el <select> del formulario).

@@ -119,7 +119,16 @@ for (const v of VISTAS) {
     await page.click('[data-filter="familias"]');
     await page.waitForTimeout(400);
     const visibles = await page.$$eval(".room-item", (els) => els.filter((e) => !e.hidden).length);
-    console.log(`Filtro "familias" -> ${visibles} habitaciones visibles (esperado 2)`);
+    // El esperado sale del propio HTML y no de un numero escrito a mano: al
+    // anadir la Triple, un 2 fijo daba un falso fallo.
+    const enFamilias = await page.$$eval(
+      '.room-item[data-category="familias"]',
+      (n) => n.length
+    );
+    console.log(
+      `Filtro "familias" -> ${visibles} habitaciones visibles (esperado ${enFamilias})` +
+        (visibles === enFamilias ? "" : "  <-- REVISAR")
+    );
     await page.click('[data-filter="todas"]');
 
     // FAQ
