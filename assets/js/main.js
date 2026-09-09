@@ -317,6 +317,24 @@
         var copia = t.cloneNode(true);
         copia.setAttribute("aria-hidden", "true");
         copia.dataset.clon = "1";
+
+        /* Las tarjetas nacen con `data-reveal`, que el CSS mantiene invisibles
+           hasta que el observador del apartado 4 les pone `is-visible`. Ese
+           observador se instalo antes de que estas copias existieran, asi que
+           nunca las revelaria: se quedaban a opacidad 0, ocupando su sitio sin
+           verse. Eso era el hueco en blanco que aparecia tras la ultima
+           habitacion.
+
+           Se les quita el revelado y se dan por visibles: no tiene sentido
+           animar la entrada de una copia, que ademas entra de lado y no desde
+           abajo. */
+        copia.removeAttribute("data-reveal");
+        copia.removeAttribute("style");
+        copia.classList.add("is-visible");
+        $$("[data-reveal]", copia).forEach(function (el) {
+          el.removeAttribute("data-reveal");
+          el.classList.add("is-visible");
+        });
         $$("img", copia).forEach(function (img) {
           img.setAttribute("loading", "eager");
           img.draggable = false;
