@@ -31,7 +31,7 @@
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
 
 <!-- Hoja de estilos compilada (Tailwind + estilos propios). Fuente en src/css/ -->
-<link rel="stylesheet" href="assets/css/styles.css?v=98187703">
+<link rel="stylesheet" href="assets/css/styles.css?v=7514b5a7">
 
 <!-- Tipografías alojadas en el propio sitio: sin peticiones a terceros -->
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/plus-jakarta-sans-latin.woff2" crossorigin>
@@ -45,7 +45,7 @@
 <!-- Marca que hay JavaScript: sin él, las animaciones de entrada se desactivan
      y todo el contenido se ve igual (nada queda invisible). -->
 <script>document.documentElement.classList.add("js");</script>
-<script src="assets/js/main.js?v=86df95f9" defer></script>
+<script src="assets/js/main.js?v=faef6391" defer></script>
 
 <script type="application/ld+json">
 {
@@ -427,8 +427,11 @@
       </div>
     </div>
 
-    <div id="gridHabitaciones"
-         class="flex overflow-x-auto gap-5 pb-4 -mx-4 px-4 no-scrollbar lg:mx-0 lg:px-0">
+    <!-- Misma tecnica que el carrusel de visitantes: la pista se mueve con
+         transform y no con el desplazamiento, asi que no hay barra que
+         recolocar ni final al que llegar. -->
+    <div class="pista-habitaciones overflow-hidden pb-4 -mx-4 lg:mx-0">
+      <div id="gridHabitaciones" class="flex gap-5 px-4 lg:px-0">
 
       <!-- Individual -->
       <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
@@ -590,6 +593,7 @@
           </a>
         </div>
       </article>
+      </div>
     </div>
 
     <p id="roomsEmpty" hidden class="text-center text-sm text-slate-500 py-10">

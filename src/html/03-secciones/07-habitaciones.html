@@ -41,8 +41,11 @@
       </div>
     </div>
 
-    <div id="gridHabitaciones"
-         class="flex overflow-x-auto gap-5 pb-4 -mx-4 px-4 no-scrollbar lg:mx-0 lg:px-0">
+    <!-- Misma tecnica que el carrusel de visitantes: la pista se mueve con
+         transform y no con el desplazamiento, asi que no hay barra que
+         recolocar ni final al que llegar. -->
+    <div class="pista-habitaciones overflow-hidden pb-4 -mx-4 lg:mx-0">
+      <div id="gridHabitaciones" class="flex gap-5 px-4 lg:px-0">
 
       <!-- Individual -->
       <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
@@ -204,6 +207,7 @@
           </a>
         </div>
       </article>
+      </div>
     </div>
 
     <p id="roomsEmpty" hidden class="text-center text-sm text-slate-500 py-10">

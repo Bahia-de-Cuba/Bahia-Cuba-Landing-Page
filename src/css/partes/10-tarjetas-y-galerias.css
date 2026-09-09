@@ -84,3 +84,25 @@
 .gallery-card:hover {
   box-shadow: inset 0 0 0 1px var(--marco-linea), var(--marco-sombra-alta);
 }
+
+/* --------------------------------------------------------------------------
+   Carrusel de habitaciones
+
+   Se mueve con `transform`, igual que el de visitantes. Al no tocar el
+   desplazamiento no hay barra que recolocar, ni extremo al que llegar, ni
+   animacion del navegador con la que pelear: de ahi que no parpadee.
+   -------------------------------------------------------------------------- */
+#gridHabitaciones {
+  will-change: transform;
+  transition: transform 620ms var(--ease-out-soft, cubic-bezier(0.22, 1, 0.36, 1));
+}
+/* Al reenganchar y al arrastrar el movimiento tiene que ser instantaneo */
+#gridHabitaciones.sin-transicion {
+  transition: none;
+}
+.pista-habitaciones {
+  cursor: grab;
+}
+.pista-habitaciones.arrastrando {
+  cursor: grabbing;
+}
