@@ -62,41 +62,61 @@
     var arrastrando = false;
 
     /** Cuanto se queda quieta antes de pasar a la siguiente. */
-    var PAUSA = 3000;
+    var PAUSA = 2200;
 
     /* ---------------------------------------------------------------- copias */
 
-    function crearClones() {
-      if (clones.length) return;
-      var visibles = originales.filter(function (t) { return !t.hidden; });
-      if (!visibles.length) return;
-
-      var hueco = parseFloat(getComputedStyle(grid).columnGap) || 20;
-      var unJuego = visibles.reduce(function (suma, t) {
-        return suma + t.getBoundingClientRect().width + hueco;
-      }, 0);
-      if (unJuego <= 0) return;
-
-      // Suficientes para que tras la costura siga habiendo catalogo
-      var copias = Math.max(1, Math.ceil((grid.clientWidth + unJuego) / unJuego));
-
-      for (var c = 0; c < copias; c++) {
-        originales.forEach(function (t) {
-          var copia = t.cloneNode(true);
-          copia.setAttribute("aria-hidden", "true");
-          copia.dataset.clon = "1";
-          // Sin carga diferida: si la imagen llegase tarde, la copia se veria
-          // en blanco justo al dar la vuelta.
-          $$("img", copia).forEach(function (img) {
-            img.setAttribute("loading", "eager");
-          });
-          $$("a, button, input", copia).forEach(function (el) {
-            el.setAttribute("tabindex", "-1");
-          });
-          grid.appendChild(copia);
-          clones.push(copia);
+    /** Anade un juego completo de copias al final del carril. */
+    function anadirJuego() {
+      originales.forEach(function (t) {
+        var copia = t.cloneNode(true);
+        copia.setAttribute("aria-hidden", "true");
+        copia.dataset.clon = "1";
+        // Sin carga diferida: si la imagen llegase tarde, la copia se veria en
+        // blanco justo al dar la vuelta.
+        $$("img", copia).forEach(function (img) {
+          img.setAttribute("loading", "eager");
+          img.draggable = false;
         });
+        $$("a, button, input", copia).forEach(function (el) {
+          el.setAttribute("tabindex", "-1");
+        });
+        grid.appendChild(copia);
+        clones.push(copia);
+      });
+    }
+
+    /**
+     * Garantiza que detras de la costura siempre queden tarjetas.
+     *
+     * No se calcula cuantas copias hacen falta y se confia: se van anadiendo
+     * juegos y se vuelve a medir hasta que el carril cubre la costura mas una
+     * ventana entera. Calcularlo de una vez fallaba cuando la primera medida
+     * salia mal —al arrancar la pagina las tarjetas pueden no tener ancho
+     * todavia—: se daba el bucle por montado sin haber creado ni una copia, y
+     * al llegar a la ultima habitacion aparecia el hueco en blanco.
+     *
+     * Devuelve si el carril quedo en condiciones.
+     */
+    function asegurarCarril() {
+      var visibles = originales.filter(function (t) { return !t.hidden; });
+      if (visibles.length < 2) return false;
+
+      var unJuego = medirJuego();
+      if (unJuego <= 0) return false; // aun sin medidas: se reintenta luego
+
+      // Tope de seguridad para no crecer sin fin si algo va mal
+      var intentos = 0;
+      while (
+        grid.scrollWidth < unJuego + grid.clientWidth + 4 &&
+        intentos < 12
+      ) {
+        anadirJuego();
+        sincronizarClones();
+        unJuego = medirJuego();
+        intentos++;
       }
+      return clones.length > 0;
     }
 
     function quitarClones() {
@@ -250,9 +270,17 @@
       var visibles = originales.filter(function (t) { return !t.hidden; }).length;
       var deberia = visibles > 1;
 
-      if (deberia && !enBucle) { crearClones(); enBucle = true; }
-      else if (!deberia && enBucle) { quitarClones(); enBucle = false; detener(); }
-      if (enBucle) sincronizarClones();
+      if (deberia) {
+        if (enBucle) sincronizarClones();
+        // Se marca el bucle SOLO si de verdad hay copias. Antes se daba por
+        // hecho, y si la medida fallaba quedaban las cinco originales sueltas.
+        enBucle = asegurarCarril();
+        if (enBucle) sincronizarClones();
+      } else if (enBucle) {
+        quitarClones();
+        enBucle = false;
+        detener();
+      }
 
       anchoJuego = medirJuego();
 
@@ -299,4 +327,11 @@
     });
 
     refrescar();
+
+    // La primera medida puede salir mal si las fuentes o las fotos aun no han
+    // llegado y las tarjetas no tienen su ancho definitivo. Se vuelve a mirar
+    // cuando la pagina termina de cargar, y una vez mas por si acaso.
+    window.addEventListener("load", refrescar);
+    setTimeout(refrescar, 1200);
+    setTimeout(refrescar, 3000);
   })();
