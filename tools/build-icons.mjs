@@ -17,6 +17,7 @@ const LINE = {
   dog: "dog",
   compass: "compass",
   calculator: "calculator",
+  reservar: "calendar-check",
   menu: "menu",
   house: "house",
   bed: "bed-double",
