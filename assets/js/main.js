@@ -8,7 +8,7 @@
   "use strict";
 
   /** Número de WhatsApp del hotel (formato internacional, sin signos). */
-  var WHATSAPP = "51941677501";
+  var WHATSAPP = "51908925065";
 
   /** Sistema de reservas. Es el único sitio donde se reserva de verdad. */
   var URL_RESERVAS = "https://bahia-cuba-app.netlify.app/es/reservar";
