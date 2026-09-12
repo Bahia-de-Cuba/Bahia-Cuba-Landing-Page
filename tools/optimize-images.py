@@ -18,10 +18,10 @@ PLAN = {
     "hab-individual":    ((1400, 1400), 78),
     "hotel-recorte":     ((1400, 1400), 82),
     "hab-matrimonial":   ((1400, 1400), 78),
-    "hab-doble":         ((1400, 1400), 78),
     # El estampado de la colcha tiene mucho detalle fino y comprime peor que
     # el resto: a calidad 78 pesaba 175 KB frente a los ~105 KB de las demas.
-    "hab-triple":        ((1200, 1200), 68),
+    "hab-doble":         ((1200, 1200), 68),
+    "hab-triple":        ((1400, 1400), 78),
     "hab-familiar":      ((1200, 1200), 70),
     "fachada":           ((1200, 1400), 78),
     "terraza-parrilla":  ((1400, 1400), 78),
@@ -40,7 +40,7 @@ CROP = {
     "fachada": (0.0, 0.17, 1.0, 1.0),
     # la foto viene en vertical de movil (9:16) y el resto del catalogo es 3:4.
     # Se recorta techo, que no aporta nada, y quedan las dos camas.
-    "hab-triple": (0.0, 0.25, 1.0, 1.0),
+    "hab-doble": (0.0, 0.25, 1.0, 1.0),
 }
 
 # imagenes con canal alfa: se guardan en WebP con transparencia (PNG de origen)
