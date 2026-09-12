@@ -29,9 +29,7 @@
         }
       });
 
-      if (!cambio) return;
-
-      $$(".room-item").forEach(function (card) {
+      if (cambio) $$(".room-item").forEach(function (card) {
         var span = $(".js-precio", card);
         var opt = select.querySelector('option[value="' + card.dataset.room + '"]');
         if (span && opt) span.textContent = "Desde S/ " + opt.dataset.precio;
@@ -46,7 +44,7 @@
       return tipo.charAt(0).toUpperCase() + tipo.slice(1);
     }
 
-    fetch(SUPABASE_URL + "/rest/v1/habitaciones?select=tipo,precio_noche", {
+    fetch(SUPABASE_URL + "/rest/v1/habitaciones?select=tipo,precio_noche,capacidad_max", {
       headers: { apikey: SUPABASE_ANON, Authorization: "Bearer " + SUPABASE_ANON },
     })
       .then(function (r) {
@@ -57,8 +55,11 @@
         if (!Array.isArray(filas) || filas.length === 0) return;
         var tarifas = {};
         filas.forEach(function (f) {
-          var n = Math.round(Number(f.precio_noche));
-          if (n > 0) tarifas[aEtiqueta(f.tipo)] = n;
+          if (typeof f.tipo !== "string" || !/^(individual|matrimonial|doble|triple|familiar)$/.test(f.tipo)) return;
+          var n = Number(f.precio_noche);
+          if (Number.isFinite(n) && n > 0) tarifas[aEtiqueta(f.tipo)] = n;
+          var opt = select.querySelector('option[value="' + aEtiqueta(f.tipo) + '"]');
+          if (opt && Number.isInteger(f.capacidad_max) && f.capacidad_max>0) opt.dataset.capacidad = f.capacidad_max;
         });
         aplicar(tarifas);
       })
