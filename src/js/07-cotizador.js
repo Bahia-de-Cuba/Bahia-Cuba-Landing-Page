@@ -33,8 +33,21 @@
       return parseInt((opt && opt.dataset.precio) || "0", 10);
     }
 
-    /** Avisa (sin bloquear) si hay más huéspedes que la capacidad del cuarto. */
-    var CAPACIDAD = { Individual: 1, Matrimonial: 2, Doble: 4, Familiar: 6 };
+    /**
+     * Avisa (sin bloquear) si hay más huéspedes que la capacidad del cuarto.
+     *
+     * Tiene que llevar TODOS los tipos del desplegable: el que falte no avisa
+     * nunca, porque `CAPACIDAD[tipo]` sale `undefined` y la condición se cae.
+     * Triple faltaba y Doble decía 4 cuando admite 3. Las cifras son las del
+     * inventario real del hotel, las mismas que muestran las tarjetas.
+     */
+    var CAPACIDAD = {
+      Individual: 1,
+      Matrimonial: 2,
+      Doble: 3,
+      Triple: 4,
+      Familiar: 6,
+    };
 
     function recalcular() {
       // El check-out siempre debe ser al menos un día después del check-in

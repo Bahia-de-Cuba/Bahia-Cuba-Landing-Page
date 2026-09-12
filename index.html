@@ -31,7 +31,7 @@
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
 
 <!-- Hoja de estilos compilada (Tailwind + estilos propios). Fuente en src/css/ -->
-<link rel="stylesheet" href="assets/css/styles.css?v=0b8ec1cc">
+<link rel="stylesheet" href="assets/css/styles.css?v=dd5e68fd">
 
 <!-- Tipografías alojadas en el propio sitio: sin peticiones a terceros -->
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/plus-jakarta-sans-latin.woff2" crossorigin>
@@ -45,7 +45,7 @@
 <!-- Marca que hay JavaScript: sin él, las animaciones de entrada se desactivan
      y todo el contenido se ve igual (nada queda invisible). -->
 <script>document.documentElement.classList.add("js");</script>
-<script src="assets/js/main.js?v=548b491a" defer></script>
+<script src="assets/js/main.js?v=5914569c" defer></script>
 
 <script type="application/ld+json">
 {
@@ -913,11 +913,11 @@
       <div>
         <label for="cRoom" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Habitación</label>
         <select id="cRoom" name="habitacion" class="w-full px-3.5 py-2.5 bg-sand-50 border border-slate-200 rounded-xl font-medium text-slate-800">
-          <option value="Individual"  data-precio="180">Individual (1 cama)</option>
-          <option value="Matrimonial" data-precio="220" selected>Matrimonial</option>
-          <option value="Doble"       data-precio="280">Doble (cama + camarote)</option>
-          <option value="Triple"      data-precio="310">Triple (3 camas)</option>
-          <option value="Familiar"    data-precio="350">Familiar</option>
+          <option value="Individual"  data-precio="180">Individual &mdash; 1 cama de 1.5 plazas</option>
+          <option value="Matrimonial" data-precio="220" selected>Matrimonial &mdash; 1 cama de 2 plazas</option>
+          <option value="Doble"       data-precio="280">Doble &mdash; 1 cama de 2 plazas + camarote</option>
+          <option value="Triple"      data-precio="310">Triple &mdash; 3 camas individuales</option>
+          <option value="Familiar"    data-precio="350">Familiar &mdash; 2 camarotes</option>
         </select>
       </div>
       <div>
@@ -950,6 +950,20 @@
       </div>
       <p class="sm:col-span-2 lg:col-span-4 text-[11px] text-slate-400 text-center -mt-1">
         La tarifa es referencial. En el siguiente paso se confirma la disponibilidad real y se paga el 50% para asegurar la reserva.
+      </p>
+
+      <!-- Las condiciones se aceptan formalmente en la app, con casilla
+           obligatoria. Aqui se anuncian antes de que el huesped salga de la
+           landing: enterarse de la politica de cancelacion despues de pagar
+           es la queja numero uno de cualquier hotel. -->
+      <p class="sm:col-span-2 lg:col-span-4 text-[11px] text-slate-500 text-center leading-relaxed border-t border-slate-100 pt-3 mt-1">
+        Al continuar aceptas los
+        <a href="https://bahia-cuba-app.netlify.app/es/terminos" target="_blank" rel="noopener"
+           class="font-semibold text-slate-700 underline underline-offset-2 decoration-slate-300 hover:text-sunset-600 hover:decoration-sunset-400 transition">T&eacute;rminos y Condiciones</a>,
+        la <a href="https://bahia-cuba-app.netlify.app/es/privacidad" target="_blank" rel="noopener"
+           class="font-semibold text-slate-700 underline underline-offset-2 decoration-slate-300 hover:text-sunset-600 hover:decoration-sunset-400 transition">Pol&iacute;tica de Privacidad</a>
+        y la <a href="https://bahia-cuba-app.netlify.app/es/cancelacion" target="_blank" rel="noopener"
+           class="font-semibold text-slate-700 underline underline-offset-2 decoration-slate-300 hover:text-sunset-600 hover:decoration-sunset-400 transition">Pol&iacute;tica de Cancelaci&oacute;n</a>.
       </p>
     </form>
   </div>
@@ -1102,7 +1116,7 @@
     </div>
 
     <div class="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] text-slate-600">
-      <p>© <span id="year">2026</span> Hotel Bahía de Cuba — Huarmey, Áncash. Todos los derechos reservados.</p>
+      <p>© <span id="year">2026</span> Hotel Bahía de Cuba — RUC 20612706230 — Huarmey, Áncash. Todos los derechos reservados.</p>
             <!-- Documentos legales: viven en la app de reservas, que es donde se
            aceptan al reservar. -->
       <nav class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
