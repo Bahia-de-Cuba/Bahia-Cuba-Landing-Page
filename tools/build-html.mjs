@@ -38,7 +38,11 @@ if (!rutas.length) throw new Error(`No hay fragmentos en ${RAIZ}`);
 
 let html =
   rutas
-    .map((r) => readFileSync(r, "utf8").replace(/^\n+|\s+$/g, ""))
+    // Saltos de línea normalizados a \n: en un clon de Windows (autocrlf) los
+    // fragmentos llegan con \r\n, la huella de la CSP saldría sobre ese texto
+    // y al subirlo git lo guarda con \n. El navegador recibiría un script
+    // distinto del autorizado y bloquearía todo el JavaScript de la página.
+    .map((r) => readFileSync(r, "utf8").replace(/\r\n?/g, "\n").replace(/^\n+|\s+$/g, ""))
     .join("\n\n") + "\n";
 
 for (const asset of VERSIONAR) {
