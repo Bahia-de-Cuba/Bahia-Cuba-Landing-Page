@@ -1,52 +1,43 @@
 /* --------------------------------------------------------------------------
-   1. TEMA — paleta, tipografías y breakpoints de la marca
+   1. TEMA — la paleta del hotel, con un papel fijo para cada color
+   Rojo: reservar y la marca. Amarillo: el sol y la hora. Morado: la segunda
+   voz del cartel. Azul noche: el fondo y la estructura. Cal: las paredes.
    -------------------------------------------------------------------------- */
-@theme {
-  --breakpoint-xs: 375px;
+:root {
+  --noche: #10162b;
+  --noche-2: #18213f;
+  --noche-3: #24305a;
+  --niebla: #c9cee0;      /* texto sobre noche */
+  --niebla-2: #8f96b3;    /* datos secundarios sobre noche */
 
-  /* Rojo atardecer — color principal de marca */
-  --color-sunset-50: #fff7f3;
-  --color-sunset-100: #ffede4;
-  --color-sunset-200: #ffd9c8;
-  --color-sunset-300: #ffb99e;
-  --color-sunset-400: #f88c6c;
-  --color-sunset-500: #ff2a2a;
-  --color-sunset-600: #e61919;
-  --color-sunset-700: #bf1212;
-  --color-sunset-800: #991010;
-  --color-sunset-900: #7a1111;
+  --rojo: #e8231e;        /* rótulos grandes, la marca */
+  --rojo-boton: #d61f1b;  /* fondo de botones: blanco encima pasa AA */
+  --rojo-hondo: #b51714;
+  --rojo-texto: #c81a17;  /* rojo en texto sobre cal */
+  --rojo-vivo: #ff4a3d;   /* rojo en texto sobre noche */
 
-  /* Dorado — acentos y vida nocturna */
-  --color-gold-200: #fce4b0;
-  --color-gold-300: #f9d080;
-  --color-gold-400: #f7c35f;
-  --color-gold-500: #f3b340;
-  --color-gold-600: #d99826;
+  --amarillo: #ffc414;
+  --amarillo-hondo: #e5a900;
+  --tinta-amarilla: #3d2a00; /* texto secundario sobre amarillo */
 
-  /* Azul noche — fondos oscuros */
-  --color-night-700: #1a2d3f;
-  --color-night-800: #142433;
-  --color-night-900: #0c1722;
-  --color-night-950: #070e16;
+  --morado: #7b5cd6;
+  --morado-hondo: #5b3fc0;
+  --morado-claro: #b7a6ff;
 
-  /* Verde eco — sostenibilidad */
-  --color-eco-50: #edf7f2;
-  --color-eco-100: #d4eddf;
-  --color-eco-300: #8fc9ae;
-  --color-eco-400: #4a9e78;
-  --color-eco-500: #2e6b52;
-  --color-eco-600: #23533f;
-  --color-eco-700: #1b4031;
+  --cal: #f7f6f2;
+  --cal-2: #ebe8e0;
+  --tinta: #10162b;
+  --tinta-2: #4a5170;
 
-  /* Arena — fondos claros */
-  --color-sand-50: #fdfbf7;
-  --color-sand-100: #f9f4eb;
-  --color-sand-200: #f2eadb;
+  --font-rotulo: "Anybody", "Arial Narrow", sans-serif;
+  --font-texto: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --font-heading: "Playfair Display", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, sans-serif;
+  --ease-salida: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-suave: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Curva de animación usada en toda la página */
-  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --alto-cabecera: 4.25rem;
+  --margen: clamp(1rem, 4vw, 3.5rem);
+  --ancho: 84rem;
+
+  --foco: var(--noche);
 }

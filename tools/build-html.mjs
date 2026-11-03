@@ -56,6 +56,26 @@ for (const asset of VERSIONAR) {
   console.log(`  ${asset} -> ?v=${hash}`);
 }
 
+/* La política de seguridad (CSP) del <head> solo deja correr los scripts en
+   línea cuya huella conoce. El cálculo solar va en línea a propósito (pinta el
+   cartel con la hora correcta antes de cargar main.js), así que su huella se
+   calcula aquí en cada build: si alguien edita ese script, la CSP se actualiza
+   sola en vez de bloquearlo en silencio. Los JSON-LD no se ejecutan y no
+   necesitan huella. */
+const enLinea = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+const huellas = enLinea
+  .map((codigo) => `'sha256-${createHash("sha256").update(codigo, "utf8").digest("base64")}'`)
+  .join(" ");
+const cspAntes = html;
+html = html.replace(
+  /(<meta http-equiv="Content-Security-Policy" content="[^"]*?script-src 'self')((?: 'sha256-[^']+')*)/,
+  (_, inicio) => `${inicio}${huellas ? " " + huellas : ""}`
+);
+if (enLinea.length && html === cspAntes && !cspAntes.includes(huellas)) {
+  throw new Error("No encuentro el script-src de la CSP para poner la huella del script en línea");
+}
+console.log(`  CSP: ${enLinea.length} script(s) en línea autorizados por huella`);
+
 writeFileSync(SALIDA, html, "utf8");
 console.log(
   `${SALIDA} — ${rutas.length} fragmentos, ${html.split("\n").length} líneas, ` +

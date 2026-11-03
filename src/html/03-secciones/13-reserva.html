@@ -1,0 +1,77 @@
+<!-- ============================ RESERVA DIRECTA ============================ -->
+<section class="seccion seccion--rojo" id="reservar" aria-labelledby="titulo-reservar">
+  <div class="contenedor reserva">
+    <div class="reserva__texto">
+      <h2 class="rotulo-seccion rotulo-seccion--rojo" id="titulo-reservar">
+        <span class="linea linea--amarillo" style="--fit:16.8">Reserva directo</span>
+        <span class="linea" style="--fit:17.1">sin comisiones</span>
+      </h2>
+      <p class="parrafo parrafo--rojo">Calcula tu estadía y termina la reserva en nuestro sistema. Pagas el 50% para asegurarla y el resto al llegar, en efectivo o por transferencia.</p>
+      <ul class="reserva__pasos">
+        <li><span>1</span> Eliges fechas y habitación aquí.</li>
+        <li><span>2</span> Confirmas la disponibilidad real en el siguiente paso.</li>
+        <li><span>3</span> Pagas el 50% y listo.</li>
+      </ul>
+    </div>
+
+    <form id="formCotizacion" class="boleto" novalidate>
+      <div class="boleto__campos">
+        <label class="campo">
+          <span>Llegada</span>
+          <input type="date" id="cCheckin" name="checkin" required>
+        </label>
+        <label class="campo">
+          <span>Salida</span>
+          <input type="date" id="cCheckout" name="checkout" required>
+        </label>
+        <label class="campo campo--ancho">
+          <span>Habitación</span>
+          <select id="cRoom" name="room">
+            <option value="Individual" data-precio="180">Individual — 1 cama de 1.5 plazas</option>
+            <option value="Matrimonial" data-precio="220" selected>Matrimonial — 1 cama de 2 plazas</option>
+            <option value="Doble" data-precio="280">Doble — cama de 2 plazas + camarote</option>
+            <option value="Triple" data-precio="310">Triple — 3 camas individuales</option>
+            <option value="Familiar" data-precio="350">Familiar — 2 camarotes</option>
+          </select>
+        </label>
+        <label class="campo">
+          <span>Huéspedes</span>
+          <select id="cGuests" name="guests">
+            <option value="1">1 persona</option>
+            <option value="2" selected>2 personas</option>
+            <option value="3">3 personas</option>
+            <option value="4">4 personas</option>
+            <option value="5">5 personas</option>
+            <option value="6">6 personas</option>
+          </select>
+        </label>
+      </div>
+
+      <p id="calcAviso" class="boleto__aviso" role="status" hidden></p>
+
+      <div class="boleto__total">
+        <div>
+          <p class="boleto__etiqueta">Tarifa estimada</p>
+          <p class="boleto__monto">S/ <span id="calcTotal">220.00</span></p>
+          <p class="boleto__detalle" id="calcDetalle">Elige tus fechas para ver el total</p>
+        </div>
+        <p class="boleto__sol" data-sol-llegada hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-sunset"/></svg>
+          <span>El día que llegas, el sol se pone a las <strong data-sol-llegada-hora></strong></span>
+        </p>
+      </div>
+
+      <button type="submit" class="boton boton--rojo boton--grande boton--ancho">
+        Reservar en línea
+        <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+      </button>
+
+      <p class="boleto__legal">
+        La tarifa es referencial. Al continuar aceptas los
+        <a href="https://bahia-cuba-app.netlify.app/es/terminos" target="_blank" rel="noopener">Términos y Condiciones</a>,
+        la <a href="https://bahia-cuba-app.netlify.app/es/privacidad" target="_blank" rel="noopener">Política de Privacidad</a>
+        y la <a href="https://bahia-cuba-app.netlify.app/es/cancelacion" target="_blank" rel="noopener">Política de Cancelación</a>.
+      </p>
+    </form>
+  </div>
+</section>

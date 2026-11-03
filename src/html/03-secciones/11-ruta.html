@@ -1,0 +1,78 @@
+<!-- ============================ RUTA DESDE LIMA + UBICACIÓN ============================ -->
+<section class="seccion seccion--noche2" id="ruta" aria-labelledby="titulo-ruta">
+  <div class="contenedor">
+    <div class="ruta__cabeza">
+      <h2 class="rotulo-seccion rotulo-seccion--noche" id="titulo-ruta">
+        <span class="linea linea--amarillo" style="--fit:15.1">De Lima a Tuquillo</span>
+        <span class="linea" style="--fit:9.5">por la Panamericana Norte</span>
+      </h2>
+      <p class="parrafo parrafo--noche">Unas cuatro horas de carretera junto al mar. Arrastra el auto para ver por dónde vas y cuánto te falta.</p>
+    </div>
+
+    <div class="ruta" id="ruta-widget">
+      <div class="letrero" aria-live="polite">
+        <p class="letrero__lugar" data-ruta="lugar">Lima</p>
+        <p class="letrero__datos">
+          <span>Km <strong data-ruta="km">0</strong></span>
+          <span><strong data-ruta="tiempo">0 h</strong> de viaje</span>
+          <span>Faltan <strong data-ruta="falta">297 km</strong></span>
+        </p>
+        <p class="letrero__nota" data-ruta="nota">Sales por la Panamericana Norte rumbo al norte.</p>
+      </div>
+
+      <div class="carretera">
+        <label class="sr" for="rutaKm">Kilómetro de la Panamericana Norte</label>
+        <input type="range" id="rutaKm" min="0" max="297" step="1" value="0" class="carretera__control"
+               aria-valuetext="Lima, kilómetro 0">
+        <div class="carretera__asfalto" aria-hidden="true"><span class="carretera__avance"></span></div>
+        <ol class="carretera__paradas">
+          <li style="--km:0"><button type="button" data-km="0">Lima</button></li>
+          <li style="--km:43"><button type="button" data-km="43">Ancón</button></li>
+          <li style="--km:148"><button type="button" data-km="148">Huacho</button></li>
+          <li style="--km:195"><button type="button" data-km="195">Barranca</button></li>
+          <li style="--km:293"><button type="button" data-km="293">Huarmey</button></li>
+          <li style="--km:297" class="carretera__meta"><button type="button" data-km="297">Hotel</button></li>
+        </ol>
+      </div>
+      <p class="ruta__aviso">Kilómetros y tiempos aproximados, saliendo de Lima sin paradas largas.</p>
+    </div>
+
+    <div class="llegada">
+      <figure class="foto-pegada llegada__foto">
+        <img src="assets/img/fachada-sm.webp"
+             srcset="assets/img/fachada-sm.webp 660w, assets/img/fachada.webp 1200w"
+             sizes="(min-width:1024px) 30vw, 92vw" width="1200" height="1328" loading="lazy" decoding="async"
+             alt="Entrada del hotel al atardecer, con el letrero amarillo pintado sobre la puerta">
+        <figcaption class="costura">Búscanos por el letrero amarillo</figcaption>
+      </figure>
+
+      <div class="llegada__datos">
+        <h3 class="llegada__titulo">Al llegar</h3>
+        <address class="llegada__direccion">
+          Hotel Bahía de Cuba<br>
+          Playa Tuquillo s/n, Huarmey 02651<br>
+          Áncash, Perú
+        </address>
+        <ul class="llegada__lista">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-walk"/></svg> A 200 m caminando de la orilla.</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-parking"/></svg> Estacionamiento privado y vigilado.</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg> Plus Code 57X3XRM5+M7</li>
+        </ul>
+        <div class="llegada__acciones">
+          <a class="boton boton--amarillo" href="https://www.google.com/maps/dir/?api=1&amp;destination=-10.0158125%2C-78.1918125" target="_blank" rel="noopener">
+            <svg class="icon" aria-hidden="true"><use href="#i-route"/></svg> Cómo llegar
+          </a>
+          <a class="enlace-cartel enlace-cartel--noche" href="https://maps.app.goo.gl/VjK2jiX3JxyvwxtC9" target="_blank" rel="noopener">Abrir en Google Maps</a>
+        </div>
+      </div>
+
+      <div class="mapa" id="mapShell">
+        <button type="button" id="btnLoadMap" class="mapa__boton">
+          <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
+          <span>Ver el mapa del hotel</span>
+          <small>Se carga solo si lo pides</small>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

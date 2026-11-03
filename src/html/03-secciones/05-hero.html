@@ -1,66 +1,56 @@
-<main>
+<!-- ============================ CARTEL PRINCIPAL ============================ -->
+<main id="contenido">
+<section class="cartel" id="inicio" aria-labelledby="titulo-hotel">
+  <div class="cartel__cielo" aria-hidden="true"></div>
 
-<!-- ============================ HERO ============================ -->
-<section id="inicio" class="hero relative min-h-[76svh] sm:min-h-[88svh] flex items-center justify-center pt-6 pb-28 sm:pb-44 overflow-hidden">
+  <div class="cartel__rejilla">
+    <div class="cartel__texto">
+      <h1 class="cartel__titulo" id="titulo-hotel">
+        <span class="linea linea--1" style="--fit:21">Hotel <img class="cartel__foto-linea" src="assets/img/fachada-sm.webp" width="660" height="730" alt="" decoding="async"></span>
+        <span class="linea linea--2" style="--fit:47.3">Bahía</span>
+        <span class="linea linea--3" style="--fit:35.5">de Cuba</span>
+      </h1>
 
-  <!-- Cielo de atardecer de Tuquillo, con los colores de la marca -->
-  <div class="hero-cielo" aria-hidden="true">
-    <span class="hero-sol"></span>
-    <span class="hero-nube hero-nube--a"></span>
-    <span class="hero-nube hero-nube--b"></span>
-    <span class="hero-nube hero-nube--c"></span>
-  </div>
+      <p class="cartel__lugar">
+        Playa Tuquillo <span aria-hidden="true">·</span> Huarmey
+        <span class="cartel__lugar-dato">200 m del mar · 4 h de Lima</span>
+      </p>
 
-  <!-- El hotel recortado: es el sujeto del hero, emerge del banco de niebla -->
-  <img id="heroHotel" src="assets/img/hotel-recorte.webp"
-       srcset="assets/img/hotel-recorte-sm.webp 622w, assets/img/hotel-recorte.webp 1130w"
-       sizes="(min-width:1130px) 1130px, 112vw"
-       width="1130" height="714" fetchpriority="high" decoding="async"
-       alt="Fachada del Hotel Bahía de Cuba al atardecer, frente a Playa Tuquillo"
-       class="hero-hotel">
+      <p class="cartel__sol" data-sol-hoy>
+        <svg class="icon" aria-hidden="true"><use href="#i-sunset"/></svg>
+        <span data-sol="frase">Hoy el sol se pone sobre el Pacífico a las <strong>6:00 p. m.</strong></span>
+      </p>
 
-  <!-- Velo: mantiene legible el texto sobre el cielo -->
-  <div class="hero-veil" aria-hidden="true"></div>
-
-  <!-- Banco de niebla marina: envuelve la base del hotel y enlaza con la sección siguiente -->
-  <div id="heroNiebla" class="hero-niebla" aria-hidden="true"></div>
-
-  <div id="heroContenido" class="hero-contenido relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mb-6 sm:mb-8" data-reveal="up">
-      <span class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold bg-white/95 text-night-900 shadow-sm backdrop-blur-md flex items-center gap-1.5 border border-white/60">
-        <svg class="icon text-sunset-500" aria-hidden="true"><use href="#i-umbrella"/></svg>
-        A 200 m de Playa Tuquillo
-      </span>
-      <span class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold bg-eco-50 text-eco-600 shadow-sm backdrop-blur-md flex items-center gap-1.5 border border-eco-300/40">
-        <svg class="icon text-eco-500" aria-hidden="true"><use href="#i-leaf"/></svg>
-        100% solar y eólico
-      </span>
+      <div class="cartel__acciones">
+        <a href="#reservar" class="boton boton--rojo boton--grande">
+          Reservar <span class="boton__precio">desde S/ <span data-precio-min>180</span></span>
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+        </a>
+        <a href="#habitaciones" class="enlace-cartel">¿Qué habitación me sirve?</a>
+        <a href="https://wa.me/51908925065?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20deseo%20informaci%C3%B3n" target="_blank" rel="noopener" class="enlace-wa">
+          <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> WhatsApp
+        </a>
+      </div>
     </div>
 
-    <h1 class="font-heading text-[2rem] xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white max-w-5xl mx-auto leading-[1.1] tracking-tight drop-shadow-xl text-balance"
-        data-reveal="up" style="--reveal-delay:90">
-      Tu refugio de paz a orillas de <span class="text-gold-400 italic font-medium">Playa Tuquillo</span>
-    </h1>
+    <div class="cartel__escena">
+      <div class="cartel__hora" role="group" aria-label="Ver el cartel de día, al atardecer o de noche">
+        <p class="cartel__reloj"><span>Ahora en Tuquillo</span> <strong data-reloj>—</strong></p>
+        <div class="selector-hora">
+          <button type="button" data-ver-hora="dia" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg><span>Día</span></button>
+          <button type="button" data-ver-hora="atardecer" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-sunset"/></svg><span>Atardecer</span></button>
+          <button type="button" data-ver-hora="noche" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg><span>Noche</span></button>
+        </div>
+      </div>
 
-    <p class="mt-4 sm:mt-6 text-sm xs:text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed drop-shadow text-pretty"
-       data-reveal="up" style="--reveal-delay:160">
-      Hotel acogedor y sostenible en <strong class="font-semibold">Huarmey</strong>. Desconéctate frente al mar
-      y disfruta nuestras noches en el <strong class="font-semibold">Rooftop Bar</strong>.
-    </p>
+      <svg class="sol-puntos" id="solCartel" viewBox="-300 -300 600 600" aria-hidden="true" focusable="false"></svg>
 
-    <div class="mt-7 sm:mt-9 flex flex-col xs:flex-row items-center justify-center gap-3 sm:gap-4"
-         data-reveal="up" style="--reveal-delay:230">
-      <a href="#habitaciones" class="w-full xs:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-bold text-white bg-linear-to-r from-sunset-500 to-sunset-600 shadow-lg text-sm sm:text-base flex items-center justify-center gap-2 transition-all hover:from-sunset-600 hover:to-sunset-700 hover:-translate-y-1">
-        <svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> Ver habitaciones
-      </a>
-      <a href="#reserva" class="w-full xs:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-bold text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-lg text-sm sm:text-base flex items-center justify-center gap-2 transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-1">
-        <svg class="icon" aria-hidden="true"><use href="#i-calculator"/></svg> Cotizar estadía
-      </a>
+      <img src="assets/img/hotel-recorte.webp"
+           srcset="assets/img/hotel-recorte-sm.webp 622w, assets/img/hotel-recorte.webp 1130w"
+           sizes="(min-width:1024px) 46vw, 100vw"
+           width="1130" height="714" fetchpriority="high" decoding="async"
+           alt="Fachada del Hotel Bahía de Cuba con su mural del atardecer y el letrero de Varadero 319 Rooftop"
+           class="cartel__hotel">
     </div>
   </div>
-
-  <a href="#confianza" aria-label="Bajar al contenido"
-     class="hidden sm:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-10 size-10 items-center justify-center rounded-full border border-night-900/15 bg-white/70 text-night-900 backdrop-blur-md animate-bounce hover:bg-white transition">
-    <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
-  </a>
 </section>

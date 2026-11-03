@@ -1,0 +1,65 @@
+  /* ------------------------------------------------------------------
+     7. TARIFAS — una sola fuente y en vivo
+     El <select> del cotizador es la fuente: las filas de habitaciones, el
+     «desde S/» y el buscador leen de él. Al cargar se piden las tarifas
+     reales a la base; si la consulta falla (sin red, base dormida) se
+     quedan las publicadas en el HTML, que hacen de respaldo.
+     ------------------------------------------------------------------ */
+  (function tarifas() {
+    var select = $("#cRoom");
+    if (!select) return;
+
+    function pintar() {
+      var min = Infinity;
+      $$("option", select).forEach(function (o) {
+        var p = Number(o.dataset.precio);
+        if (p > 0 && p < min) min = p;
+      });
+      $$(".js-precio[data-tipo]").forEach(function (span) {
+        span.textContent = precioDe(span.dataset.tipo);
+      });
+      if (min < Infinity) {
+        $$("[data-precio-min]").forEach(function (s) { s.textContent = min; });
+      }
+      emitir("tarifas");
+    }
+
+    pintar();
+    if (!window.fetch) return;
+
+    fetch(SUPABASE_URL + "/rest/v1/habitaciones?select=tipo,precio_noche,capacidad_max", {
+      headers: { apikey: SUPABASE_ANON, Authorization: "Bearer " + SUPABASE_ANON },
+    })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (filas) {
+        if (!Array.isArray(filas) || !filas.length) return;
+        var cambio = false;
+        filas.forEach(function (f) {
+          // Solo los cinco tipos conocidos: nada que venga de la base se mete en un selector sin validar
+          if (typeof f.tipo !== "string" || !/^(individual|matrimonial|doble|triple|familiar)$/.test(f.tipo)) return;
+          var tipo = f.tipo.charAt(0).toUpperCase() + f.tipo.slice(1);
+          var opt = select.querySelector('option[value="' + tipo + '"]');
+          if (!opt) return;
+          // Con céntimos: la tarifa se muestra tal cual la guarda el hotel
+          var n = Number(f.precio_noche);
+          if (Number.isFinite(n) && n > 0 && opt.dataset.precio !== String(n)) {
+            opt.dataset.precio = String(n);
+            cambio = true;
+          }
+          // Aforo real de la base: el cotizador lo usa antes que su tabla de respaldo
+          if (Number.isInteger(f.capacidad_max) && f.capacidad_max > 0 && opt.dataset.capacidad !== String(f.capacidad_max)) {
+            opt.dataset.capacidad = String(f.capacidad_max);
+            cambio = true;
+          }
+        });
+        if (!cambio) return;
+        pintar();
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+      })
+      .catch(function () {
+        /* Sin conexión con la base se quedan las tarifas publicadas en el HTML. */
+      });
+  })();

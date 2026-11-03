@@ -1,0 +1,374 @@
+/* --------------------------------------------------------------------------
+   5. CARTEL PRINCIPAL
+   El cartel cambia de color con la hora real de Tuquillo. `data-hora` en
+   <html> lo pone el script del <head> antes de pintar; el visitante puede
+   cambiarlo con el selector. Todos los colores del cartel cuelgan de estas
+   variables, así que un cambio de hora es solo un cambio de tokens.
+   -------------------------------------------------------------------------- */
+.cartel {
+  /* noche: el estado por defecto y el de la página sin JavaScript */
+  --suelo: var(--noche);
+  --suelo-2: #0b1021;
+  --l1: var(--amarillo);
+  --l2: var(--rojo-vivo);
+  --l3: #fff;
+  --sombra-letra: var(--morado-hondo);
+  --texto: var(--niebla);
+  --texto-fuerte: #fff;
+  --sol: var(--morado-claro);
+  --sol-2: #fff;
+  --hotel-filtro: brightness(0.62) saturate(0.85) contrast(1.05);
+  --estrellas: 1;
+  --foco: var(--amarillo);
+  --borde-suave: rgb(255 255 255 / 0.22);
+
+  position: relative;
+  overflow: hidden;
+  background: var(--suelo);
+  color: var(--texto);
+  padding-top: var(--alto-cabecera);
+  transition: background-color 0.8s var(--ease-suave), color 0.8s var(--ease-suave);
+}
+
+html[data-hora="dia"] .cartel {
+  --suelo: var(--amarillo);
+  --suelo-2: var(--amarillo-hondo);
+  --l1: var(--noche);
+  --l2: var(--rojo);
+  --l3: var(--noche);
+  --sombra-letra: #fff;
+  --texto: var(--tinta-amarilla);
+  --texto-fuerte: var(--noche);
+  --sol: var(--rojo);
+  --sol-2: #ff7a1a;
+  --hotel-filtro: none;
+  --estrellas: 0;
+  --foco: var(--noche);
+  --borde-suave: rgb(16 22 43 / 0.28);
+}
+
+html[data-hora="atardecer"] .cartel {
+  --suelo: var(--rojo-boton);
+  --suelo-2: var(--rojo-hondo);
+  --l1: var(--amarillo);
+  --l2: var(--amarillo);
+  --l3: #fff;
+  --sombra-letra: var(--noche);
+  --texto: #ffe9e4;
+  --texto-fuerte: #fff;
+  --sol: var(--amarillo);
+  --sol-2: #fff3c4;
+  --hotel-filtro: brightness(0.85) saturate(1.1) sepia(0.15);
+  --estrellas: 0.25;
+  --foco: var(--amarillo);
+  --borde-suave: rgb(255 255 255 / 0.3);
+}
+
+/* Estrellas: una trama de puntos fija, visible de noche */
+.cartel__cielo {
+  position: absolute;
+  inset: 0;
+  opacity: var(--estrellas);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgb(255 255 255 / 0.8) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 70% 60%, rgb(255 255 255 / 0.55) 0 1px, transparent 1.4px),
+    radial-gradient(circle at 40% 80%, rgb(183 166 255 / 0.7) 0 1.2px, transparent 1.8px);
+  background-size: 140px 120px, 210px 170px, 300px 230px;
+  mask-image: linear-gradient(to bottom, #000 30%, transparent 85%);
+  transition: opacity 0.8s var(--ease-suave);
+  pointer-events: none;
+}
+
+.cartel__rejilla {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  max-width: 90rem;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 5vh, 3.5rem) var(--margen) 0;
+}
+
+.cartel__texto {
+  position: relative;
+  z-index: 2;
+}
+
+.cartel__titulo {
+  /* El ancho manda en el tamaño de las letras; lo limitamos por la altura
+     de la pantalla para que el botón siga a la vista en portátiles bajos. */
+  width: min(100%, 56svh);
+  color: var(--l3);
+  transition: color 0.8s var(--ease-suave);
+}
+.cartel__titulo .linea--1 { color: var(--l1); }
+.cartel__titulo .linea--2 {
+  color: var(--l2);
+  text-shadow: 0.03em 0.03em 0 var(--sombra-letra);
+  margin-block: 0.015em 0.03em;
+}
+.cartel__titulo .linea--3 { color: var(--l3); }
+.cartel__titulo .linea {
+  transition: color 0.8s var(--ease-suave), text-shadow 0.8s var(--ease-suave);
+}
+
+.cartel__lugar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+  margin: 1.25rem 0 0;
+  font-family: var(--font-rotulo);
+  font-weight: 800;
+  font-stretch: 70%;
+  font-size: clamp(1.375rem, 1.6vw + 0.9rem, 2rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--texto-fuerte);
+}
+.cartel__lugar-dato {
+  font-family: var(--font-texto);
+  font-weight: 600;
+  font-stretch: 100%;
+  font-size: 1rem;
+  text-transform: none;
+  color: var(--texto);
+}
+
+.cartel__sol {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  max-width: 34rem;
+  margin: 1rem 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.45;
+  color: var(--texto);
+}
+.cartel__sol > .icon {
+  font-size: 1.4rem;
+  color: var(--texto-fuerte);
+  margin-top: -0.05rem;
+}
+.cartel__sol strong {
+  color: var(--texto-fuerte);
+  font-variant-numeric: tabular-nums;
+}
+
+.cartel__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 1.75rem;
+  color: var(--texto-fuerte);
+}
+
+/* ---------- Escena: sol de puntos y hotel ---------- */
+.cartel__escena {
+  position: relative;
+  display: grid;
+  align-content: start;
+}
+@media (max-width: 1023px) {
+  .cartel__escena .sol-puntos {
+    position: relative;
+    left: auto;
+    grid-row: 2;
+    grid-column: 1;
+    justify-self: center;
+    translate: 0 calc(var(--sol-y, 0.25) * 30%);
+  }
+  .cartel__escena .cartel__hotel {
+    grid-row: 2;
+    grid-column: 1;
+    align-self: end;
+    margin-top: 40%;
+  }
+}
+
+.sol-puntos {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: min(86%, 30rem);
+  aspect-ratio: 1;
+  translate: -50% calc(var(--sol-y, 0.25) * 52%);
+  transition: translate 1.4s var(--ease-salida);
+  pointer-events: none;
+}
+.sol-puntos circle {
+  fill: var(--sol);
+  transition: fill 0.8s var(--ease-suave);
+}
+.sol-puntos circle.claro {
+  fill: var(--sol-2);
+}
+
+.cartel__hotel {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 112%;
+  max-width: none;
+  margin-left: -6%;
+  filter: var(--hotel-filtro);
+  /* Funde la base y el borde izquierdo del recorte: el suelo no queda como losa */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 2%, #000 22%),
+    linear-gradient(to bottom, #000 66%, transparent 97%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 2%, #000 22%),
+    linear-gradient(to bottom, #000 66%, transparent 97%);
+  mask-composite: intersect;
+  transition: filter 0.9s var(--ease-suave);
+}
+
+.cartel__hora {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.25rem;
+}
+@media (min-width: 1024px) {
+  .cartel__hora {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: grid;
+    justify-items: end;
+    margin: 0;
+  }
+  .cartel__reloj { text-align: right; }
+}
+.cartel__reloj {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--texto);
+}
+.cartel__reloj strong {
+  display: block;
+  font-family: var(--font-rotulo);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 1.375rem;
+  line-height: 1.05;
+  color: var(--texto-fuerte);
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+}
+
+.selector-hora {
+  display: inline-flex;
+  padding: 3px;
+  border: 2px solid var(--borde-suave);
+  border-radius: 6px;
+}
+.selector-hora button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.25rem;
+  padding: 0 0.6rem;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--texto-fuerte);
+  font-family: var(--font-rotulo);
+  font-weight: 700;
+  font-stretch: 80%;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s;
+}
+.selector-hora button span {
+  display: none;
+}
+.selector-hora button:active {
+  transform: scale(0.95);
+}
+.selector-hora button[aria-pressed="true"] {
+  background: var(--texto-fuerte);
+  color: var(--suelo);
+}
+@media (hover: hover) {
+  .selector-hora button:hover:not([aria-pressed="true"]) {
+    background: var(--borde-suave);
+  }
+}
+
+@media (min-width: 560px) {
+  .selector-hora button span { display: inline; }
+}
+
+@media (min-width: 1024px) {
+  .cartel {
+    min-height: 100svh;
+  }
+  .cartel__rejilla {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    align-items: stretch;
+    min-height: calc(100svh - var(--alto-cabecera));
+    gap: 2rem;
+  }
+  .cartel__texto {
+    align-self: center;
+    padding-bottom: clamp(2rem, 6vh, 4.5rem);
+  }
+  .cartel__escena {
+    min-height: 0;
+    padding-top: 6.5rem;
+    align-content: end;
+  }
+  .sol-puntos {
+    top: 4.5rem;
+    width: min(92%, 34rem);
+  }
+  .cartel__hotel {
+    width: 124%;
+    margin-left: -10%;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 760px) {
+  .cartel__sol { margin-top: 0.75rem; }
+  .cartel__acciones { margin-top: 1.25rem; }
+}
+
+/* Al atardecer el suelo es rojo: el botón principal pasa a amarillo */
+html[data-hora="atardecer"] .cartel .boton--rojo {
+  --b-fondo: var(--amarillo);
+  --b-texto: var(--noche);
+  --b-hover: #ffd34d;
+  --b-sombra: rgb(60 0 0 / 0.55);
+}
+
+/* Foto pequeña dentro del rótulo, como un recorte pegado en el cartel */
+.cartel__foto-linea {
+  display: inline-block;
+  width: 1.3em;
+  height: 0.78em;
+  margin-left: 0.1em;
+  object-fit: cover;
+  object-position: 50% 62%;
+  vertical-align: -0.02em;
+  border: 0.06em solid var(--l3);
+  border-radius: 0.08em;
+  rotate: -4deg;
+}
+
+.enlace-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--texto);
+  font-weight: 700;
+  text-decoration: none;
+}
+.enlace-wa:hover { color: var(--texto-fuerte); text-decoration: underline; }

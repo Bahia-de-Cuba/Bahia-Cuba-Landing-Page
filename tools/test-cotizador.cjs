@@ -11,7 +11,7 @@ function preparar(){
   campos.cRoom.options=[{dataset:{precio:'280.75'}}];campos.cGuests.value='2';
   const form={addEventListener(nombre,fn){eventos[nombre]=fn;}};
   const location={href:''};
-  vm.runInNewContext(readFileSync(path.join(__dirname,'../src/js/07-cotizador.js'),'utf8'),{
+  vm.runInNewContext(readFileSync(path.join(__dirname,'../src/js/11-cotizador.js'),'utf8'),{
     $:selector=>selector==='#formCotizacion'?form:campos[selector.slice(1)],
     window:{location},URL_RESERVAS:'https://example.invalid/reservar',
   });

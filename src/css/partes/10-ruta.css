@@ -1,0 +1,318 @@
+/* --------------------------------------------------------------------------
+   10. RUTA DESDE LIMA + LLEGADA
+   -------------------------------------------------------------------------- */
+.ruta__cabeza .rotulo-seccion {
+  max-width: 44rem;
+}
+
+.ruta {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* Letrero de carretera */
+.letrero {
+  display: inline-grid;
+  gap: 0.35rem;
+  min-width: min(100%, 26rem);
+  padding: 1.1rem 1.4rem 1.2rem;
+  background: var(--noche-3);
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 3px var(--noche-3), inset 0 0 0 5px #fff;
+}
+.letrero__lugar {
+  margin: 0;
+  font-family: var(--font-rotulo);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: clamp(2.75rem, 6vw, 4rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: #fff;
+}
+.letrero__datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0;
+  color: var(--niebla);
+  font-variant-numeric: tabular-nums;
+}
+.letrero__datos strong {
+  color: var(--amarillo);
+}
+.letrero__nota {
+  margin: 0.25rem 0 0;
+  color: var(--niebla);
+  font-size: 0.9375rem;
+}
+
+/* La carretera: un range nativo con forma de pista */
+.carretera {
+  --avance: 0;
+  position: relative;
+  margin: 4.5rem 0 0;
+  padding-block: 2.75rem;
+}
+.carretera__asfalto {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1rem;
+  translate: 0 -50%;
+  background:
+    repeating-linear-gradient(90deg, var(--amarillo) 0 18px, transparent 18px 34px) center / 100% 2px no-repeat,
+    #0a0f20;
+  border-radius: 3px;
+}
+.carretera__avance {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(var(--avance));
+  transform-origin: left;
+  background: rgb(255 74 61 / 0.35);
+  border-radius: 3px;
+}
+.carretera__control {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 3rem;
+  margin: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: grab;
+}
+.carretera__control:active { cursor: grabbing; }
+.carretera__control:focus-visible {
+  outline-offset: 6px;
+}
+.carretera__control::-webkit-slider-runnable-track {
+  height: 3rem;
+  background: transparent;
+}
+.carretera__control::-moz-range-track {
+  height: 3rem;
+  background: transparent;
+}
+.carretera__control::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 3.25rem;
+  height: 3rem;
+  border: 0;
+  border-radius: 8px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2'/%3E%3Ccircle cx='7' cy='17' r='2'/%3E%3Cpath d='M9 17h6'/%3E%3Ccircle cx='17' cy='17' r='2'/%3E%3C/svg%3E") center / 1.75rem no-repeat,
+    var(--rojo-boton);
+  box-shadow: 0 10px 20px -8px rgb(0 0 0 / 0.7);
+  transition: scale 0.2s var(--ease-salida);
+}
+.carretera__control:active::-webkit-slider-thumb { scale: 1.08; }
+.carretera__control::-moz-range-thumb {
+  width: 3.25rem;
+  height: 3rem;
+  border: 0;
+  border-radius: 8px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2'/%3E%3Ccircle cx='7' cy='17' r='2'/%3E%3Cpath d='M9 17h6'/%3E%3Ccircle cx='17' cy='17' r='2'/%3E%3C/svg%3E") center / 1.75rem no-repeat,
+    var(--rojo-boton);
+  box-shadow: 0 10px 20px -8px rgb(0 0 0 / 0.7);
+}
+
+.carretera__paradas {
+  position: absolute;
+  inset: 0 1.625rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+.carretera__paradas li {
+  position: absolute;
+  left: calc(var(--km) / 297 * 100%);
+  top: 50%;
+  translate: -50% 0;
+}
+.carretera__paradas li::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -0.85rem;
+  width: 3px;
+  height: 1.7rem;
+  translate: -50% 0;
+  background: #fff;
+  border-radius: 2px;
+}
+.carretera__paradas button {
+  position: absolute;
+  left: 50%;
+  top: 1.35rem;
+  translate: -50% 0;
+  padding: 0.3rem 0.4rem;
+  border: 0;
+  background: transparent;
+  color: var(--niebla);
+  font-family: var(--font-rotulo);
+  font-weight: 800;
+  font-stretch: 72%;
+  font-size: 0.9375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: color 0.2s;
+}
+.carretera__paradas li:nth-child(even) button {
+  top: auto;
+  bottom: 1.35rem;
+}
+.carretera__paradas button:hover,
+.carretera__paradas li[data-pasada] button {
+  color: #fff;
+}
+.carretera__paradas li[data-actual] button {
+  color: var(--amarillo);
+}
+.carretera__meta::before {
+  background: var(--amarillo) !important;
+  width: 5px !important;
+}
+.carretera__meta button {
+  padding: 0.3rem 0.55rem !important;
+  background: var(--amarillo) !important;
+  color: var(--noche) !important;
+  border-radius: 3px;
+}
+.ruta__aviso {
+  margin: 1rem 0 0;
+  font-size: 0.875rem;
+  color: var(--niebla-2);
+}
+
+/* Llegada */
+.llegada {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+}
+@media (min-width: 768px) {
+  .llegada {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  }
+  .mapa { grid-column: 1 / -1; }
+}
+@media (min-width: 1200px) {
+  .llegada {
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 0.9fr) minmax(0, 1.15fr);
+    align-items: start;
+  }
+  .mapa { grid-column: auto; }
+}
+.llegada__foto img {
+  aspect-ratio: 4 / 5;
+  rotate: -1.5deg;
+}
+.llegada__foto .costura {
+  margin-top: -1rem;
+  margin-left: 1rem;
+  position: relative;
+}
+.llegada__titulo {
+  margin: 0;
+  font-family: var(--font-rotulo);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: 2.75rem;
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: var(--amarillo);
+}
+.llegada__direccion {
+  margin: 1rem 0 0;
+  font-style: normal;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: #fff;
+}
+.llegada__lista {
+  display: grid;
+  gap: 0.6rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--niebla);
+}
+.llegada__lista li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.llegada__lista .icon {
+  color: var(--amarillo);
+}
+.llegada__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 1.75rem;
+}
+
+.mapa {
+  position: relative;
+  min-height: 20rem;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle, rgb(255 255 255 / 0.12) 1.4px, transparent 1.8px) 0 0 / 18px 18px,
+    var(--noche-3);
+}
+.mapa iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.mapa__boton {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.mapa__boton .icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0.85rem;
+  border-radius: 50%;
+  background: var(--rojo-boton);
+  transition: transform 0.35s var(--ease-salida);
+}
+@media (hover: hover) {
+  .mapa__boton:hover .icon {
+    transform: translateY(-4px);
+  }
+}
+.mapa__boton span {
+  font-family: var(--font-rotulo);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+}
+.mapa__boton small {
+  color: var(--niebla);
+  font-size: 0.875rem;
+}
