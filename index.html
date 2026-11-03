@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Seguridad. GitHub Pages no deja enviar cabeceras, así que la política va
+     aquí. Solo se ejecuta el JavaScript propio y el único script en línea,
+     autorizado por su huella exacta: si alguien consiguiera inyectar otro,
+     el navegador lo rechaza. La huella del script de 03-recursos.html la
+     calcula tools/build-html.mjs en cada build; la de aquí se sobrescribe.
+     frame-ancestors no funciona desde una etiqueta meta: contra el
+     enmarcado haría falta mover la landing a un alojamiento con cabeceras. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-x2TnBHbvcqfVJXxy9sTTkYyX4xhy2aRHHMQzecDSUC8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://xahrwafxzymxnuphpacl.supabase.co; frame-src https://www.google.com https://maps.google.com; form-action 'self' https://bahia-cuba-app.netlify.app; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Hotel Bahía de Cuba | Eco Hotel & Rooftop Bar en Playa Tuquillo, Huarmey</title>
 <meta name="description" content="Hotel ecológico y pet friendly a 200 m de Playa Tuquillo, Huarmey (Áncash). Energía 100% renovable, Varadero 319 Rooftop con billar, sapito y dardos, y reserva en línea directa, sin comisiones de intermediarios.">
 <meta name="theme-color" content="#10162B">
@@ -31,7 +41,7 @@
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
 
 <!-- Hoja de estilos compilada (Tailwind + estilos propios). Fuente en src/css/ -->
-<link rel="stylesheet" href="assets/css/styles.css?v=b34ec507">
+<link rel="stylesheet" href="assets/css/styles.css?v=8013f4bb">
 
 <!-- Tipografías alojadas en el propio sitio: sin peticiones a terceros -->
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/anybody-latin.woff2" crossorigin>
@@ -102,7 +112,7 @@
   d.documentElement.dataset.hora = estado(new Date());
 })(window, document);
 </script>
-<script src="assets/js/main.js?v=2691b2a6" defer></script>
+<script src="assets/js/main.js?v=d774ef99" defer></script>
 
 <script type="application/ld+json">
 {
@@ -397,7 +407,7 @@
       <li class="fila" data-room="Doble" data-cap="3">
         <figure class="fila__foto">
           <img src="assets/img/hab-doble-sm.webp" srcset="assets/img/hab-doble-sm.webp 495w, assets/img/hab-doble.webp 900w"
-               sizes="(min-width:1024px) 340px, 92vw" width="900" height="1200" loading="lazy" decoding="async" alt="Habitación doble con cama de dos plazas y camarote">
+               sizes="(min-width:1024px) 340px, 92vw" width="900" height="1200" loading="lazy" decoding="async" alt="Habitación doble con cama de dos plazas y una segunda cama al fondo">
           <figcaption class="costura">Doble · 1 cama de 2 plazas + camarote · baño privado</figcaption>
         </figure>
         <p class="fila__cap" aria-hidden="true">3</p>
@@ -412,7 +422,7 @@
       <li class="fila" data-room="Triple" data-cap="4">
         <figure class="fila__foto">
           <img src="assets/img/hab-triple-sm.webp" srcset="assets/img/hab-triple-sm.webp 577w, assets/img/hab-triple.webp 1050w"
-               sizes="(min-width:1024px) 340px, 92vw" width="1050" height="1400" loading="lazy" decoding="async" alt="Habitación triple con tres camas individuales">
+               sizes="(min-width:1024px) 340px, 92vw" width="1050" height="1400" loading="lazy" decoding="async" alt="Habitación triple con camarote y cama de dos plazas">
           <figcaption class="costura">Triple · 3 camas individuales · baño privado</figcaption>
         </figure>
         <p class="fila__cap" aria-hidden="true">4</p>

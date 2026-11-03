@@ -211,6 +211,14 @@ Para cambiarlos, edita los diccionarios `LINE` / `BRAND` de
 ## Revisión automática
 
 ```bash
+node --test tools/test-cotizador.cjs   # aforo, céntimos y fechas del cotizador
+```
+
+La política de seguridad (CSP) del `<head>` solo autoriza el script en línea
+del cálculo solar por su huella; `build:html` la recalcula en cada build, así
+que ese script se puede editar sin tocar la CSP a mano.
+
+```bash
 npm run check
 ```
 

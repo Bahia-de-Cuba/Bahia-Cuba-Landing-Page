@@ -12,7 +12,7 @@
     function pintar() {
       var min = Infinity;
       $$("option", select).forEach(function (o) {
-        var p = parseInt(o.dataset.precio, 10);
+        var p = Number(o.dataset.precio);
         if (p > 0 && p < min) min = p;
       });
       $$(".js-precio[data-tipo]").forEach(function (span) {
@@ -27,7 +27,7 @@
     pintar();
     if (!window.fetch) return;
 
-    fetch(SUPABASE_URL + "/rest/v1/habitaciones?select=tipo,precio_noche", {
+    fetch(SUPABASE_URL + "/rest/v1/habitaciones?select=tipo,precio_noche,capacidad_max", {
       headers: { apikey: SUPABASE_ANON, Authorization: "Bearer " + SUPABASE_ANON },
     })
       .then(function (r) {
@@ -38,12 +38,20 @@
         if (!Array.isArray(filas) || !filas.length) return;
         var cambio = false;
         filas.forEach(function (f) {
-          var n = Math.round(Number(f.precio_noche));
-          var tipo = String(f.tipo || "");
-          tipo = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+          // Solo los cinco tipos conocidos: nada que venga de la base se mete en un selector sin validar
+          if (typeof f.tipo !== "string" || !/^(individual|matrimonial|doble|triple|familiar)$/.test(f.tipo)) return;
+          var tipo = f.tipo.charAt(0).toUpperCase() + f.tipo.slice(1);
           var opt = select.querySelector('option[value="' + tipo + '"]');
-          if (n > 0 && opt && opt.dataset.precio !== String(n)) {
+          if (!opt) return;
+          // Con céntimos: la tarifa se muestra tal cual la guarda el hotel
+          var n = Number(f.precio_noche);
+          if (Number.isFinite(n) && n > 0 && opt.dataset.precio !== String(n)) {
             opt.dataset.precio = String(n);
+            cambio = true;
+          }
+          // Aforo real de la base: el cotizador lo usa antes que su tabla de respaldo
+          if (Number.isInteger(f.capacidad_max) && f.capacidad_max > 0 && opt.dataset.capacidad !== String(f.capacidad_max)) {
+            opt.dataset.capacidad = String(f.capacidad_max);
             cambio = true;
           }
         });

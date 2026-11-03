@@ -77,7 +77,7 @@
   /** Precio por noche de un tipo, leído del <select> del cotizador (fuente única) */
   function precioDe(tipo) {
     var opt = document.querySelector('#cRoom option[value="' + tipo + '"]');
-    return opt ? parseInt(opt.dataset.precio, 10) || 0 : 0;
+    return opt ? Number(opt.dataset.precio) || 0 : 0;
   }
 
   /**
@@ -388,7 +388,7 @@
     function pintar() {
       var min = Infinity;
       $$("option", select).forEach(function (o) {
-        var p = parseInt(o.dataset.precio, 10);
+        var p = Number(o.dataset.precio);
         if (p > 0 && p < min) min = p;
       });
       $$(".js-precio[data-tipo]").forEach(function (span) {
@@ -403,7 +403,7 @@
     pintar();
     if (!window.fetch) return;
 
-    fetch(SUPABASE_URL + "/rest/v1/habitaciones?select=tipo,precio_noche", {
+    fetch(SUPABASE_URL + "/rest/v1/habitaciones?select=tipo,precio_noche,capacidad_max", {
       headers: { apikey: SUPABASE_ANON, Authorization: "Bearer " + SUPABASE_ANON },
     })
       .then(function (r) {
@@ -414,12 +414,20 @@
         if (!Array.isArray(filas) || !filas.length) return;
         var cambio = false;
         filas.forEach(function (f) {
-          var n = Math.round(Number(f.precio_noche));
-          var tipo = String(f.tipo || "");
-          tipo = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+          // Solo los cinco tipos conocidos: nada que venga de la base se mete en un selector sin validar
+          if (typeof f.tipo !== "string" || !/^(individual|matrimonial|doble|triple|familiar)$/.test(f.tipo)) return;
+          var tipo = f.tipo.charAt(0).toUpperCase() + f.tipo.slice(1);
           var opt = select.querySelector('option[value="' + tipo + '"]');
-          if (n > 0 && opt && opt.dataset.precio !== String(n)) {
+          if (!opt) return;
+          // Con céntimos: la tarifa se muestra tal cual la guarda el hotel
+          var n = Number(f.precio_noche);
+          if (Number.isFinite(n) && n > 0 && opt.dataset.precio !== String(n)) {
             opt.dataset.precio = String(n);
+            cambio = true;
+          }
+          // Aforo real de la base: el cotizador lo usa antes que su tabla de respaldo
+          if (Number.isInteger(f.capacidad_max) && f.capacidad_max > 0 && opt.dataset.capacidad !== String(f.capacidad_max)) {
+            opt.dataset.capacidad = String(f.capacidad_max);
             cambio = true;
           }
         });
@@ -450,7 +458,12 @@
     var filas = $$(".fila");
     var v = function (k) { return $('[data-veredicto="' + k + '"]', veredicto); };
 
+    /* Aforo de respaldo; si la base trae `capacidad_max`, manda esa (07-tarifas.js) */
     var CAP = { Individual: 1, Matrimonial: 2, Doble: 3, Triple: 4, Familiar: 6 };
+    function capDe(tipo) {
+      var opt = document.querySelector('#cRoom option[value="' + tipo + '"]');
+      return Number(opt && opt.dataset.capacidad) || CAP[tipo];
+    }
     var CAMAS = {
       Individual: "1 cama de 1.5 plazas, silenciosa para descansar o trabajar.",
       Matrimonial: "1 cama de 2 plazas, para descansar en pareja.",
@@ -488,6 +501,12 @@
       mas.disabled = n >= 6;
 
       var tipo = elegir();
+      // Si la base cambió un aforo y la regla ya no cabe, el cuarto más chico que sí
+      if (capDe(tipo) < n) {
+        tipo = ["Individual", "Matrimonial", "Doble", "Triple", "Familiar"]
+          .filter(function (t) { return capDe(t) >= n; })
+          .sort(function (a, b) { return capDe(a) - capDe(b); })[0] || "Familiar";
+      }
       var precio = precioDe(tipo);
       v("nombre").textContent = tipo;
       v("razon").textContent = razon(tipo);
@@ -501,7 +520,7 @@
       }
 
       filas.forEach(function (f) {
-        var cap = CAP[f.dataset.room];
+        var cap = capDe(f.dataset.room);
         f.dataset.encaja = cap >= n ? "si" : "no";
         if (f.dataset.room === tipo) f.setAttribute("data-recomendada", "");
         else f.removeAttribute("data-recomendada");
@@ -755,6 +774,7 @@
     var form = $("#formCotizacion");
     if (!form) return;
 
+    var UN_DIA = 86400000;
     var inEl = $("#cCheckin");
     var outEl = $("#cCheckout");
     var roomEl = $("#cRoom");
@@ -779,9 +799,37 @@
       return d > 0 ? d : 0;
     }
 
-    /* Capacidad real de cada tipo (la misma que muestran las filas). Tiene
-       que llevar todos los tipos: el que falte no avisa nunca. */
-    var CAPACIDAD = { Individual: 1, Matrimonial: 2, Doble: 3, Triple: 4, Familiar: 6 };
+    /* Tarifa del tipo elegido, con céntimos si la base los tiene */
+    function precioNoche() {
+      var opt = roomEl.options[roomEl.selectedIndex];
+      return Number((opt && opt.dataset.precio) || "0");
+    }
+
+    /**
+     * Aforo del tipo elegido.
+     *
+     * Manda `data-capacidad`, que lo pone 07-tarifas.js con lo que dice la
+     * columna `capacidad_max` de la base: si el hotel cambia un aforo, la web
+     * se entera sola. La tabla de aquí abajo es solo el respaldo para cuando
+     * la base no contesta.
+     *
+     * Ese respaldo tiene que llevar TODOS los tipos del desplegable. El que
+     * falte no avisa nunca, porque `CAPACIDAD[tipo]` sale `undefined` y la
+     * condición se cae en silencio: así estuvo Triple, admitiendo peticiones
+     * de seis personas sin rechistar.
+     */
+    var CAPACIDAD = {
+      Individual: 1,
+      Matrimonial: 2,
+      Doble: 3,
+      Triple: 4,
+      Familiar: 6,
+    };
+
+    function capacidad() {
+      var opt = roomEl.options[roomEl.selectedIndex];
+      return Number(opt && opt.dataset.capacidad) || CAPACIDAD[roomEl.value];
+    }
 
     function recalcular() {
       // El check-out siempre al menos un día después del check-in
@@ -792,23 +840,24 @@
       }
 
       var n = noches();
-      var precio = precioDe(roomEl.value);
+      var precio = precioNoche();
       totalEl.textContent = (n * precio).toFixed(2);
       detalleEl.textContent = n
         ? n + (n === 1 ? " noche" : " noches") + " × S/ " + precio
         : "Elige tus fechas para ver el total";
 
-      var cap = CAPACIDAD[roomEl.value];
+      var cap = capacidad();
       var huespedes = parseInt(guestsEl.value, 10);
       aviso(cap && huespedes > cap
         ? "La habitación " + roomEl.value + " admite hasta " + cap +
           (cap === 1 ? " persona" : " personas") + ". Elige una más grande o escríbenos por camas extra."
         : "");
 
-      // A qué hora cae el sol el día que llegan
-      var dia = diaDesdeISO(inEl.value);
-      if (solLlegada && dia && SOL) {
-        solLlegadaHora.textContent = hora(SOL.horas(dia).puesta);
+      // A qué hora cae el sol el día que llegan (solo si el cálculo solar está)
+      var sol = typeof SOL !== "undefined" ? SOL : null;
+      var dia = sol && typeof diaDesdeISO === "function" ? diaDesdeISO(inEl.value) : null;
+      if (solLlegada && solLlegadaHora && dia) {
+        solLlegadaHora.textContent = hora(sol.horas(dia).puesta);
         solLlegada.hidden = false;
       }
     }
@@ -822,9 +871,26 @@
        como propuesta y el calendario de allá las descarta si pisan otra. */
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
+      // Decir "elige las fechas" a quien ya las eligió no ayuda: cada motivo
+      // lleva su mensaje, o el visitante no sabe qué corregir.
       if (!inEl.value || !outEl.value || !noches()) {
         aviso("Elige las fechas de llegada y salida para continuar.");
         inEl.focus();
+        return;
+      }
+      if (inEl.value < inEl.min) {
+        aviso("La entrada más temprana que podemos reservar es mañana.");
+        inEl.focus();
+        return;
+      }
+      if (noches() > 365) {
+        aviso("Para estancias de más de un año, escríbenos y lo vemos contigo.");
+        outEl.focus();
+        return;
+      }
+      if (Number(guestsEl.value) > capacidad()) {
+        aviso("El número de huéspedes supera la capacidad de esta habitación. Elige otra habitación o consulta al hotel.");
+        guestsEl.focus();
         return;
       }
       var q =
@@ -834,10 +900,13 @@
       window.location.href = URL_RESERVAS + q;
     });
 
-    // Fechas por defecto: mañana y pasado (la llegada más temprana que admite el sistema)
-    var base = new Date(Date.now() - 5 * UNA_HORA);
-    var manana = new Date(+base + UN_DIA);
-    var pasado = new Date(+base + 2 * UN_DIA);
+    // Fechas por defecto: mañana y pasado. La llegada más temprana que admite
+    // el sistema de reservas es mañana, así que ofrecer hoy solo llevaría a
+    // que allá rechazasen las fechas nada más llegar.
+    // Perú es UTC-5 todo el año; no usar el día UTC ni el del visitante.
+    var hoyLima = new Date(Date.now() - 5 * 3600000).toISOString().slice(0, 10);
+    var manana = new Date(Date.parse(hoyLima + "T00:00:00Z") + UN_DIA);
+    var pasado = new Date(manana.getTime() + UN_DIA);
     inEl.min = iso(manana);
     inEl.value = iso(manana);
     outEl.value = iso(pasado);

@@ -3,6 +3,21 @@ tools/shots/
 .DS_Store
 preview.html
 
+# --- Red de seguridad: credenciales que NUNCA deben llegar a este repo ------
+# El repo es público. Esta web no necesita ningún secreto (la única clave que
+# lleva es la anon de Supabase, pública por diseño), así que si alguno de
+# estos archivos aparece, es un error: que git ni lo vea.
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.sql
+*.dump
+*.bak
+service-account*.json
+credentials*.json
+
 # Capturas y utilidades de revisión de diseño (se regeneran)
 .impeccable/review/
 .impeccable/capturar.mjs

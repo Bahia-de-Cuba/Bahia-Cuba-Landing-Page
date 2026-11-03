@@ -68,7 +68,7 @@
   /** Precio por noche de un tipo, leído del <select> del cotizador (fuente única) */
   function precioDe(tipo) {
     var opt = document.querySelector('#cRoom option[value="' + tipo + '"]');
-    return opt ? parseInt(opt.dataset.precio, 10) || 0 : 0;
+    return opt ? Number(opt.dataset.precio) || 0 : 0;
   }
 
   /**

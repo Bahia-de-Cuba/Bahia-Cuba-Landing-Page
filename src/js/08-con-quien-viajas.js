@@ -16,7 +16,12 @@
     var filas = $$(".fila");
     var v = function (k) { return $('[data-veredicto="' + k + '"]', veredicto); };
 
+    /* Aforo de respaldo; si la base trae `capacidad_max`, manda esa (07-tarifas.js) */
     var CAP = { Individual: 1, Matrimonial: 2, Doble: 3, Triple: 4, Familiar: 6 };
+    function capDe(tipo) {
+      var opt = document.querySelector('#cRoom option[value="' + tipo + '"]');
+      return Number(opt && opt.dataset.capacidad) || CAP[tipo];
+    }
     var CAMAS = {
       Individual: "1 cama de 1.5 plazas, silenciosa para descansar o trabajar.",
       Matrimonial: "1 cama de 2 plazas, para descansar en pareja.",
@@ -54,6 +59,12 @@
       mas.disabled = n >= 6;
 
       var tipo = elegir();
+      // Si la base cambió un aforo y la regla ya no cabe, el cuarto más chico que sí
+      if (capDe(tipo) < n) {
+        tipo = ["Individual", "Matrimonial", "Doble", "Triple", "Familiar"]
+          .filter(function (t) { return capDe(t) >= n; })
+          .sort(function (a, b) { return capDe(a) - capDe(b); })[0] || "Familiar";
+      }
       var precio = precioDe(tipo);
       v("nombre").textContent = tipo;
       v("razon").textContent = razon(tipo);
@@ -67,7 +78,7 @@
       }
 
       filas.forEach(function (f) {
-        var cap = CAP[f.dataset.room];
+        var cap = capDe(f.dataset.room);
         f.dataset.encaja = cap >= n ? "si" : "no";
         if (f.dataset.room === tipo) f.setAttribute("data-recomendada", "");
         else f.removeAttribute("data-recomendada");
