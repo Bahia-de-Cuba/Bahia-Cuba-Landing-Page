@@ -1,0 +1,261 @@
+/* --------------------------------------------------------------------------
+   4. CABECERA, MENÚ MÓVIL Y ACCIONES FLOTANTES
+   -------------------------------------------------------------------------- */
+.cabecera {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 40;
+  height: var(--alto-cabecera);
+  background: rgb(16 22 43 / 0.94);
+  color: #fff;
+  --foco: var(--amarillo);
+  transition: transform 0.4s var(--ease-salida), box-shadow 0.3s;
+}
+@supports (backdrop-filter: blur(1px)) {
+  .cabecera {
+    background: rgb(16 22 43 / 0.82);
+    backdrop-filter: saturate(1.4) blur(14px);
+  }
+}
+.cabecera[data-estado="abajo"] {
+  box-shadow: 0 10px 30px -18px rgb(0 0 0 / 0.8);
+}
+.cabecera[data-estado="oculta"] {
+  transform: translateY(-100%);
+}
+
+.cabecera__fila {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  height: 100%;
+  max-width: var(--ancho);
+  margin-inline: auto;
+  padding-inline: var(--margen);
+}
+
+.cabecera__marca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #fff;
+  text-decoration: none;
+  margin-right: auto;
+}
+.cabecera__logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.cabecera__nombre {
+  font-family: var(--font-rotulo);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: 1.5rem;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.cabecera__nav {
+  display: none;
+  gap: clamp(1rem, 2vw, 2rem);
+}
+.cabecera__nav a {
+  position: relative;
+  color: var(--niebla);
+  text-decoration: none;
+  font-family: var(--font-rotulo);
+  font-weight: 700;
+  font-stretch: 80%;
+  font-size: 0.9375rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding-block: 0.5rem;
+  transition: color 0.2s;
+}
+.cabecera__nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.1rem;
+  height: 3px;
+  background: var(--amarillo);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease-salida);
+}
+.cabecera__nav a:hover,
+.cabecera__nav a[aria-current="true"] {
+  color: #fff;
+}
+.cabecera__nav a:hover::after,
+.cabecera__nav a[aria-current="true"]::after {
+  transform: scaleX(1);
+}
+
+.cabecera__reservar {
+  display: none;
+}
+
+.cabecera__menu {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid rgb(255 255 255 / 0.25);
+  border-radius: 4px;
+  background: transparent;
+  color: #fff;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  .cabecera__nav { display: flex; }
+  .cabecera__reservar { display: inline-flex; }
+  .cabecera__menu { display: none; }
+}
+
+/* ---------- Menú móvil: un cartel a pantalla completa ---------- */
+.menu-movil {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  padding: 0.85rem var(--margen) calc(1.5rem + env(safe-area-inset-bottom));
+  background: var(--noche);
+  color: #fff;
+  --foco: var(--amarillo);
+  opacity: 0;
+  transform: translateY(-1.5rem);
+  transition: opacity 0.3s var(--ease-salida), transform 0.45s var(--ease-salida);
+}
+.menu-movil[data-estado="abierto"] {
+  opacity: 1;
+  transform: none;
+}
+.menu-movil__barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.menu-movil__cerrar {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid rgb(255 255 255 / 0.25);
+  border-radius: 4px;
+  background: transparent;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+.menu-movil__nav {
+  display: grid;
+  align-content: center;
+  flex: 1;
+  gap: 0.25rem;
+}
+.menu-movil__nav a {
+  font-family: var(--font-rotulo);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: clamp(2.5rem, 12vw, 4rem);
+  line-height: 1.02;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(0.4em);
+  transition: opacity 0.4s var(--ease-salida), transform 0.5s var(--ease-salida), color 0.2s;
+  transition-delay: calc(var(--i) * 45ms + 80ms);
+}
+.menu-movil__nav a:nth-child(3n + 2) { color: var(--amarillo); }
+.menu-movil__nav a:nth-child(3n) { color: var(--rojo-vivo); }
+.menu-movil[data-estado="abierto"] .menu-movil__nav a {
+  opacity: 1;
+  transform: none;
+}
+.menu-movil__acciones {
+  display: grid;
+  gap: 0.75rem;
+}
+
+/* ---------- Barra fija en móvil ---------- */
+.barra-movil {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 35;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem calc(0.6rem + env(safe-area-inset-bottom));
+  background: rgb(16 22 43 / 0.96);
+  transform: translateY(110%);
+  transition: transform 0.45s var(--ease-salida);
+}
+.barra-movil[data-visible="true"] {
+  transform: none;
+}
+.barra-movil .boton--rojo {
+  flex: 1;
+}
+.barra-movil .boton--noche {
+  width: 3rem;
+  padding: 0;
+  border: 2px solid rgb(255 255 255 / 0.25);
+  font-size: 1.35rem;
+}
+html:not(.js) .barra-movil { transform: none; }
+
+.wa-flotante {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .barra-movil { display: none; }
+  .wa-flotante {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 35;
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    height: 3.5rem;
+    padding: 0 1.05rem;
+    border-radius: 999px;
+    background: var(--noche);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    box-shadow: 0 14px 30px -12px rgb(16 22 43 / 0.6);
+    border: 2px solid rgb(255 255 255 / 0.18);
+    --foco: var(--amarillo);
+    transition: background-color 0.2s;
+  }
+  .wa-flotante .icon {
+    font-size: 1.4rem;
+  }
+  .wa-flotante span {
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+    transition: max-width 0.4s var(--ease-salida), opacity 0.25s, margin 0.4s var(--ease-salida);
+  }
+  .wa-flotante:hover,
+  .wa-flotante:focus-visible {
+    background: var(--noche-3);
+  }
+  .wa-flotante:hover span,
+  .wa-flotante:focus-visible span {
+    max-width: 12rem;
+    opacity: 1;
+    margin-left: 0.6rem;
+  }
+}

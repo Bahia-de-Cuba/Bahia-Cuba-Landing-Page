@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hotel Bahía de Cuba | Eco Hotel & Rooftop Bar en Playa Tuquillo, Huarmey</title>
-<meta name="description" content="Hotel ecológico y pet friendly a 200 m de Playa Tuquillo, Huarmey (Áncash). Energía 100% renovable, rooftop bar nocturno con billar, sapito y dardos, y reserva en línea directa, sin comisiones de intermediarios.">
-<meta name="theme-color" content="#0c1722">
+<meta name="description" content="Hotel ecológico y pet friendly a 200 m de Playa Tuquillo, Huarmey (Áncash). Energía 100% renovable, Varadero 319 Rooftop con billar, sapito y dardos, y reserva en línea directa, sin comisiones de intermediarios.">
+<meta name="theme-color" content="#10162B">
 
 <!-- Ubicación exacta del hotel: Playa Tuquillo, Huarmey (Áncash) -->
 <meta name="geo.region" content="PE-ANC">
@@ -31,21 +31,78 @@
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
 
 <!-- Hoja de estilos compilada (Tailwind + estilos propios). Fuente en src/css/ -->
-<link rel="stylesheet" href="assets/css/styles.css?v=dd5e68fd">
+<link rel="stylesheet" href="assets/css/styles.css?v=b34ec507">
 
 <!-- Tipografías alojadas en el propio sitio: sin peticiones a terceros -->
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/plus-jakarta-sans-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-display-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/anybody-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-latin.woff2" crossorigin>
 
-<!-- El hotel recortado es el elemento más grande del hero: lo pedimos cuanto antes -->
+<!-- El hotel recortado es la imagen más grande del primer pantallazo -->
 <link rel="preload" as="image" href="assets/img/hotel-recorte.webp"
       imagesrcset="assets/img/hotel-recorte-sm.webp 622w, assets/img/hotel-recorte.webp 1130w"
-      imagesizes="(min-width:1130px) 1130px, 112vw">
+      imagesizes="(min-width:1024px) 46vw, 100vw">
 
-<!-- Marca que hay JavaScript: sin él, las animaciones de entrada se desactivan
-     y todo el contenido se ve igual (nada queda invisible). -->
-<script>document.documentElement.classList.add("js");</script>
-<script src="assets/js/main.js?v=5914569c" defer></script>
+<!-- Sol de Tuquillo. Va en línea y antes de pintar por una razón: el cartel
+     cambia de color según la hora real (día, atardecer, noche) y, si esto
+     esperase a main.js, la página se pintaría primero de noche y luego
+     saltaría al color del día. Es el cálculo solar estándar (el de SunCalc),
+     reducido a lo que la página usa. -->
+<script>
+(function (w, d) {
+  var R = Math.PI / 180, DIA = 864e5, J2000 = 2451545, E = R * 23.4397;
+  var LAT = -10.0158125, LON = -78.1918125;
+  function dias(f) { return f / DIA - 0.5 + 2440588 - J2000; }
+  function fecha(j) { return new Date((j + 0.5 - 2440588) * DIA); }
+  function anom(x) { return R * (357.5291 + 0.98560028 * x); }
+  function lonEcl(M) {
+    return M + R * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M)) + R * 102.9372 + Math.PI;
+  }
+  function decl(L) { return Math.asin(Math.sin(E) * Math.sin(L)); }
+  function asc(L) { return Math.atan2(Math.sin(L) * Math.cos(E), Math.cos(L)); }
+  var lw = R * -LON, phi = R * LAT;
+
+  /* Altura del sol (grados) en un instante */
+  function altura(t) {
+    var x = dias(+t), L = lonEcl(anom(x));
+    var H = R * (280.16 + 360.9856235 * x) - lw - asc(L);
+    return Math.asin(Math.sin(phi) * Math.sin(decl(L)) + Math.cos(phi) * Math.cos(decl(L)) * Math.cos(H)) / R;
+  }
+
+  /* Salida, mediodía, puesta y hora dorada del día que contiene `t` */
+  function horas(t) {
+    var x = dias(+t), n = Math.round(x - 0.0009 - lw / (2 * Math.PI));
+    var ds = 0.0009 + lw / (2 * Math.PI) + n, M = anom(ds), L = lonEcl(M), dc = decl(L);
+    var tr = J2000 + ds + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L);
+    function puesta(h) {
+      var w0 = Math.acos((Math.sin(h * R) - Math.sin(phi) * Math.sin(dc)) / (Math.cos(phi) * Math.cos(dc)));
+      var a = 0.0009 + (w0 + lw) / (2 * Math.PI) + n;
+      return J2000 + a + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L);
+    }
+    var js = puesta(-0.833), jd = puesta(6);
+    return { salida: fecha(tr - (js - tr)), mediodia: fecha(tr), puesta: fecha(js), dorada: fecha(jd) };
+  }
+
+  /* Huarmey vive en UTC-5 todo el año: el mediodía local son las 17:00 UTC */
+  function mediodiaLima(y, m, dd) { return new Date(Date.UTC(y, m, dd, 17, 0, 0)); }
+  function hoyLima(t) {
+    var p = new Date(+t - 5 * 3600e3);
+    return mediodiaLima(p.getUTCFullYear(), p.getUTCMonth(), p.getUTCDate());
+  }
+
+  /* dia | atardecer | noche, a partir de la hora real en Tuquillo */
+  function estado(t) {
+    var h = horas(hoyLima(t)), m = +t;
+    if (m >= +h.puesta - 60 * 6e4 && m < +h.puesta + 30 * 6e4) return "atardecer";
+    if (m >= +h.salida + 20 * 6e4 && m < +h.puesta - 60 * 6e4) return "dia";
+    return "noche";
+  }
+
+  w.SOL = { altura: altura, horas: horas, estado: estado, hoyLima: hoyLima, mediodiaLima: mediodiaLima };
+  d.documentElement.classList.add("js");
+  d.documentElement.dataset.hora = estado(new Date());
+})(window, document);
+</script>
+<script src="assets/js/main.js?v=2691b2a6" defer></script>
 
 <script type="application/ld+json">
 {
@@ -90,43 +147,43 @@
 
 </head>
 
-<body class="bg-sand-50 text-slate-800 antialiased selection:bg-sunset-500 selection:text-white">
+<body>
 
 <!-- Sprite de iconos (generado por tools/build-icons.mjs - no editar a mano) -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
   <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /> <path d="M12 2v2" /> <path d="M12 20v2" /> <path d="m4.93 4.93 1.41 1.41" /> <path d="m17.66 17.66 1.41 1.41" /> <path d="M2 12h2" /> <path d="M20 12h2" /> <path d="m6.34 17.66-1.41 1.41" /> <path d="m19.07 4.93-1.41 1.41" /></symbol>
-  <symbol id="i-solar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /> <path d="M12 3v1" /> <path d="M12 20v1" /> <path d="M3 12h1" /> <path d="M20 12h1" /> <path d="m18.364 5.636-.707.707" /> <path d="m6.343 17.657-.707.707" /> <path d="m5.636 5.636.707.707" /> <path d="m17.657 17.657.707.707" /></symbol>
-  <symbol id="i-dog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.25 16.25h1.5L12 17z" /> <path d="M16 14v.5" /> <path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444a11.702 11.702 0 0 0-.493-3.309" /> <path d="M8 14v.5" /> <path d="M8.5 8.5c-.384 1.05-1.083 2.028-2.344 2.5-1.931.722-3.576-.297-3.656-1-.113-.994 1.177-6.53 4-7 1.923-.321 3.651.845 3.651 2.235A7.497 7.497 0 0 1 14 5.277c0-1.39 1.844-2.598 3.767-2.277 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.239-2.5" /></symbol>
-  <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /> <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" /></symbol>
-  <symbol id="i-calculator" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" /> <line x1="8" x2="16" y1="6" y2="6" /> <line x1="16" x2="16" y1="14" y2="18" /> <path d="M16 10h.01" /> <path d="M12 10h.01" /> <path d="M8 10h.01" /> <path d="M12 14h.01" /> <path d="M8 14h.01" /> <path d="M12 18h.01" /> <path d="M8 18h.01" /></symbol>
-  <symbol id="i-reservar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /> <path d="m9 15 2 2 4-4" /></symbol>
-  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16" /> <path d="M4 12h16" /> <path d="M4 19h16" /></symbol>
-  <symbol id="i-house" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /> <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></symbol>
-  <symbol id="i-bed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8" /> <path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4" /> <path d="M12 4v6" /> <path d="M2 18h20" /></symbol>
-  <symbol id="i-martini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12 4.207 4.207A.707.707 0 0 1 4.707 3h14.586a.707.707 0 0 1 .5 1.207z" /> <path d="M12 12v10" /> <path d="M7 22h10" /></symbol>
-  <symbol id="i-images" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16" /> <path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2" /> <circle cx="13" cy="7" r="1" fill="currentColor" /> <rect x="8" y="2" width="14" height="14" rx="2" /></symbol>
-  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /> <circle cx="12" cy="10" r="3" /></symbol>
-  <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /> <path d="M12 17h.01" /></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol>
-  <symbol id="i-umbrella" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13v7a2 2 0 0 0 4 0" /> <path d="M12 2v2" /> <path d="M20.992 13a1 1 0 0 0 .97-1.274 10.284 10.284 0 0 0-19.923 0A1 1 0 0 0 3 13z" /></symbol>
-  <symbol id="i-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /> <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></symbol>
-  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8L2 12L6 16" /> <path d="M2 12H22" /></symbol>
-  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8L22 12L18 16" /> <path d="M2 12H22" /></symbol>
-  <symbol id="i-shower" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 2.5 2.5" /> <path d="M13.5 6.5a4.95 4.95 0 0 0-7 7" /> <path d="M15 5 5 15" /> <path d="M14 17v.01" /> <path d="M10 16v.01" /> <path d="M13 13v.01" /> <path d="M16 10v.01" /> <path d="M11 20v.01" /> <path d="M17 14v.01" /> <path d="M20 11v.01" /></symbol>
-  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></symbol>
-  <symbol id="i-ball" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1" /> <circle cx="12" cy="12" r="10" /></symbol>
-  <symbol id="i-coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.744 17.736a6 6 0 1 1-7.48-7.48" /> <path d="M15 6h1v4" /> <path d="m6.134 14.768.866-.5 2 3.464" /> <circle cx="16" cy="8" r="6" /></symbol>
-  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /> <circle cx="12" cy="12" r="6" /> <circle cx="12" cy="12" r="2" /></symbol>
-  <symbol id="i-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01" /> <path d="M2 8.82a15 15 0 0 1 20 0" /> <path d="M5 12.859a10 10 0 0 1 14 0" /> <path d="M8.5 16.429a5 5 0 0 1 7 0" /></symbol>
+  <symbol id="i-sunset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10V2" /> <path d="m4.93 10.93 1.41 1.41" /> <path d="M2 18h2" /> <path d="M20 18h2" /> <path d="m19.07 10.93-1.41 1.41" /> <path d="M22 22H2" /> <path d="m16 6-4 4-4-4" /> <path d="M16 18a4 4 0 0 0-8 0" /></symbol>
+  <symbol id="i-sunrise" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8" /> <path d="m4.93 10.93 1.41 1.41" /> <path d="M2 18h2" /> <path d="M20 18h2" /> <path d="m19.07 10.93-1.41 1.41" /> <path d="M22 22H2" /> <path d="m8 6 4-4 4 4" /> <path d="M16 18a4 4 0 0 0-8 0" /></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
+  <symbol id="i-wind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.8 19.6A2 2 0 1 0 14 16H2" /> <path d="M17.5 8a2.5 2.5 0 1 1 2 4H2" /> <path d="M9.8 4.4A2 2 0 1 1 11 8H2" /></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 7-3 5h4l-3 5" /> <path d="M14.856 6H16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.935" /> <path d="M22 14v-4" /> <path d="M5.14 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2.936" /></symbol>
+  <symbol id="i-water" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2" /> <path d="M12 8a4 4 0 0 0-1.645 7.647" /> <path d="M2 12h2" /> <path d="M20 14.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0z" /> <path d="m4.93 4.93 1.41 1.41" /> <path d="m6.34 17.66-1.41 1.41" /></symbol>
+  <symbol id="i-parking" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" /> <path d="M9 17V7h4a3 3 0 0 1 0 6H9" /></symbol>
   <symbol id="i-paw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2" /> <circle cx="18" cy="8" r="2" /> <circle cx="20" cy="16" r="2" /> <path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z" /></symbol>
-  <symbol id="i-walk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z" /> <path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z" /> <path d="M16 17h4" /> <path d="M4 13h4" /></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /> <circle cx="12" cy="7" r="4" /></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" /></symbol>
+  <symbol id="i-baby" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5" /> <path d="M15 12h.01" /> <path d="M19.38 6.813A9 9 0 0 1 20.8 10.2a2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1" /> <path d="M9 12h.01" /></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /> <path d="M12 6v6l4 2" /></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /> <path d="M8 13h.01" /> <path d="M12 13h.01" /> <path d="M16 13h.01" /> <path d="M8 17h.01" /> <path d="M12 17h.01" /> <path d="M16 17h.01" /></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /> <path d="M12 5v14" /></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16" /> <path d="M4 12h16" /> <path d="M4 19h16" /></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol>
+  <symbol id="i-bed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8" /> <path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4" /> <path d="M12 4v6" /> <path d="M2 18h20" /></symbol>
+  <symbol id="i-shower" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 2.5 2.5" /> <path d="M13.5 6.5a4.95 4.95 0 0 0-7 7" /> <path d="M15 5 5 15" /> <path d="M14 17v.01" /> <path d="M10 16v.01" /> <path d="M13 13v.01" /> <path d="M16 10v.01" /> <path d="M11 20v.01" /> <path d="M17 14v.01" /> <path d="M20 11v.01" /></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /> <circle cx="12" cy="10" r="3" /></symbol>
   <symbol id="i-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" /> <circle cx="7" cy="17" r="2" /> <path d="M9 17h6" /> <circle cx="17" cy="17" r="2" /></symbol>
   <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3" /> <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /> <circle cx="18" cy="5" r="3" /></symbol>
+  <symbol id="i-walk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z" /> <path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z" /> <path d="M16 17h4" /> <path d="M4 13h4" /></symbol>
+  <symbol id="i-waves" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12q2.5 2 5 0t5 0 5 0 5 0" /> <path d="M2 19q2.5 2 5 0t5 0 5 0 5 0" /> <path d="M2 5q2.5 2 5 0t5 0 5 0 5 0" /></symbol>
   <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></symbol>
-  <symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7" /> <path d="M12 19V5" /></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /></symbol>
+  <symbol id="i-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10" /> <path d="M7 17 17 7" /></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" /></symbol>
-  <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z" /> <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97" /></symbol>
   <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v16" /> <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /> <circle cx="12" cy="12" r="6" /> <circle cx="12" cy="12" r="2" /></symbol>
+  <symbol id="i-ball" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1" /> <circle cx="12" cy="12" r="10" /></symbol>
   <symbol id="i-whatsapp" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></symbol>
   <symbol id="i-instagram" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></symbol>
   <symbol id="i-facebook" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></symbol>
@@ -134,1035 +191,730 @@
   <symbol id="i-gato" viewBox="0 0 79.319115 80.471268" fill="currentColor" stroke="none"><g transform="translate(-88.268023,-272.24019)"> <path d="m 124.8079,352.65024 c -0.42665,-0.0444 -1.33828,-0.15525 -2.02586,-0.24626 -0.68757,-0.091 -1.56234,-0.19199 -1.94392,-0.22437 -1.0447,-0.0887 -3.96537,-0.16199 -6.54933,-0.16444 -2.92848,-0.003 -4.16835,-0.10599 -6.10532,-0.50822 -1.34509,-0.27933 -3.04039,-0.76505 -3.18904,-0.9137 -0.11932,-0.11932 -0.13958,-0.24179 -0.15519,-0.93799 l -0.0137,-0.61053 -0.41627,0.41001 c -0.66005,0.65012 -1.03474,0.75229 -2.17551,0.59326 -1.32974,-0.18537 -2.296494,-0.5523 -2.578694,-0.97873 -0.179302,-0.27095 -0.294546,-0.74493 -0.295683,-1.2161 -0.0013,-0.546 0.271253,-2.61931 0.362906,-2.76044 0.129699,-0.19971 0.530001,-0.39859 1.455041,-0.7229 0.48019,-0.16835 0.8956,-0.32684 0.92313,-0.35218 0.0295,-0.0271 0.001,-0.33796 -0.0695,-0.75642 -0.21735,-1.29195 -0.23915,-1.58201 -0.26833,-3.56873 -0.0316,-2.15151 0.0118,-3.07465 0.31859,-6.77135 0.42177,-5.08303 0.81895,-7.32129 1.62716,-9.16983 l 0.0901,-0.20613 -0.29661,-0.43215 c -0.16314,-0.23769 -0.50012,-0.71939 -0.74886,-1.07044 -1.0042,-1.41725 -1.37791,-2.36014 -2.45281,-6.18857 -0.394401,-1.40472 -0.774059,-2.50429 -1.513959,-4.38472 -0.56769,-1.44277 -0.920482,-2.48009 -1.098721,-3.23057 -0.61547,-2.59146 -0.454707,-4.75931 0.622415,-8.39313 0.34174,-1.15291 0.493472,-1.81065 0.493472,-2.13916 0,-0.28511 -0.17632,-0.33065 -1.098954,-0.28381 -0.913285,0.0464 -1.44614,-0.0109 -2.619736,-0.2812 -1.538123,-0.35433 -2.33274,-0.6645 -3.219165,-1.25656 -1.382086,-0.92312 -1.704236,-1.42298 -1.760424,-2.73151 -0.03642,-0.84814 0.05201,-1.33533 0.483563,-2.66414 0.514928,-1.58551 0.513571,-1.56564 0.21047,-3.0804 -0.158074,-0.78999 -0.172546,-0.95555 -0.177086,-2.02586 -0.0068,-1.60658 0.189076,-2.81044 0.65263,-4.01073 0.357659,-0.92609 1.015094,-2.0542 1.602732,-2.75016 l 0.178631,-0.21156 -1.836083,-1.8143 c -1.450704,-1.43348 -1.942065,-1.95665 -2.341012,-2.49254 -0.310391,-0.41694 -0.529526,-0.7696 -0.568775,-0.91536 -0.0749,-0.27815 -0.04555,-0.77844 0.05261,-0.8967 0.06037,-0.0728 0.08985,-0.0703 0.245476,0.0202 0.320403,0.18636 1.13694,0.49909 1.805699,0.69158 1.004606,0.28916 2.11489,0.48758 5.11476,0.91409 3.367462,0.47877 4.315923,0.58836 6.022057,0.69578 1.79175,0.11282 2.06858,0.13624 2.74739,0.2324 2.90061,0.4109 6.20081,1.99392 7.63429,3.66197 1.01833,1.18498 1.57467,2.1774 2.96745,5.29351 1.75252,3.92093 2.06626,4.94272 2.16388,7.04727 0.0262,0.56562 0.0773,1.16576 0.11348,1.33366 0.14138,0.65616 0.56228,1.29903 1.52621,2.33112 0.29936,0.32053 0.90675,1.00737 1.34974,1.52633 0.443,0.51895 1.00686,1.15261 1.25302,1.40814 0.45693,0.47431 1.23868,1.15827 1.45685,1.2746 0.0783,0.0418 0.4516,0.0648 1.05455,0.0651 3.21959,10e-4 5.40109,0.86216 9.04089,3.56659 2.37018,1.76109 2.77271,2.28071 5.44892,7.034 2.81296,4.99618 3.70835,6.78643 4.31664,8.63069 0.81947,2.48454 1.36411,5.45401 1.82902,9.97222 0.30109,2.926 0.37104,3.94705 0.40054,5.84609 0.0262,1.68505 0.0155,2.03566 -0.0993,3.27467 -0.16606,1.79079 -0.17888,3.54083 -0.0313,4.27235 0.21353,1.05841 0.65277,1.87317 1.38133,2.56227 0.76948,0.7278 1.60789,1.12151 2.95688,1.38849 0.73558,0.14558 2.42029,0.13318 3.64903,-0.0268 1.93753,-0.25235 4.69916,-0.76138 5.78538,-1.06639 2.4187,-0.67916 3.95094,-1.74729 4.41562,-3.07817 0.255,-0.73034 0.28522,-1.02259 0.3146,-3.04277 0.0377,-2.59401 -0.0857,-4.41562 -0.42576,-6.2817 -0.1267,-0.69539 -0.13908,-0.99071 -0.052,-1.24054 0.0667,-0.19121 0.10772,-0.2069 0.28961,-0.1106 0.33446,0.17706 2.37844,1.9856 2.97383,2.63128 0.90708,0.98369 1.29811,1.93252 1.50816,3.65961 0.17511,1.43986 -0.0135,5.94866 -0.30771,7.35413 -0.2727,1.30285 -0.84289,2.47164 -1.87408,3.84147 -0.92739,1.23197 -1.95626,2.19138 -2.81088,2.62113 -0.93045,0.46788 -1.77401,0.62395 -3.78056,0.69944 -0.80895,0.0304 -2.38246,0.0922 -3.49668,0.13724 -5.31423,0.21485 -8.39239,0.15424 -11.33453,-0.22317 -2.08875,-0.26794 -4.31851,-0.8393 -5.65519,-1.44911 -0.29323,-0.13378 -0.55762,-0.24323 -0.58754,-0.24323 -0.0299,0 -0.32908,0.18185 -0.66479,0.4041 -2.13958,1.41649 -4.88244,2.345 -7.90835,2.67712 -1.1482,0.12603 -3.32931,0.15272 -4.29158,0.0525 z m -14.26555,-7.80586 c 0.75564,-0.13201 1.77629,-0.15786 3.11086,-0.0788 0.92693,0.0549 1.27361,-0.006 1.51868,-0.26685 0.11429,-0.12166 0.11981,-0.16457 0.0872,-0.6781 -0.0201,-0.31687 -0.001,-0.98203 0.0449,-1.57614 0.0825,-1.06442 0.0623,-1.48003 -0.0895,-1.84316 -0.0476,-0.11382 -0.37923,-0.51344 -0.73698,-0.88805 -1.31245,-1.37432 -1.99211,-2.38495 -3.65667,-5.43732 -0.42681,-0.78266 -0.79138,-1.41352 -0.81015,-1.40192 -0.0554,0.0343 -0.10434,1.41549 -0.16299,4.60406 -0.0723,3.9306 -0.20511,5.55409 -0.5827,7.12268 -0.0759,0.31534 -0.13802,0.58728 -0.13802,0.60432 0,0.0461 0.66121,-0.029 1.41533,-0.16075 z" /> </g></symbol>
 </svg>
 
-<a href="#inicio" class="skip-link">Saltar al contenido</a>
+<a href="#contenido" class="salto">Saltar al contenido</a>
 
-<div id="scrollBar" aria-hidden="true"></div>
-
-<!-- ============================ INTRO ============================ -->
-<div id="welcomeCinema" role="presentation">
-  <img src="assets/img/logo.webp" width="320" height="320" class="logo-3d" alt="">
-  <canvas id="cinemaWaves" class="cinema-waves" aria-hidden="true"></canvas>
-  <div class="cinema-text px-4">
-    <p class="cinema-title">Bahía de Cuba</p>
-    <p class="cinema-subtitle">Eco Hotel &amp; Rooftop Bar • Huarmey</p>
-    <div class="cinema-skip">
-      <button type="button" id="btnEnterCinema">
-        <svg class="icon mr-1.5 text-gold-300" aria-hidden="true"><use href="#i-compass"/></svg>
-        Entrar a la experiencia
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ============================ BARRA SUPERIOR ============================ -->
-<div class="bg-night-950 text-white text-[11px] sm:text-xs py-2 px-3 sm:px-4 border-b border-white/10 relative z-30">
-  <div class="max-w-7xl mx-auto flex justify-between items-center gap-3">
-    <!-- En móvil solo se muestra el teléfono: la franja ocupa una sola línea -->
-    <div class="hidden sm:flex items-center gap-2 sm:gap-4 flex-wrap justify-center text-center">
-      <span class="flex items-center gap-1.5 text-gold-400 font-medium whitespace-nowrap">
-        <svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>
-        Tuquillo: <strong class="text-white font-semibold">oleaje calmo todo el año</strong>
-      </span>
-      <span class="text-white/20 hidden xs:inline">•</span>
-      <span class="flex items-center gap-1.5 text-eco-300 font-medium whitespace-nowrap">
-        <svg class="icon" aria-hidden="true"><use href="#i-solar"/></svg>
-        100% eco-energía
-      </span>
-      <span class="text-white/20 hidden md:inline">•</span>
-      <span class="hidden md:flex items-center gap-1.5 text-sunset-300 font-medium whitespace-nowrap">
-        <svg class="icon" aria-hidden="true"><use href="#i-dog"/></svg>
-        100% pet friendly
-      </span>
-    </div>
-    <a href="https://wa.me/51908925065?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20deseo%20informaci%C3%B3n%20sobre%20la%20estad%C3%ADa"
-       target="_blank" rel="noopener"
-       class="text-gold-400 hover:text-gold-300 font-semibold flex items-center gap-1.5 transition mx-auto sm:mx-0">
-      <svg class="icon text-eco-400" aria-hidden="true"><use href="#i-whatsapp"/></svg>
-      Central: +51 908 925 065
-    </a>
-  </div>
-</div>
-
-<!-- ============================ HEADER ============================ -->
-<header id="siteHeader" class="sticky top-0 z-40 bg-sand-50/90 backdrop-blur-xl border-b border-amber-900/10">
-  <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-
-    <a href="#inicio" class="header-logo flex items-center gap-3 group py-1">
-      <img src="assets/img/logo.webp" width="320" height="320" alt="Hotel Bahía de Cuba"
-           class="h-10 w-10 sm:h-12 sm:w-12 rounded-xl object-cover shadow-sm transition-transform group-hover:scale-105">
-      <span class="flex flex-col">
-        <span class="font-heading text-lg sm:text-2xl font-bold text-night-900 leading-none tracking-tight transition-colors group-hover:text-sunset-600">Bahía de Cuba</span>
-        <span class="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-slate-500 mt-1">Eco Hotel • Tuquillo</span>
-      </span>
+<!-- ============================ ENCABEZADO ============================ -->
+<header class="cabecera" id="cabecera" data-estado="arriba">
+  <div class="cabecera__fila">
+    <a href="#inicio" class="cabecera__marca" aria-label="Hotel Bahía de Cuba, ir al inicio">
+      <img src="assets/img/logo.webp" width="320" height="320" alt="" class="cabecera__logo">
+      <span class="cabecera__nombre">Bahía de Cuba</span>
     </a>
 
-    <nav id="primaryNav" aria-label="Navegación principal"
-         class="hidden lg:flex items-center gap-6 xl:gap-8 text-xs xl:text-sm font-semibold text-slate-700">
-      <a href="#inicio" class="nav-link">Inicio</a>
-      <a href="#habitaciones" class="nav-link">Habitaciones</a>
-      <a href="#rooftop" class="nav-link flex items-center gap-1.5">
-        Rooftop Bar
-        <span class="px-1.5 py-0.5 text-[9px] font-bold bg-gold-500 text-night-900 rounded-full leading-none">NOCHE</span>
-      </a>
-      <a href="#eco-tech" class="nav-link flex items-center gap-1.5">
-        Eco-Energía
-        <span class="px-1.5 py-0.5 text-[9px] font-bold bg-eco-100 text-eco-700 rounded-full leading-none">100%</span>
-      </a>
-      <a href="#huespedes" class="nav-link">Comunidad</a>
-      <a href="#ubicacion" class="nav-link">Ubicación</a>
-      <a href="#faq" class="nav-link">Preguntas</a>
+    <nav class="cabecera__nav" aria-label="Navegación principal">
+      <a href="#habitaciones">Habitaciones</a>
+      <a href="#atardecer">Atardecer</a>
+      <a href="#rooftop">Varadero 319</a>
+      <a href="#ruta">Cómo llegar</a>
+      <a href="#preguntas">Preguntas</a>
     </nav>
 
-    <div class="flex items-center gap-2 sm:gap-3">
-      <a href="https://bahia-cuba-app.netlify.app/es/reservar" class="hidden sm:inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm text-white bg-linear-to-r from-sunset-500 to-sunset-600 shadow-md transition-all hover:from-sunset-600 hover:to-sunset-700 hover:-translate-y-0.5">
-        <svg class="icon" aria-hidden="true"><use href="#i-reservar"/></svg>
-        Reservar ahora
-      </a>
-      <button type="button" id="btnOpenDrawer" aria-label="Abrir menú" aria-expanded="false" aria-controls="sideDrawer"
-              class="lg:hidden size-10 rounded-xl text-night-800 bg-sand-100 hover:bg-sand-200 transition flex items-center justify-center text-lg">
-        <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
-      </button>
-    </div>
+    <a href="#reservar" class="boton boton--rojo boton--chico cabecera__reservar">
+      Reservar
+    </a>
+
+    <button type="button" class="cabecera__menu" id="abrirMenu" aria-label="Abrir menú" aria-expanded="false" aria-controls="menuMovil">
+      <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+    </button>
   </div>
 </header>
 
 <!-- ============================ MENÚ MÓVIL ============================ -->
-<div id="drawerOverlay" data-state="closed" class="fixed inset-0 bg-night-950/70 backdrop-blur-md z-50 lg:hidden"></div>
-<aside id="sideDrawer" data-state="closed" role="dialog" aria-modal="true" aria-label="Menú de navegación"
-       class="fixed top-0 right-0 bottom-0 w-[85vw] max-w-sm bg-white z-50 shadow-2xl p-6 flex flex-col justify-between lg:hidden overflow-y-auto">
-  <div>
-    <div class="flex items-center justify-between pb-5 border-b border-slate-100">
-      <div class="flex items-center gap-3">
-        <img src="assets/img/logo.webp" width="320" height="320" alt="" class="size-10 rounded-lg object-cover">
-        <span class="font-heading font-bold text-night-900 text-lg leading-none">Bahía de Cuba</span>
+<div class="menu-movil" id="menuMovil" role="dialog" aria-modal="true" aria-label="Menú" data-estado="cerrado" hidden>
+  <div class="menu-movil__barra">
+    <img src="assets/img/logo.webp" width="320" height="320" alt="" class="cabecera__logo">
+    <button type="button" class="menu-movil__cerrar" id="cerrarMenu" aria-label="Cerrar menú">
+      <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+    </button>
+  </div>
+  <nav class="menu-movil__nav" aria-label="Navegación móvil">
+    <a href="#habitaciones" style="--i:0">Habitaciones</a>
+    <a href="#atardecer" style="--i:1">Atardecer</a>
+    <a href="#rooftop" style="--i:2">Varadero 319</a>
+    <a href="#energia" style="--i:3">Sol y viento</a>
+    <a href="#ruta" style="--i:4">Cómo llegar</a>
+    <a href="#preguntas" style="--i:5">Preguntas</a>
+  </nav>
+  <div class="menu-movil__acciones">
+    <a href="#reservar" class="boton boton--rojo boton--ancho">Reservar</a>
+    <a href="https://wa.me/51908925065?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20deseo%20informaci%C3%B3n" target="_blank" rel="noopener" class="boton boton--claro boton--ancho">
+      <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> WhatsApp
+    </a>
+  </div>
+</div>
+
+<!-- ============================ CARTEL PRINCIPAL ============================ -->
+<main id="contenido">
+<section class="cartel" id="inicio" aria-labelledby="titulo-hotel">
+  <div class="cartel__cielo" aria-hidden="true"></div>
+
+  <div class="cartel__rejilla">
+    <div class="cartel__texto">
+      <h1 class="cartel__titulo" id="titulo-hotel">
+        <span class="linea linea--1" style="--fit:21">Hotel <img class="cartel__foto-linea" src="assets/img/fachada-sm.webp" width="660" height="730" alt="" decoding="async"></span>
+        <span class="linea linea--2" style="--fit:47.3">Bahía</span>
+        <span class="linea linea--3" style="--fit:35.5">de Cuba</span>
+      </h1>
+
+      <p class="cartel__lugar">
+        Playa Tuquillo <span aria-hidden="true">·</span> Huarmey
+        <span class="cartel__lugar-dato">200 m del mar · 4 h de Lima</span>
+      </p>
+
+      <p class="cartel__sol" data-sol-hoy>
+        <svg class="icon" aria-hidden="true"><use href="#i-sunset"/></svg>
+        <span data-sol="frase">Hoy el sol se pone sobre el Pacífico a las <strong>6:00 p. m.</strong></span>
+      </p>
+
+      <div class="cartel__acciones">
+        <a href="#reservar" class="boton boton--rojo boton--grande">
+          Reservar <span class="boton__precio">desde S/ <span data-precio-min>180</span></span>
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+        </a>
+        <a href="#habitaciones" class="enlace-cartel">¿Qué habitación me sirve?</a>
+        <a href="https://wa.me/51908925065?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20deseo%20informaci%C3%B3n" target="_blank" rel="noopener" class="enlace-wa">
+          <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> WhatsApp
+        </a>
       </div>
-      <button type="button" id="btnCloseDrawer" aria-label="Cerrar menú"
-              class="size-9 rounded-xl bg-slate-100 text-slate-600 hover:bg-sunset-50 hover:text-sunset-600 flex items-center justify-center transition text-lg">
-        <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
-      </button>
     </div>
 
-    <nav class="mt-6 flex flex-col space-y-1" aria-label="Navegación móvil">
-      <a href="#inicio" style="--i:0" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
-        <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-house"/></svg> Inicio
-      </a>
-      <a href="#habitaciones" style="--i:1" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
-        <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-bed"/></svg> Habitaciones
-      </a>
-      <a href="#rooftop" style="--i:2" class="drawer-item flex items-center justify-between px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
-        <span class="flex items-center gap-3">
-          <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-martini"/></svg> Rooftop Bar
-        </span>
-        <span class="px-2 py-0.5 text-[9px] font-bold bg-gold-500 text-night-900 rounded-full">NOCHE</span>
-      </a>
-      <a href="#eco-tech" style="--i:3" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
-        <svg class="icon text-eco-500 text-lg" aria-hidden="true"><use href="#i-solar"/></svg> Energía renovable
-      </a>
-      <a href="#huespedes" style="--i:4" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
-        <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-images"/></svg> Comunidad
-      </a>
-      <a href="#ubicacion" style="--i:5" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
-        <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-pin"/></svg> Ubicación
-      </a>
-      <a href="#faq" style="--i:6" class="drawer-item flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sunset-50 hover:text-sunset-600 transition">
-        <svg class="icon text-sunset-400 text-lg" aria-hidden="true"><use href="#i-help"/></svg> Preguntas frecuentes
-      </a>
-    </nav>
-  </div>
+    <div class="cartel__escena">
+      <div class="cartel__hora" role="group" aria-label="Ver el cartel de día, al atardecer o de noche">
+        <p class="cartel__reloj"><span>Ahora en Tuquillo</span> <strong data-reloj>—</strong></p>
+        <div class="selector-hora">
+          <button type="button" data-ver-hora="dia" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg><span>Día</span></button>
+          <button type="button" data-ver-hora="atardecer" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-sunset"/></svg><span>Atardecer</span></button>
+          <button type="button" data-ver-hora="noche" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg><span>Noche</span></button>
+        </div>
+      </div>
 
-  <div class="pt-6 border-t border-slate-100 space-y-3">
-    <a href="https://bahia-cuba-app.netlify.app/es/reservar" style="--i:7" class="drawer-item w-full py-3 px-4 rounded-xl font-bold text-sm text-white bg-sunset-500 hover:bg-sunset-600 shadow-md flex items-center justify-center gap-2 transition">
-      <svg class="icon" aria-hidden="true"><use href="#i-reservar"/></svg> Reservar ahora
-    </a>
-    <a href="https://wa.me/51908925065" target="_blank" rel="noopener" style="--i:8"
-       class="drawer-item w-full py-3 px-4 rounded-xl font-bold text-sm text-eco-600 bg-eco-50 hover:bg-eco-100 flex items-center justify-center gap-2 transition">
-      <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> Escríbenos
-    </a>
-  </div>
-</aside>
+      <svg class="sol-puntos" id="solCartel" viewBox="-300 -300 600 600" aria-hidden="true" focusable="false"></svg>
 
-<main>
-
-<!-- ============================ HERO ============================ -->
-<section id="inicio" class="hero relative min-h-[76svh] sm:min-h-[88svh] flex items-center justify-center pt-6 pb-28 sm:pb-44 overflow-hidden">
-
-  <!-- Cielo de atardecer de Tuquillo, con los colores de la marca -->
-  <div class="hero-cielo" aria-hidden="true">
-    <span class="hero-sol"></span>
-    <span class="hero-nube hero-nube--a"></span>
-    <span class="hero-nube hero-nube--b"></span>
-    <span class="hero-nube hero-nube--c"></span>
-  </div>
-
-  <!-- El hotel recortado: es el sujeto del hero, emerge del banco de niebla -->
-  <img id="heroHotel" src="assets/img/hotel-recorte.webp"
-       srcset="assets/img/hotel-recorte-sm.webp 622w, assets/img/hotel-recorte.webp 1130w"
-       sizes="(min-width:1130px) 1130px, 112vw"
-       width="1130" height="714" fetchpriority="high" decoding="async"
-       alt="Fachada del Hotel Bahía de Cuba al atardecer, frente a Playa Tuquillo"
-       class="hero-hotel">
-
-  <!-- Velo: mantiene legible el texto sobre el cielo -->
-  <div class="hero-veil" aria-hidden="true"></div>
-
-  <!-- Banco de niebla marina: envuelve la base del hotel y enlaza con la sección siguiente -->
-  <div id="heroNiebla" class="hero-niebla" aria-hidden="true"></div>
-
-  <div id="heroContenido" class="hero-contenido relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mb-6 sm:mb-8" data-reveal="up">
-      <span class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold bg-white/95 text-night-900 shadow-sm backdrop-blur-md flex items-center gap-1.5 border border-white/60">
-        <svg class="icon text-sunset-500" aria-hidden="true"><use href="#i-umbrella"/></svg>
-        A 200 m de Playa Tuquillo
-      </span>
-      <span class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold bg-eco-50 text-eco-600 shadow-sm backdrop-blur-md flex items-center gap-1.5 border border-eco-300/40">
-        <svg class="icon text-eco-500" aria-hidden="true"><use href="#i-leaf"/></svg>
-        100% solar y eólico
-      </span>
-    </div>
-
-    <h1 class="font-heading text-[2rem] xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white max-w-5xl mx-auto leading-[1.1] tracking-tight drop-shadow-xl text-balance"
-        data-reveal="up" style="--reveal-delay:90">
-      Tu refugio de paz a orillas de <span class="text-gold-400 italic font-medium">Playa Tuquillo</span>
-    </h1>
-
-    <p class="mt-4 sm:mt-6 text-sm xs:text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed drop-shadow text-pretty"
-       data-reveal="up" style="--reveal-delay:160">
-      Hotel acogedor y sostenible en <strong class="font-semibold">Huarmey</strong>. Desconéctate frente al mar
-      y disfruta nuestras noches en el <strong class="font-semibold">Rooftop Bar</strong>.
-    </p>
-
-    <div class="mt-7 sm:mt-9 flex flex-col xs:flex-row items-center justify-center gap-3 sm:gap-4"
-         data-reveal="up" style="--reveal-delay:230">
-      <a href="#habitaciones" class="w-full xs:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-bold text-white bg-linear-to-r from-sunset-500 to-sunset-600 shadow-lg text-sm sm:text-base flex items-center justify-center gap-2 transition-all hover:from-sunset-600 hover:to-sunset-700 hover:-translate-y-1">
-        <svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> Ver habitaciones
-      </a>
-      <a href="#reserva" class="w-full xs:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-bold text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-lg text-sm sm:text-base flex items-center justify-center gap-2 transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-1">
-        <svg class="icon" aria-hidden="true"><use href="#i-calculator"/></svg> Cotizar estadía
-      </a>
+      <img src="assets/img/hotel-recorte.webp"
+           srcset="assets/img/hotel-recorte-sm.webp 622w, assets/img/hotel-recorte.webp 1130w"
+           sizes="(min-width:1024px) 46vw, 100vw"
+           width="1130" height="714" fetchpriority="high" decoding="async"
+           alt="Fachada del Hotel Bahía de Cuba con su mural del atardecer y el letrero de Varadero 319 Rooftop"
+           class="cartel__hotel">
     </div>
   </div>
-
-  <a href="#confianza" aria-label="Bajar al contenido"
-     class="hidden sm:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-10 size-10 items-center justify-center rounded-full border border-night-900/15 bg-white/70 text-night-900 backdrop-blur-md animate-bounce hover:bg-white transition">
-    <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
-  </a>
 </section>
 
-<!-- ============================ FRANJA DE CONFIANZA ============================ -->
-<section id="confianza" class="bg-white border-y border-slate-100">
-  <ul class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-slate-100">
-    <li class="flex items-center gap-3 p-4 sm:p-6" data-reveal="up">
-      <svg class="icon text-2xl text-sunset-500" aria-hidden="true"><use href="#i-walk"/></svg>
-      <div>
-        <p class="font-bold text-sm text-night-900 leading-tight">200 m del mar</p>
-        <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">3 minutos caminando</p>
-      </div>
-    </li>
-    <li class="flex items-center gap-3 p-4 sm:p-6" data-reveal="up" style="--reveal-delay:70">
-      <svg class="icon text-2xl text-eco-500" aria-hidden="true"><use href="#i-solar"/></svg>
-      <div>
-        <p class="font-bold text-sm text-night-900 leading-tight">Energía renovable</p>
-        <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Solar y eólica, sin cortes</p>
-      </div>
-    </li>
-    <li class="flex items-center gap-3 p-4 sm:p-6" data-reveal="up" style="--reveal-delay:140">
-      <span class="flex items-center gap-1 text-gold-500 shrink-0" aria-hidden="true">
-        <svg class="size-6"><use href="#i-perro"/></svg>
-        <svg class="size-5"><use href="#i-gato"/></svg>
-      </span>
-      <div>
-        <p class="font-bold text-sm text-night-900 leading-tight">Pet friendly</p>
-        <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Sin costo adicional</p>
-      </div>
-    </li>
-    <li class="flex items-center gap-3 p-4 sm:p-6" data-reveal="up" style="--reveal-delay:210">
-      <svg class="icon text-2xl text-night-700" aria-hidden="true"><use href="#i-car"/></svg>
-      <div>
-        <p class="font-bold text-sm text-night-900 leading-tight">Estacionamiento</p>
-        <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Privado y vigilado</p>
-      </div>
-    </li>
+<!-- ============================ TIRA ============================ -->
+<div class="tira" aria-label="Lo esencial del hotel">
+  <ul class="tira__pista">
+    <li><svg class="icon" aria-hidden="true"><use href="#i-walk"/></svg> 200 m caminando a la orilla</li>
+    <li><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg> Energía solar y eólica</li>
+    <li><svg class="icon" aria-hidden="true"><use href="#i-paw"/></svg> Pet friendly sin costo</li>
+    <li><svg class="icon" aria-hidden="true"><use href="#i-parking"/></svg> Estacionamiento privado</li>
+    <li><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg> Varadero 319 Rooftop · 7 p. m. a 1 a. m.</li>
+    <li><svg class="icon" aria-hidden="true"><use href="#i-waves"/></svg> La piscina del Pacífico</li>
   </ul>
-</section>
+</div>
 
 <!-- ============================ HABITACIONES ============================ -->
-<section id="habitaciones" class="py-16 sm:py-24 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="seccion seccion--cal" id="habitaciones" aria-labelledby="titulo-habitaciones">
+  <div class="contenedor">
+    <div class="habitaciones__cabeza">
+      <h2 class="rotulo-seccion" id="titulo-habitaciones">
+        <span class="linea" style="--fit:23.8">¿Con quién</span>
+        <span class="linea linea--rojo" style="--fit:32.8">viajas?</span>
+      </h2>
 
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12" data-reveal="up">
-      <div>
-        <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-widest text-sunset-600">Catálogo de confort</span>
-        <h2 class="font-heading text-[1.75rem] xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-night-900 mt-2 leading-tight">
-          Nuestras habitaciones
-        </h2>
-      </div>
+      <form class="buscador" id="buscador" aria-describedby="buscadorAyuda">
+        <p class="buscador__ayuda" id="buscadorAyuda">Dinos quiénes van y te decimos qué cuarto les queda.</p>
 
-      <div class="flex flex-wrap gap-2" role="group" aria-label="Filtrar habitaciones">
-        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="todas" aria-pressed="true">Todas</button>
-        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="solo" aria-pressed="false">Individual</button>
-        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="parejas" aria-pressed="false">Parejas</button>
-        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="familias" aria-pressed="false">Familias</button>
-      </div>
+        <fieldset class="buscador__grupo">
+          <legend>Viajo</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="quien" value="solo"><span><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg> Solo</span></label>
+            <label class="chip"><input type="radio" name="quien" value="pareja" checked><span><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg> En pareja</span></label>
+            <label class="chip"><input type="radio" name="quien" value="amigos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> Con amigos</span></label>
+            <label class="chip"><input type="radio" name="quien" value="familia"><span><svg class="icon" aria-hidden="true"><use href="#i-baby"/></svg> En familia</span></label>
+          </div>
+        </fieldset>
+
+        <div class="buscador__fila">
+          <div class="contador" role="group" aria-labelledby="contadorEtiqueta">
+            <span id="contadorEtiqueta" class="contador__etiqueta">Somos</span>
+            <button type="button" class="contador__boton" data-paso="-1" aria-label="Una persona menos"><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg></button>
+            <output class="contador__valor" id="buscadorN" aria-live="polite">2</output>
+            <button type="button" class="contador__boton" data-paso="1" aria-label="Una persona más"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          </div>
+          <label class="interruptor">
+            <input type="checkbox" id="buscadorMascota">
+            <span class="interruptor__pista" aria-hidden="true"></span>
+            <span>Con mascota</span>
+          </label>
+        </div>
+
+        <div class="veredicto" id="veredicto" aria-live="polite">
+          <p class="veredicto__linea">Les toca la <strong data-veredicto="nombre">Matrimonial</strong></p>
+          <p class="veredicto__razon" data-veredicto="razon">1 cama de 2 plazas, para descansar en pareja.</p>
+          <p class="veredicto__mascota" data-veredicto="mascota" hidden>
+            <svg class="icon" aria-hidden="true"><use href="#i-paw"/></svg>
+            Tu perro o tu gato entra contigo, sin costo extra.
+          </p>
+          <a class="boton boton--rojo" data-veredicto="reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=matrimonial">
+            <span>Reservar por S/&nbsp;<span data-veredicto="precio">220</span> la noche</span>
+            <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+          </a>
+        </div>
+      </form>
     </div>
 
-    <div class="flex items-center justify-between gap-4 mb-3" data-reveal="up">
-      <p class="flex items-center gap-2 text-[11px] font-semibold text-slate-400">
-        <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-        <span class="lg:hidden">Desliza para ver todas las habitaciones</span>
-        <span class="hidden lg:inline">Arrastra para recorrer el cat&aacute;logo, o d&eacute;jalo avanzar solo</span>
-      </p>
-
-      <!-- Controles del carrusel. La barra de desplazamiento va oculta
-           (no-scrollbar), asi que sin esto en escritorio no hay manera de
-           avanzar salvo shift+rueda, que casi nadie conoce. El script los
-           esconde solo si todas las tarjetas caben. -->
-      <div id="habControles" class="flex gap-2 shrink-0" hidden>
-        <button type="button" id="habAnterior" aria-label="Ver habitaciones anteriores"
-                class="size-10 rounded-xl border border-slate-200 bg-white text-night-900 flex items-center justify-center transition hover:border-sunset-500 hover:text-sunset-600 disabled:opacity-30 disabled:pointer-events-none">
-          <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
-        </button>
-        <button type="button" id="habSiguiente" aria-label="Ver m&aacute;s habitaciones"
-                class="size-10 rounded-xl border border-slate-200 bg-white text-night-900 flex items-center justify-center transition hover:border-sunset-500 hover:text-sunset-600 disabled:opacity-30 disabled:pointer-events-none">
-          <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Misma tecnica que el carrusel de visitantes: la pista se mueve con
-         transform y no con el desplazamiento, asi que no hay barra que
-         recolocar ni final al que llegar. -->
-    <div class="pista-habitaciones overflow-hidden pb-4 -mx-4 lg:mx-0">
-      <div id="gridHabitaciones" class="flex gap-5 px-4 lg:px-0">
-
-      <!-- Individual -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
-               data-category="solo" data-room="Individual" data-reveal="up">
-        <div class="room-media">
-          <img src="assets/img/hab-individual.webp"
-               srcset="assets/img/hab-individual-sm.webp 528w, assets/img/hab-individual.webp 960w"
-               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
-               width="960" height="1280" loading="lazy" decoding="async"
-               alt="Habitación individual del Hotel Bahía de Cuba"
-               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
+    <ol class="cartelera" id="cartelera" aria-label="Las cinco habitaciones">
+      <li class="fila" data-room="Individual" data-cap="1">
+        <figure class="fila__foto">
+          <img src="assets/img/hab-individual-sm.webp" srcset="assets/img/hab-individual-sm.webp 528w, assets/img/hab-individual.webp 960w"
+               sizes="(min-width:1024px) 340px, 92vw" width="960" height="1280" loading="lazy" decoding="async" alt="Habitación individual con cama de plaza y media">
+          <figcaption class="costura">Individual · 1 cama de 1.5 plazas · baño privado</figcaption>
+        </figure>
+        <p class="fila__cap" aria-hidden="true">1</p>
+        <div class="fila__cuerpo">
+          <h3 class="fila__nombre">Individual</h3>
+          <p class="fila__datos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> 1 persona</span><span><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 1.5 plazas</span><span><svg class="icon" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span></p>
+          <p class="fila__desc">Silenciosa y cómoda para descansar o trabajar frente al mar.</p>
         </div>
-        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
-        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">1 persona</span>
-          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
+        <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Individual">0</span><span class="fila__noche">por noche</span></p>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=individual" data-reservar-tipo="individual">Reservar<span class="sr"> la habitación Individual</span></a>
+      </li>
+      <li class="fila" data-room="Matrimonial" data-cap="2">
+        <figure class="fila__foto">
+          <img src="assets/img/hab-matrimonial-sm.webp" srcset="assets/img/hab-matrimonial-sm.webp 577w, assets/img/hab-matrimonial.webp 1050w"
+               sizes="(min-width:1024px) 340px, 92vw" width="1050" height="1400" loading="lazy" decoding="async" alt="Habitación matrimonial con cama de dos plazas y lámpara cálida">
+          <figcaption class="costura">Matrimonial · 1 cama de 2 plazas · baño privado</figcaption>
+        </figure>
+        <p class="fila__cap" aria-hidden="true">2</p>
+        <div class="fila__cuerpo">
+          <h3 class="fila__nombre">Matrimonial</h3>
+          <p class="fila__datos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> 2 personas</span><span><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 2 plazas</span><span><svg class="icon" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span></p>
+          <p class="fila__desc">Cálida y acogedora para desconectarse en pareja.</p>
         </div>
-        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
-          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Individual</h3>
-          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Silenciosa y cómoda para descansar o trabajar frente al mar.</p>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 1.5 plazas</span>
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span>
-          </div>
-        
-          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=individual"
-             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
-            Reservar
-          </a>
+        <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Matrimonial">0</span><span class="fila__noche">por noche</span></p>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=matrimonial" data-reservar-tipo="matrimonial">Reservar<span class="sr"> la habitación Matrimonial</span></a>
+      </li>
+      <li class="fila" data-room="Doble" data-cap="3">
+        <figure class="fila__foto">
+          <img src="assets/img/hab-doble-sm.webp" srcset="assets/img/hab-doble-sm.webp 495w, assets/img/hab-doble.webp 900w"
+               sizes="(min-width:1024px) 340px, 92vw" width="900" height="1200" loading="lazy" decoding="async" alt="Habitación doble con cama de dos plazas y camarote">
+          <figcaption class="costura">Doble · 1 cama de 2 plazas + camarote · baño privado</figcaption>
+        </figure>
+        <p class="fila__cap" aria-hidden="true">3</p>
+        <div class="fila__cuerpo">
+          <h3 class="fila__nombre">Doble</h3>
+          <p class="fila__datos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> Hasta 3 personas</span><span><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 2 plazas + camarote</span><span><svg class="icon" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span></p>
+          <p class="fila__desc">Buena distribución para compartir cómodamente.</p>
         </div>
-      </article>
-
-      <!-- Matrimonial -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
-               data-category="parejas" data-room="Matrimonial" data-reveal="up" style="--reveal-delay:80">
-        <div class="room-media">
-          <img src="assets/img/hab-matrimonial.webp"
-               srcset="assets/img/hab-matrimonial-sm.webp 577w, assets/img/hab-matrimonial.webp 1050w"
-               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
-               width="1050" height="1400" loading="lazy" decoding="async"
-               alt="Habitación matrimonial con cama de dos plazas"
-               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
+        <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Doble">0</span><span class="fila__noche">por noche</span></p>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=doble" data-reservar-tipo="doble">Reservar<span class="sr"> la habitación Doble</span></a>
+      </li>
+      <li class="fila" data-room="Triple" data-cap="4">
+        <figure class="fila__foto">
+          <img src="assets/img/hab-triple-sm.webp" srcset="assets/img/hab-triple-sm.webp 577w, assets/img/hab-triple.webp 1050w"
+               sizes="(min-width:1024px) 340px, 92vw" width="1050" height="1400" loading="lazy" decoding="async" alt="Habitación triple con tres camas individuales">
+          <figcaption class="costura">Triple · 3 camas individuales · baño privado</figcaption>
+        </figure>
+        <p class="fila__cap" aria-hidden="true">4</p>
+        <div class="fila__cuerpo">
+          <h3 class="fila__nombre">Triple</h3>
+          <p class="fila__datos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> Hasta 4 personas</span><span><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> 3 camas individuales</span><span><svg class="icon" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span></p>
+          <p class="fila__desc">Cada uno en su cama: ideal para amigos o familias pequeñas.</p>
         </div>
-        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
-        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">2 personas</span>
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-gold-500 text-night-900 flex items-center gap-1">
-            <svg class="icon text-[9px]" aria-hidden="true"><use href="#i-star"/></svg> Más solicitada
-          </span>
+        <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Triple">0</span><span class="fila__noche">por noche</span></p>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=triple" data-reservar-tipo="triple">Reservar<span class="sr"> la habitación Triple</span></a>
+      </li>
+      <li class="fila" data-room="Familiar" data-cap="6">
+        <figure class="fila__foto">
+          <img src="assets/img/hab-familiar-sm.webp" srcset="assets/img/hab-familiar-sm.webp 660w, assets/img/hab-familiar.webp 1200w"
+               sizes="(min-width:1024px) 340px, 92vw" width="1200" height="900" loading="lazy" decoding="async" alt="Habitación familiar con dos camarotes">
+          <figcaption class="costura">Familiar · 2 camarotes · baño privado</figcaption>
+        </figure>
+        <p class="fila__cap" aria-hidden="true">6</p>
+        <div class="fila__cuerpo">
+          <h3 class="fila__nombre">Familiar</h3>
+          <p class="fila__datos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> Hasta 6 personas</span><span><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> 2 camarotes</span><span><svg class="icon" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span></p>
+          <p class="fila__desc">Toda la familia descansa junta en un solo cuarto.</p>
         </div>
-        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
-          <div class="flex items-center gap-2 mb-1">
-            <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Matrimonial</h3>
-            <span class="js-precio text-[11px] font-bold text-gold-300"></span>
-          </div>
-          <p class="text-slate-200 text-xs sm:text-sm mt-1 leading-relaxed max-w-xs">Ambiente cálido y acogedor para desconectarse en pareja.</p>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 2 plazas</span>
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span>
-          </div>
-        
-          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=matrimonial"
-             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
-            Reservar
-          </a>
-        </div>
-      </article>
-
-      <!-- Doble -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
-               data-category="familias" data-room="Doble" data-reveal="up">
-        <div class="room-media">
-          <img src="assets/img/hab-doble.webp"
-               srcset="assets/img/hab-doble-sm.webp 495w, assets/img/hab-doble.webp 900w"
-               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
-               width="900" height="1200" loading="lazy" decoding="async"
-               alt="Habitación doble del Hotel Bahía de Cuba"
-               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
-        </div>
-        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
-        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">Hasta 3 personas</span>
-          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
-        </div>
-        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
-          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Habitación doble</h3>
-          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Excelente distribución para compartir cómodamente en grupo.</p>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 2 plazas + camarote</span>
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span>
-          </div>
-        
-          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=doble"
-             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
-            Reservar
-          </a>
-        </div>
-      </article>
-
-
-      <!-- Triple -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
-               data-category="familias" data-room="Triple" data-reveal="up" style="--reveal-delay:80">
-        <div class="room-media">
-          <img src="assets/img/hab-triple.webp"
-               srcset="assets/img/hab-triple-sm.webp 577w, assets/img/hab-triple.webp 1050w"
-               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
-               width="1050" height="1400" loading="lazy" decoding="async"
-               alt="Habitaci&oacute;n triple del Hotel Bah&iacute;a de Cuba"
-               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
-        </div>
-        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
-        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">Hasta 4 personas</span>
-          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
-        </div>
-        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
-          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Habitaci&oacute;n triple</h3>
-          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Tres camas individuales, ideal para grupos de amigos o familias peque&ntilde;as.</p>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 3 camas individuales</span>
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Ba&ntilde;o privado</span>
-          </div>
-
-          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=triple"
-             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
-            Reservar
-          </a>
-        </div>
-      </article>
-
-      <!-- Familiar -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
-               data-category="familias" data-room="Familiar" data-reveal="up" style="--reveal-delay:80">
-        <div class="room-media">
-          <img src="assets/img/hab-familiar.webp"
-               srcset="assets/img/hab-familiar-sm.webp 660w, assets/img/hab-familiar.webp 1200w"
-               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
-               width="1200" height="900" loading="lazy" decoding="async"
-               alt="Habitación familiar con dos camarotes"
-               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
-        </div>
-        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
-        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">Hasta 6 personas</span>
-          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
-        </div>
-        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
-          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Familiar</h3>
-          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Máxima capacidad para que toda la familia descanse unida.</p>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 2 camarotes confortables</span>
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado amplio</span>
-          </div>
-        
-          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=familiar"
-             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
-            Reservar
-          </a>
-        </div>
-      </article>
-      </div>
-    </div>
-
-    <p id="roomsEmpty" hidden class="text-center text-sm text-slate-500 py-10">
-      No hay habitaciones en esa categoría.
-    </p>
+        <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Familiar">0</span><span class="fila__noche">por noche</span></p>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=familiar" data-reservar-tipo="familiar">Reservar<span class="sr"> la habitación Familiar</span></a>
+      </li>
+    </ol>
   </div>
 </section>
 
-<!-- ============================ ROOFTOP ============================ -->
-<section id="rooftop" class="py-16 sm:py-24 bg-night-950 text-white relative overflow-hidden">
-  <div id="rooftopStars" class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true"></div>
-
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16" data-reveal="up">
-      <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-widest text-gold-400">Vida nocturna</span>
-      <h2 class="font-heading text-[1.75rem] xs:text-4xl sm:text-5xl font-bold text-white leading-tight mt-2">
-        Magia nocturna en la <span class="text-gold-400 italic">azotea</span>
+<!-- ============================ ATARDECER EN VIVO ============================ -->
+<section class="seccion seccion--amarillo" id="atardecer" aria-labelledby="titulo-atardecer">
+  <div class="contenedor atardecer">
+    <div class="atardecer__texto">
+      <h2 class="rotulo-seccion" id="titulo-atardecer">
+        <span class="linea" style="--fit:22.8">¿A qué hora</span>
+        <span class="linea linea--rojo" style="--fit:25.3">cae el sol?</span>
       </h2>
-      <p class="text-slate-400 mt-4 text-sm sm:text-base leading-relaxed">
-        Billar, sapito y dardos bajo el cielo estrellado de Huarmey.
-        <span class="text-white font-semibold whitespace-nowrap">7:00 p. m. – 1:00 a. m.</span>
+      <p class="parrafo">En Tuquillo el sol se esconde en el mar. Lo calculamos para la ubicación exacta del hotel, para hoy y para el día que llegues.</p>
+
+      <p class="respuesta" aria-live="polite">
+        <span class="respuesta__cuando" data-atardecer="etiqueta">Hoy, a las</span>
+        <strong class="respuesta__hora" data-atardecer="hora">6:00 p. m.</strong>
       </p>
+      <p class="lectura__falta" data-atardecer="falta"></p>
+      <p class="lectura__detalle" data-atardecer="detalle"></p>
+
+      <label class="campo campo--fecha">
+        <span>¿Qué día llegas?</span>
+        <input type="date" id="fechaSol">
+      </label>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 divide-y md:divide-y-0 md:divide-x divide-white/10 text-center md:text-left">
-      <div class="pt-6 md:pt-0 md:px-8" data-reveal="up">
-        <svg class="icon text-3xl text-gold-500 mb-4" aria-hidden="true"><use href="#i-ball"/></svg>
-        <h3 class="font-heading text-xl sm:text-2xl font-bold text-white mb-2">Mesa de billar</h3>
-        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">Partidas de pool con tacos profesionales, bolas pulidas e iluminación cálida vintage.</p>
-      </div>
-      <div class="pt-6 md:pt-0 md:px-8" data-reveal="up" style="--reveal-delay:100">
-        <svg class="icon text-3xl text-eco-400 mb-4" aria-hidden="true"><use href="#i-coins"/></svg>
-        <h3 class="font-heading text-xl sm:text-2xl font-bold text-white mb-2">Juego del sapito</h3>
-        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">La tradición peruana con fichas de bronce. ¡Compite por el puntaje más alto!</p>
-      </div>
-      <div class="pt-6 md:pt-0 md:px-8" data-reveal="up" style="--reveal-delay:200">
-        <svg class="icon text-3xl text-sunset-500 mb-4" aria-hidden="true"><use href="#i-target"/></svg>
-        <h3 class="font-heading text-xl sm:text-2xl font-bold text-white mb-2">Dardos &amp; bar</h3>
-        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">Puntería al blanco mientras disfrutas de cervezas artesanales y piqueos nocturnos.</p>
-      </div>
+    <figure class="arco">
+      <svg class="arco__svg" id="arcoSol" viewBox="0 0 640 340" aria-hidden="true" focusable="false">
+        <path class="arco__camino" id="arcoCamino" d="M40 290 Q320 -70 600 290" />
+        <g class="arco__mar" id="arcoMar"></g>
+        <line class="arco__horizonte" x1="0" y1="290" x2="640" y2="290" />
+        <g class="arco__sol" id="arcoSolPuntos"></g>
+      </svg>
+      <figcaption class="arco__pie">
+        <span><svg class="icon" aria-hidden="true"><use href="#i-sunrise"/></svg> <span data-atardecer="salida-corta">—</span></span>
+        <span data-atardecer="ahora">El sol, ahora</span>
+        <span><span data-atardecer="puesta-corta">—</span> <svg class="icon" aria-hidden="true"><use href="#i-sunset"/></svg></span>
+      </figcaption>
+    </figure>
+
+    <div class="semana">
+      <h3 class="semana__titulo">Los próximos atardeceres</h3>
+      <ol class="semana__lista" id="semanaSol"></ol>
+      <a href="#rooftop" class="enlace-flecha">Después del atardecer, sube al Varadero 319 <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ VARADERO 319 ROOFTOP ============================ -->
+<section class="seccion seccion--noche rooftop" id="rooftop" aria-labelledby="titulo-rooftop">
+  <div class="rooftop__estrellas" aria-hidden="true"></div>
+  <div class="contenedor rooftop__rejilla">
+    <div class="rooftop__texto">
+      <p class="estado-bar" id="estadoBar" data-abierto="false">
+        <span class="estado-bar__luz" aria-hidden="true"></span>
+        <span data-bar="texto">Todas las noches de 7:00 p. m. a 1:00 a. m.</span>
+      </p>
+
+      <h2 class="rotulo-seccion rotulo-seccion--noche" id="titulo-rooftop">
+        <span class="linea linea--amarillo" style="--fit:19.9">Varadero 319</span>
+        <span class="linea" style="--fit:32.8">Rooftop</span>
+      </h2>
+
+      <p class="parrafo parrafo--noche">La azotea del hotel bajo el cielo de Huarmey, de 7:00 p. m. a 1:00 a. m. Incluida para todos los huéspedes.</p>
+
+      <ul class="programa">
+        <li class="programa__item">
+          <span class="programa__nombre">Billar</span>
+          <span class="programa__desc">Partidas de pool con tacos profesionales y luz cálida.</span>
+        </li>
+        <li class="programa__item">
+          <span class="programa__nombre programa__nombre--rojo">Sapito</span>
+          <span class="programa__desc">La tradición peruana con fichas de bronce. Gana quien suma más.</span>
+        </li>
+        <li class="programa__item">
+          <span class="programa__nombre programa__nombre--morado">Dardos</span>
+          <span class="programa__desc">Puntería al blanco con una cerveza y piqueos de noche.</span>
+        </li>
+        <li class="programa__item">
+          <span class="programa__nombre">Parrilla</span>
+          <span class="programa__desc">Carbón encendido y buena compañía frente al mar.</span>
+        </li>
+      </ul>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-14 sm:mt-20">
-      <figure class="gallery-card relative rounded-2xl overflow-hidden" data-reveal="left">
-        <img src="assets/img/terraza-parrilla.webp"
-             srcset="assets/img/terraza-parrilla-sm.webp 577w, assets/img/terraza-parrilla.webp 1050w"
-             sizes="(min-width:768px) 50vw, 100vw"
-             width="1050" height="1400" loading="lazy" decoding="async"
-             alt="Zona de parrilla en la terraza del hotel"
-             class="w-full h-72 sm:h-96 object-cover">
-        <div class="absolute inset-0 bg-linear-to-t from-night-950 via-night-950/15 to-transparent"></div>
-        <figcaption class="absolute bottom-0 left-0 p-6 sm:p-8">
-          <span class="text-[10px] uppercase tracking-widest text-gold-400 font-bold">Área común</span>
-          <span class="block font-heading text-2xl sm:text-3xl font-bold text-white mt-1">Zona de parrilla</span>
-          <span class="block text-slate-300 text-xs sm:text-sm mt-1 max-w-xs">Carbón encendido, buena compañía y noche despejada frente al mar.</span>
-        </figcaption>
-      </figure>
-
-      <figure class="gallery-card relative rounded-2xl overflow-hidden" data-reveal="right">
+    <div class="rooftop__fotos">
+      <figure class="foto-pegada foto-pegada--ancha">
         <img src="assets/img/terraza-billar.webp"
              srcset="assets/img/terraza-billar-sm.webp 709w, assets/img/terraza-billar.webp 1290w"
-             sizes="(min-width:768px) 50vw, 100vw"
-             width="1290" height="720" loading="lazy" decoding="async"
-             alt="Mesa de billar en la terraza del hotel"
-             class="w-full h-72 sm:h-96 object-cover">
-        <div class="absolute inset-0 bg-linear-to-t from-night-950 via-night-950/15 to-transparent"></div>
-        <figcaption class="absolute bottom-0 left-0 p-6 sm:p-8">
-          <span class="text-[10px] uppercase tracking-widest text-gold-400 font-bold">Área común</span>
-          <span class="block font-heading text-2xl sm:text-3xl font-bold text-white mt-1">Mesa de billar</span>
-          <span class="block text-slate-300 text-xs sm:text-sm mt-1 max-w-xs">Partidas nocturnas con vista al horizonte iluminado.</span>
-        </figcaption>
+             sizes="(min-width:1024px) 40vw, 92vw" width="1290" height="720" loading="lazy" decoding="async"
+             alt="Huésped jugando billar de noche en la azotea del hotel">
+        <figcaption class="costura">Mesa de billar · azotea</figcaption>
+      </figure>
+      <figure class="foto-pegada foto-pegada--alta">
+        <img src="assets/img/terraza-parrilla.webp"
+             srcset="assets/img/terraza-parrilla-sm.webp 577w, assets/img/terraza-parrilla.webp 1050w"
+             sizes="(min-width:1024px) 24vw, 70vw" width="1050" height="1400" loading="lazy" decoding="async"
+             alt="Zona de parrilla en la terraza del hotel">
+        <figcaption class="costura">Zona de parrilla</figcaption>
       </figure>
     </div>
   </div>
 </section>
 
-<!-- ============================ ECO-ENERGÍA ============================ -->
-<section id="eco-tech" class="py-16 sm:py-24 bg-sand-50 relative overflow-hidden">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16" data-reveal="up">
-      <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-widest text-eco-500">Sostenibilidad</span>
-      <h2 class="font-heading text-[1.75rem] xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-night-900 mt-2 leading-tight">
-        Energía limpia: <span class="text-gradient">sol y viento</span>
+<!-- ============================ SOL Y VIENTO + LA CASA ============================ -->
+<section class="seccion seccion--cal" id="energia" aria-labelledby="titulo-energia">
+  <div class="contenedor">
+    <div class="energia__cabeza">
+      <h2 class="rotulo-seccion" id="titulo-energia">
+        <span class="linea" style="--fit:17.8">La luz la ponen</span>
+        <span class="linea linea--rojo" style="--fit:16.2">el sol y el viento</span>
       </h2>
-      <p class="text-slate-600 mt-3 text-sm sm:text-[15px] max-w-2xl mx-auto text-pretty">
-        No emitimos gases contaminantes ni dependemos de redes inestables. Un hotel 100% renovable.
-      </p>
+      <p class="parrafo">Paneles solares, un aerogenerador y baterías cubren el consumo del hotel. Sin gases contaminantes y sin depender de una red que se corta.</p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
-      <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-100 card-tilt" data-reveal="left">
-        <div class="tilt-content text-center">
-          <div class="bg-sand-50 rounded-2xl p-8 border border-slate-100 flex items-center justify-around">
-            <div>
-              <svg width="70" height="90" viewBox="0 0 100 130" class="mx-auto" role="img" aria-label="Aerogenerador">
-                <line x1="50" y1="50" x2="50" y2="130" stroke="#23533f" stroke-width="4" stroke-linecap="round"/>
-                <g class="turbine-blade">
-                  <circle cx="50" cy="50" r="7" fill="#23533f"/>
-                  <path d="M50 50 L50 10 C53 10 56 30 50 50 Z" fill="#2e6b52"/>
-                  <path d="M50 50 L85 70 C83 73 65 65 50 50 Z" fill="#2e6b52"/>
-                  <path d="M50 50 L15 70 C17 73 35 65 50 50 Z" fill="#2e6b52"/>
-                </g>
-              </svg>
-              <p class="text-xs font-bold text-night-900 mt-3">Eólica</p>
-            </div>
-            <div class="h-16 w-px bg-slate-200"></div>
-            <div>
-              <svg class="icon text-5xl text-gold-500" aria-hidden="true"><use href="#i-solar"/></svg>
-              <p class="text-xs font-bold text-night-900 mt-3">Solar</p>
-            </div>
-          </div>
-          <p class="text-xs text-slate-500 mt-5 leading-relaxed">
-            Paneles solares y un aerogenerador cubren el consumo del hotel durante todo el día.
-          </p>
+    <ol class="instrumentos" id="instrumentos">
+      <li class="instrumento" data-fuente="sol">
+        <div class="instrumento__cara">
+          <svg class="instrumento__dial" viewBox="-60 -60 120 120" aria-hidden="true" focusable="false"></svg>
+          <svg class="icon instrumento__icono" aria-hidden="true"><use href="#i-sun"/></svg>
         </div>
-      </div>
+        <h3>Sol</h3>
+        <p>Paneles solares en la azotea.</p>
+        <p class="instrumento__estado" data-estado-fuente="sol">De día</p>
+      </li>
+      <li class="instrumento" data-fuente="viento">
+        <div class="instrumento__cara">
+          <svg class="instrumento__dial" viewBox="-60 -60 120 120" aria-hidden="true" focusable="false"></svg>
+          <svg class="icon instrumento__icono" aria-hidden="true"><use href="#i-wind"/></svg>
+        </div>
+        <h3>Viento</h3>
+        <p>Un aerogenerador con la brisa del mar.</p>
+        <p class="instrumento__estado" data-estado-fuente="viento">Con la brisa del mar</p>
+      </li>
+      <li class="instrumento" data-fuente="bateria">
+        <div class="instrumento__cara">
+          <svg class="instrumento__dial" viewBox="-60 -60 120 120" aria-hidden="true" focusable="false"></svg>
+          <svg class="icon instrumento__icono" aria-hidden="true"><use href="#i-battery"/></svg>
+        </div>
+        <h3>Baterías</h3>
+        <p>Guardan el día para la noche: luz sin cortes.</p>
+        <p class="instrumento__estado" data-estado-fuente="bateria">De noche</p>
+      </li>
+      <li class="instrumento" data-fuente="agua">
+        <div class="instrumento__cara">
+          <svg class="instrumento__dial" viewBox="-60 -60 120 120" aria-hidden="true" focusable="false"></svg>
+          <svg class="icon instrumento__icono" aria-hidden="true"><use href="#i-water"/></svg>
+        </div>
+        <h3>Agua temperada</h3>
+        <p>Calentada con el sol, sin impacto ambiental.</p>
+        <p class="instrumento__estado" data-estado-fuente="agua">Agua caliente solar</p>
+      </li>
+    </ol>
 
-      <ul class="flex flex-col justify-center" data-reveal="right">
-        <li class="flex items-start gap-5 py-4 border-b border-slate-200">
-          <svg class="icon text-2xl text-eco-500 mt-1" aria-hidden="true"><use href="#i-drop"/></svg>
-          <div>
-            <h3 class="font-bold text-base text-night-900">Agua temperada solar</h3>
-            <p class="text-sm text-slate-500 mt-1">Agua caliente natural sin generar impacto ambiental.</p>
-          </div>
+    <div class="casa">
+      <h3 class="casa__titulo">En la casa</h3>
+      <ul class="casa__lista">
+        <li>
+          <span class="casa__icono" aria-hidden="true"><svg class="icon"><use href="#i-paw"/></svg></span>
+          <span><strong>Pet friendly, sin costo.</strong> Espacios amplios y ventilados para tu perro o tu gato.</span>
         </li>
-        <li class="flex items-start gap-5 py-4 border-b border-slate-200">
-          <svg class="icon text-2xl text-gold-500 mt-1" aria-hidden="true"><use href="#i-wifi"/></svg>
-          <div>
-            <h3 class="font-bold text-base text-night-900">Energía continua</h3>
-            <p class="text-sm text-slate-500 mt-1">Baterías de almacenamiento solar que garantizan conexión estable.</p>
-          </div>
+        <li>
+          <span class="casa__icono" aria-hidden="true"><svg class="icon"><use href="#i-parking"/></svg></span>
+          <span><strong>Estacionamiento privado.</strong> Dentro del hotel, seguro y vigilado.</span>
         </li>
-        <li class="flex items-start gap-5 py-4">
-          <span class="flex items-center gap-1.5 text-sunset-500 mt-1 shrink-0" aria-hidden="true">
-            <svg class="size-7"><use href="#i-perro"/></svg>
-            <svg class="size-6"><use href="#i-gato"/></svg>
-          </span>
-          <div>
-            <h3 class="font-bold text-base text-night-900">Pet friendly seguro</h3>
-            <p class="text-sm text-slate-500 mt-1">Amplios espacios ventilados para viajar con tu perro o tu gato.</p>
-          </div>
+        <li>
+          <span class="casa__icono" aria-hidden="true"><svg class="icon"><use href="#i-shower"/></svg></span>
+          <span><strong>Baño privado</strong> en todas las habitaciones, con agua temperada solar.</span>
+        </li>
+        <li>
+          <span class="casa__icono" aria-hidden="true"><svg class="icon"><use href="#i-clock"/></svg></span>
+          <span><strong>Check-in 2:00 p. m. · Check-out 12:00 m.</strong> ¿Otro horario? Escríbenos y lo coordinamos.</span>
         </li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- ============================ UBICACIÓN ============================ -->
-<section id="ubicacion" class="py-16 sm:py-24 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-      <div class="lg:col-span-5 space-y-6" data-reveal="left">
-        <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-widest text-sunset-600">Cómo llegar</span>
-        <h2 class="font-heading text-[1.75rem] xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-night-900 leading-tight">
-          A pasos de <br><span class="text-gradient">Playa Tuquillo</span>
-        </h2>
-        <p class="text-slate-600 text-sm sm:text-[15px] leading-relaxed text-pretty">
-          Conocida como «la piscina del Pacífico» por su oleaje calmo y su arena fina.
-          Estamos en Huarmey, Áncash, a unas 4 horas de Lima por la Panamericana Norte.
-        </p>
-        <ul class="pt-2 space-y-4">
-          <li class="flex items-center gap-4">
-            <svg class="icon text-xl text-sunset-500" aria-hidden="true"><use href="#i-walk"/></svg>
-            <span class="text-sm text-night-900 font-medium">A 200 metros caminando de la orilla.</span>
-          </li>
-          <li class="flex items-center gap-4">
-            <svg class="icon text-xl text-gold-500" aria-hidden="true"><use href="#i-car"/></svg>
-            <span class="text-sm text-night-900 font-medium">Estacionamiento privado y seguro.</span>
-          </li>
-          <li class="flex items-center gap-4">
-            <svg class="icon text-xl text-eco-500" aria-hidden="true"><use href="#i-route"/></svg>
-            <span class="text-sm text-night-900 font-medium">Acceso directo por la Panamericana Norte.</span>
-          </li>
-        </ul>
-        <address style="font-style:normal" class="rounded-2xl bg-sand-50 border border-slate-100 p-4 space-y-1">
-          <p class="text-sm font-bold text-night-900">Hotel Bahía de Cuba</p>
-          <p class="text-sm text-slate-600">Playa Tuquillo s/n, Huarmey 02651 — Áncash, Perú</p>
-          <p class="text-[11px] text-slate-500">
-            Plus Code <span class="font-semibold text-slate-700">57X3XRM5+M7</span>
-            · <span class="font-semibold text-slate-700">-10.0158125, -78.1918125</span>
-          </p>
-        </address>
+<!-- ============================ RUTA DESDE LIMA + UBICACIÓN ============================ -->
+<section class="seccion seccion--noche2" id="ruta" aria-labelledby="titulo-ruta">
+  <div class="contenedor">
+    <div class="ruta__cabeza">
+      <h2 class="rotulo-seccion rotulo-seccion--noche" id="titulo-ruta">
+        <span class="linea linea--amarillo" style="--fit:15.1">De Lima a Tuquillo</span>
+        <span class="linea" style="--fit:9.5">por la Panamericana Norte</span>
+      </h2>
+      <p class="parrafo parrafo--noche">Unas cuatro horas de carretera junto al mar. Arrastra el auto para ver por dónde vas y cuánto te falta.</p>
+    </div>
 
-        <div class="flex flex-wrap items-center gap-5">
-          <a href="https://maps.app.goo.gl/VjK2jiX3JxyvwxtC9"
-             target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 text-sm font-bold text-sunset-600 hover:text-sunset-700 transition">
-            <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg> Abrir en Google Maps
+    <div class="ruta" id="ruta-widget">
+      <div class="letrero" aria-live="polite">
+        <p class="letrero__lugar" data-ruta="lugar">Lima</p>
+        <p class="letrero__datos">
+          <span>Km <strong data-ruta="km">0</strong></span>
+          <span><strong data-ruta="tiempo">0 h</strong> de viaje</span>
+          <span>Faltan <strong data-ruta="falta">297 km</strong></span>
+        </p>
+        <p class="letrero__nota" data-ruta="nota">Sales por la Panamericana Norte rumbo al norte.</p>
+      </div>
+
+      <div class="carretera">
+        <label class="sr" for="rutaKm">Kilómetro de la Panamericana Norte</label>
+        <input type="range" id="rutaKm" min="0" max="297" step="1" value="0" class="carretera__control"
+               aria-valuetext="Lima, kilómetro 0">
+        <div class="carretera__asfalto" aria-hidden="true"><span class="carretera__avance"></span></div>
+        <ol class="carretera__paradas">
+          <li style="--km:0"><button type="button" data-km="0">Lima</button></li>
+          <li style="--km:43"><button type="button" data-km="43">Ancón</button></li>
+          <li style="--km:148"><button type="button" data-km="148">Huacho</button></li>
+          <li style="--km:195"><button type="button" data-km="195">Barranca</button></li>
+          <li style="--km:293"><button type="button" data-km="293">Huarmey</button></li>
+          <li style="--km:297" class="carretera__meta"><button type="button" data-km="297">Hotel</button></li>
+        </ol>
+      </div>
+      <p class="ruta__aviso">Kilómetros y tiempos aproximados, saliendo de Lima sin paradas largas.</p>
+    </div>
+
+    <div class="llegada">
+      <figure class="foto-pegada llegada__foto">
+        <img src="assets/img/fachada-sm.webp"
+             srcset="assets/img/fachada-sm.webp 660w, assets/img/fachada.webp 1200w"
+             sizes="(min-width:1024px) 30vw, 92vw" width="1200" height="1328" loading="lazy" decoding="async"
+             alt="Entrada del hotel al atardecer, con el letrero amarillo pintado sobre la puerta">
+        <figcaption class="costura">Búscanos por el letrero amarillo</figcaption>
+      </figure>
+
+      <div class="llegada__datos">
+        <h3 class="llegada__titulo">Al llegar</h3>
+        <address class="llegada__direccion">
+          Hotel Bahía de Cuba<br>
+          Playa Tuquillo s/n, Huarmey 02651<br>
+          Áncash, Perú
+        </address>
+        <ul class="llegada__lista">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-walk"/></svg> A 200 m caminando de la orilla.</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-parking"/></svg> Estacionamiento privado y vigilado.</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg> Plus Code 57X3XRM5+M7</li>
+        </ul>
+        <div class="llegada__acciones">
+          <a class="boton boton--amarillo" href="https://www.google.com/maps/dir/?api=1&amp;destination=-10.0158125%2C-78.1918125" target="_blank" rel="noopener">
+            <svg class="icon" aria-hidden="true"><use href="#i-route"/></svg> Cómo llegar
           </a>
-          <a href="https://www.google.com/maps/dir/?api=1&amp;destination=-10.0158125%2C-78.1918125"
-             target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 text-sm font-bold text-sunset-600 hover:text-sunset-700 transition">
-            <svg class="icon text-eco-500" aria-hidden="true"><use href="#i-route"/></svg> Cómo llegar
-          </a>
+          <a class="enlace-cartel enlace-cartel--noche" href="https://maps.app.goo.gl/VjK2jiX3JxyvwxtC9" target="_blank" rel="noopener">Abrir en Google Maps</a>
         </div>
       </div>
 
-      <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-5 gap-4" data-reveal="right">
-
-        <!-- Foto de referencia: lo que el huésped ve al llegar -->
-        <figure class="sm:col-span-2 relative rounded-3xl overflow-hidden h-64 sm:h-[400px] shadow-sm">
-          <img src="assets/img/fachada.webp"
-               srcset="assets/img/fachada-sm.webp 660w, assets/img/fachada.webp 1200w"
-               sizes="(min-width:1024px) 300px, (min-width:640px) 40vw, 100vw"
-               width="1200" height="1328" loading="lazy" decoding="async"
-               alt="Fachada del Hotel Bahía de Cuba al atardecer, con el letrero amarillo sobre la entrada"
-               class="w-full h-full object-cover">
-          <div class="absolute inset-0 bg-linear-to-t from-night-950/90 via-night-950/10 to-transparent"></div>
-          <figcaption class="absolute bottom-0 inset-x-0 p-5">
-            <span class="text-[10px] uppercase tracking-widest text-gold-400 font-bold">Al llegar</span>
-            <span class="block text-white font-bold text-sm mt-1 leading-snug">
-              Búscanos por el letrero amarillo
-            </span>
-          </figcaption>
-        </figure>
-
-        <!-- El mapa se carga solo al pulsar: ahorra ~700 KB en la primera visita -->
-        <div id="mapShell" class="sm:col-span-3 map-shell rounded-3xl overflow-hidden h-[300px] sm:h-[400px] shadow-sm border border-slate-100">
-          <button type="button" id="btnLoadMap"
-                  class="absolute inset-0 w-full h-full flex flex-col items-center justify-center gap-3 text-white group">
-            <span class="size-14 rounded-full bg-sunset-500 flex items-center justify-center text-2xl shadow-lg transition-transform group-hover:scale-110">
-              <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
-            </span>
-            <span class="font-bold text-sm">Ver la ubicación exacta del hotel</span>
-            <span class="text-[11px] text-white/60">Se carga solo cuando lo pides</span>
-          </button>
-        </div>
+      <div class="mapa" id="mapShell">
+        <button type="button" id="btnLoadMap" class="mapa__boton">
+          <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
+          <span>Ver el mapa del hotel</span>
+          <small>Se carga solo si lo pides</small>
+        </button>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============================ COMUNIDAD ============================ -->
-<section id="huespedes" class="py-14 sm:py-20 bg-sand-50 overflow-hidden">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-10 sm:mb-14" data-reveal="up">
-    <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-widest text-sunset-600">Nuestra comunidad</span>
-    <h2 class="font-heading text-[1.75rem] xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-night-900 mt-2 leading-tight">
-      Momentos que viven en Bahía de Cuba
-    </h2>
-    <p class="text-slate-500 text-sm sm:text-base mt-3 max-w-xl mx-auto text-pretty">
-      Familias, amigos y viajeros que ya hicieron de este lugar su segunda casa frente al mar.
-    </p>
-  </div>
-
-  <div class="marquee-wrap relative">
-    <div class="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-24 bg-linear-to-r from-sand-50 to-transparent z-10"></div>
-    <div class="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-24 bg-linear-to-l from-sand-50 to-transparent z-10"></div>
-
-    <div class="marquee-track gap-6 sm:gap-8 py-4">
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(-4deg)">
-        <img src="assets/img/huesped-1.webp" width="760" height="570" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="Familia desayunando en el hotel">
-      </div>
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(3deg)">
-        <img src="assets/img/huesped-2.webp" width="760" height="570" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="Amigos compartiendo el desayuno">
-      </div>
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(-2deg)">
-        <img src="assets/img/huesped-3.webp" width="674" height="900" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="Familia en el patio del hotel">
-      </div>
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(4deg)">
-        <img src="assets/img/huesped-4.webp" width="760" height="572" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="Grupo de amigas en la sala">
-      </div>
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(-3deg)">
-        <img src="assets/img/huesped-5.webp" width="674" height="900" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="Amigos en el hotel">
-      </div>
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(2deg)">
-        <img src="assets/img/huesped-6.webp" width="760" height="572" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="Grupo de amigas listas para el viaje">
-      </div>
-      <!-- Copia para que el bucle no tenga cortes -->
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(-4deg)" aria-hidden="true">
-        <img src="assets/img/huesped-1.webp" width="760" height="570" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="">
-      </div>
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(3deg)" aria-hidden="true">
-        <img src="assets/img/huesped-2.webp" width="760" height="570" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="">
-      </div>
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(-2deg)" aria-hidden="true">
-        <img src="assets/img/huesped-3.webp" width="674" height="900" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="">
-      </div>
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(4deg)" aria-hidden="true">
-        <img src="assets/img/huesped-4.webp" width="760" height="572" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="">
-      </div>
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(-3deg)" aria-hidden="true">
-        <img src="assets/img/huesped-5.webp" width="674" height="900" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="">
-      </div>
-      <div class="polaroid shrink-0 w-40 sm:w-56" style="transform:rotate(2deg)" aria-hidden="true">
-        <img src="assets/img/huesped-6.webp" width="760" height="572" loading="lazy" decoding="async" class="w-full h-44 sm:h-64 object-cover" alt="">
-      </div>
+<section class="seccion seccion--morado" id="huespedes" aria-labelledby="titulo-huespedes">
+  <div class="contenedor">
+    <div class="comunidad__cabeza">
+      <h2 class="rotulo-seccion rotulo-seccion--morado" id="titulo-huespedes">
+        <span class="linea" style="--fit:26.4">Así se vive</span>
+        <span class="linea linea--amarillo" style="--fit:19.7">Bahía de Cuba</span>
+      </h2>
+      <p class="parrafo parrafo--morado">Familias, amigos y viajeros que ya pasaron por aquí.
+        <a href="https://www.instagram.com/hotelbahiadecuba/" target="_blank" rel="noopener" class="enlace-claro">Más fotos en Instagram</a>.
+      </p>
     </div>
+
+    <ul class="muro">
+      <li class="muro__foto muro__foto--a"><img src="assets/img/huesped-1.webp" width="760" height="570" loading="lazy" decoding="async" alt="Familia desayunando en el hotel"></li>
+      <li class="muro__foto muro__foto--b"><img src="assets/img/huesped-3.webp" width="674" height="900" loading="lazy" decoding="async" alt="Familia en el patio del hotel"></li>
+      <li class="muro__foto muro__foto--c"><img src="assets/img/huesped-2.webp" width="760" height="570" loading="lazy" decoding="async" alt="Amigos compartiendo el desayuno"></li>
+      <li class="muro__foto muro__foto--d"><img src="assets/img/huesped-4.webp" width="760" height="572" loading="lazy" decoding="async" alt="Grupo de amigas en la sala del hotel"></li>
+      <li class="muro__foto muro__foto--e"><img src="assets/img/huesped-5.webp" width="674" height="900" loading="lazy" decoding="async" alt="Amigos de visita en el hotel"></li>
+      <li class="muro__foto muro__foto--f"><img src="assets/img/huesped-6.webp" width="760" height="572" loading="lazy" decoding="async" alt="Grupo de amigas listas para el viaje"></li>
+    </ul>
   </div>
 </section>
 
-<!-- ============================ RESERVA / COTIZADOR ============================ -->
-<section id="reserva" class="py-16 sm:py-24 bg-linear-to-r from-sunset-700 via-sunset-600 to-sunset-500 text-white relative overflow-hidden">
-  <div class="max-w-5xl mx-auto px-4 text-center relative z-10 mb-10 sm:mb-12" data-reveal="up">
-    <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-widest text-gold-200">Reserva directa</span>
-    <h2 class="font-heading text-[1.75rem] xs:text-3xl sm:text-4xl md:text-5xl font-bold mt-2 leading-tight">
-      Cotiza y reserva directo
-    </h2>
-    <p class="mt-3 text-white/90 text-sm sm:text-base max-w-2xl mx-auto text-pretty">
-      Sin comisiones de intermediarios. Calcula tu presupuesto y reserva en línea en un clic.
-    </p>
-  </div>
+<!-- ============================ RESERVA DIRECTA ============================ -->
+<section class="seccion seccion--rojo" id="reservar" aria-labelledby="titulo-reservar">
+  <div class="contenedor reserva">
+    <div class="reserva__texto">
+      <h2 class="rotulo-seccion rotulo-seccion--rojo" id="titulo-reservar">
+        <span class="linea linea--amarillo" style="--fit:16.8">Reserva directo</span>
+        <span class="linea" style="--fit:17.1">sin comisiones</span>
+      </h2>
+      <p class="parrafo parrafo--rojo">Calcula tu estadía y termina la reserva en nuestro sistema. Pagas el 50% para asegurarla y el resto al llegar, en efectivo o por transferencia.</p>
+      <ul class="reserva__pasos">
+        <li><span>1</span> Eliges fechas y habitación aquí.</li>
+        <li><span>2</span> Confirmas la disponibilidad real en el siguiente paso.</li>
+        <li><span>3</span> Pagas el 50% y listo.</li>
+      </ul>
+    </div>
 
-  <div id="calculadora" class="max-w-4xl mx-4 sm:mx-auto bg-white rounded-3xl p-5 sm:p-8 shadow-2xl text-left relative z-10" data-reveal="zoom">
-    <form id="formCotizacion" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end" novalidate>
-      <div>
-        <label for="cCheckin" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Check-in</label>
-        <input type="date" id="cCheckin" name="checkin" required
-               class="w-full px-3.5 py-2.5 bg-sand-50 border border-slate-200 rounded-xl font-medium text-slate-800">
-      </div>
-      <div>
-        <label for="cCheckout" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Check-out</label>
-        <input type="date" id="cCheckout" name="checkout" required
-               class="w-full px-3.5 py-2.5 bg-sand-50 border border-slate-200 rounded-xl font-medium text-slate-800">
-      </div>
-      <div>
-        <label for="cRoom" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Habitación</label>
-        <select id="cRoom" name="habitacion" class="w-full px-3.5 py-2.5 bg-sand-50 border border-slate-200 rounded-xl font-medium text-slate-800">
-          <option value="Individual"  data-precio="180">Individual &mdash; 1 cama de 1.5 plazas</option>
-          <option value="Matrimonial" data-precio="220" selected>Matrimonial &mdash; 1 cama de 2 plazas</option>
-          <option value="Doble"       data-precio="280">Doble &mdash; 1 cama de 2 plazas + camarote</option>
-          <option value="Triple"      data-precio="310">Triple &mdash; 3 camas individuales</option>
-          <option value="Familiar"    data-precio="350">Familiar &mdash; 2 camarotes</option>
-        </select>
-      </div>
-      <div>
-        <label for="cGuests" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Huéspedes</label>
-        <select id="cGuests" name="huespedes" class="w-full px-3.5 py-2.5 bg-sand-50 border border-slate-200 rounded-xl font-medium text-slate-800">
-          <option value="1">1 persona</option>
-          <option value="2" selected>2 personas</option>
-          <option value="3">3 personas</option>
-          <option value="4">4 personas</option>
-          <option value="5">5 personas</option>
-          <option value="6">6 personas</option>
-        </select>
+    <form id="formCotizacion" class="boleto" novalidate>
+      <div class="boleto__campos">
+        <label class="campo">
+          <span>Llegada</span>
+          <input type="date" id="cCheckin" name="checkin" required>
+        </label>
+        <label class="campo">
+          <span>Salida</span>
+          <input type="date" id="cCheckout" name="checkout" required>
+        </label>
+        <label class="campo campo--ancho">
+          <span>Habitación</span>
+          <select id="cRoom" name="room">
+            <option value="Individual" data-precio="180">Individual — 1 cama de 1.5 plazas</option>
+            <option value="Matrimonial" data-precio="220" selected>Matrimonial — 1 cama de 2 plazas</option>
+            <option value="Doble" data-precio="280">Doble — cama de 2 plazas + camarote</option>
+            <option value="Triple" data-precio="310">Triple — 3 camas individuales</option>
+            <option value="Familiar" data-precio="350">Familiar — 2 camarotes</option>
+          </select>
+        </label>
+        <label class="campo">
+          <span>Huéspedes</span>
+          <select id="cGuests" name="guests">
+            <option value="1">1 persona</option>
+            <option value="2" selected>2 personas</option>
+            <option value="3">3 personas</option>
+            <option value="4">4 personas</option>
+            <option value="5">5 personas</option>
+            <option value="6">6 personas</option>
+          </select>
+        </label>
       </div>
 
-      <p id="calcAviso" role="status" hidden
-         class="sm:col-span-2 lg:col-span-4 -mt-1 text-xs font-semibold text-sunset-600 bg-sunset-50 border border-sunset-200 rounded-xl px-4 py-2.5"></p>
+      <p id="calcAviso" class="boleto__aviso" role="status" hidden></p>
 
-      <div class="sm:col-span-2 lg:col-span-4 bg-sand-50 rounded-2xl p-4 border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 mt-1">
-        <div class="text-center sm:text-left">
-          <p class="text-xs text-slate-500 font-medium" id="calcDetalle">Tarifa estimada</p>
-          <p class="text-2xl sm:text-3xl font-heading font-bold text-night-900">
-            S/ <span id="calcTotal" class="text-sunset-600">220.00</span>
-          </p>
+      <div class="boleto__total">
+        <div>
+          <p class="boleto__etiqueta">Tarifa estimada</p>
+          <p class="boleto__monto">S/ <span id="calcTotal">220.00</span></p>
+          <p class="boleto__detalle" id="calcDetalle">Elige tus fechas para ver el total</p>
         </div>
-        <button type="submit"
-                class="w-full sm:w-auto px-8 py-3.5 bg-eco-500 hover:bg-eco-600 text-white font-bold text-sm rounded-xl transition-all shadow-md flex items-center justify-center gap-2 hover:-translate-y-0.5">
-          <svg class="icon text-lg" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-          Reservar en línea
-        </button>
+        <p class="boleto__sol" data-sol-llegada hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-sunset"/></svg>
+          <span>El día que llegas, el sol se pone a las <strong data-sol-llegada-hora></strong></span>
+        </p>
       </div>
-      <p class="sm:col-span-2 lg:col-span-4 text-[11px] text-slate-400 text-center -mt-1">
-        La tarifa es referencial. En el siguiente paso se confirma la disponibilidad real y se paga el 50% para asegurar la reserva.
-      </p>
 
-      <!-- Las condiciones se aceptan formalmente en la app, con casilla
-           obligatoria. Aqui se anuncian antes de que el huesped salga de la
-           landing: enterarse de la politica de cancelacion despues de pagar
-           es la queja numero uno de cualquier hotel. -->
-      <p class="sm:col-span-2 lg:col-span-4 text-[11px] text-slate-500 text-center leading-relaxed border-t border-slate-100 pt-3 mt-1">
-        Al continuar aceptas los
-        <a href="https://bahia-cuba-app.netlify.app/es/terminos" target="_blank" rel="noopener"
-           class="font-semibold text-slate-700 underline underline-offset-2 decoration-slate-300 hover:text-sunset-600 hover:decoration-sunset-400 transition">T&eacute;rminos y Condiciones</a>,
-        la <a href="https://bahia-cuba-app.netlify.app/es/privacidad" target="_blank" rel="noopener"
-           class="font-semibold text-slate-700 underline underline-offset-2 decoration-slate-300 hover:text-sunset-600 hover:decoration-sunset-400 transition">Pol&iacute;tica de Privacidad</a>
-        y la <a href="https://bahia-cuba-app.netlify.app/es/cancelacion" target="_blank" rel="noopener"
-           class="font-semibold text-slate-700 underline underline-offset-2 decoration-slate-300 hover:text-sunset-600 hover:decoration-sunset-400 transition">Pol&iacute;tica de Cancelaci&oacute;n</a>.
+      <button type="submit" class="boton boton--rojo boton--grande boton--ancho">
+        Reservar en línea
+        <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+      </button>
+
+      <p class="boleto__legal">
+        La tarifa es referencial. Al continuar aceptas los
+        <a href="https://bahia-cuba-app.netlify.app/es/terminos" target="_blank" rel="noopener">Términos y Condiciones</a>,
+        la <a href="https://bahia-cuba-app.netlify.app/es/privacidad" target="_blank" rel="noopener">Política de Privacidad</a>
+        y la <a href="https://bahia-cuba-app.netlify.app/es/cancelacion" target="_blank" rel="noopener">Política de Cancelación</a>.
       </p>
     </form>
   </div>
 </section>
 
 <!-- ============================ PREGUNTAS FRECUENTES ============================ -->
-<section id="faq" class="py-16 sm:py-24 bg-white">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6">
-    <div class="text-center mb-10 sm:mb-14" data-reveal="up">
-      <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-widest text-sunset-600">Resolvemos tus dudas</span>
-      <h2 class="font-heading text-[1.75rem] xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-night-900 mt-2 leading-tight">
-        Preguntas frecuentes
+<section class="seccion seccion--cal" id="preguntas" aria-labelledby="titulo-preguntas">
+  <div class="contenedor preguntas">
+    <div class="preguntas__cabeza">
+      <h2 class="rotulo-seccion" id="titulo-preguntas">
+        <span class="linea" style="--fit:24.5">Preguntas</span>
+        <span class="linea linea--rojo" style="--fit:23.8">frecuentes</span>
       </h2>
-    </div>
-
-    <div class="space-y-3" data-reveal="up">
-      <div class="faq-item border border-slate-100 rounded-2xl overflow-hidden">
-        <h3>
-          <button type="button" class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-5 sm:px-6 py-4 sm:py-5" aria-expanded="false" aria-controls="faq-1">
-            <span class="faq-question font-bold text-sm sm:text-base text-night-900 transition-colors">¿A qué hora son el check-in y el check-out?</span>
-            <svg class="icon faq-chevron text-sunset-500" aria-hidden="true"><use href="#i-chevron"/></svg>
-          </button>
-        </h3>
-        <div class="faq-answer" id="faq-1"><div><p class="text-slate-600 text-xs sm:text-sm leading-relaxed px-5 sm:px-6 pb-5">El check-in es a partir de las 14:00 y el check-out hasta las 12:00. Si necesitas horarios especiales, escríbenos por WhatsApp y lo coordinamos según disponibilidad.</p></div></div>
-      </div>
-
-      <div class="faq-item border border-slate-100 rounded-2xl overflow-hidden">
-        <h3>
-          <button type="button" class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-5 sm:px-6 py-4 sm:py-5" aria-expanded="false" aria-controls="faq-2">
-            <span class="faq-question font-bold text-sm sm:text-base text-night-900 transition-colors">¿Aceptan mascotas?</span>
-            <svg class="icon faq-chevron text-sunset-500" aria-hidden="true"><use href="#i-chevron"/></svg>
-          </button>
-        </h3>
-        <div class="faq-answer" id="faq-2"><div><p class="text-slate-600 text-xs sm:text-sm leading-relaxed px-5 sm:px-6 pb-5">Sí, somos 100% pet friendly. Contamos con espacios amplios y ventilados para que viajes tranquilo junto a tu mascota, sin costo adicional.</p></div></div>
-      </div>
-
-      <div class="faq-item border border-slate-100 rounded-2xl overflow-hidden">
-        <h3>
-          <button type="button" class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-5 sm:px-6 py-4 sm:py-5" aria-expanded="false" aria-controls="faq-3">
-            <span class="faq-question font-bold text-sm sm:text-base text-night-900 transition-colors">¿El hotel cuenta con estacionamiento?</span>
-            <svg class="icon faq-chevron text-sunset-500" aria-hidden="true"><use href="#i-chevron"/></svg>
-          </button>
-        </h3>
-        <div class="faq-answer" id="faq-3"><div><p class="text-slate-600 text-xs sm:text-sm leading-relaxed px-5 sm:px-6 pb-5">Sí, ofrecemos estacionamiento privado y seguro dentro del hotel para todos nuestros huéspedes.</p></div></div>
-      </div>
-
-      <div class="faq-item border border-slate-100 rounded-2xl overflow-hidden">
-        <h3>
-          <button type="button" class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-5 sm:px-6 py-4 sm:py-5" aria-expanded="false" aria-controls="faq-4">
-            <span class="faq-question font-bold text-sm sm:text-base text-night-900 transition-colors">¿El Rooftop Bar tiene algún costo adicional?</span>
-            <svg class="icon faq-chevron text-sunset-500" aria-hidden="true"><use href="#i-chevron"/></svg>
-          </button>
-        </h3>
-        <div class="faq-answer" id="faq-4"><div><p class="text-slate-600 text-xs sm:text-sm leading-relaxed px-5 sm:px-6 pb-5">El acceso a la azotea (billar, sapito y dardos) está incluido para todos los huéspedes hospedados. El horario es de 7:00 p. m. a 1:00 a. m.</p></div></div>
-      </div>
-
-      <div class="faq-item border border-slate-100 rounded-2xl overflow-hidden">
-        <h3>
-          <button type="button" class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-5 sm:px-6 py-4 sm:py-5" aria-expanded="false" aria-controls="faq-5">
-            <span class="faq-question font-bold text-sm sm:text-base text-night-900 transition-colors">¿A qué distancia está la playa?</span>
-            <svg class="icon faq-chevron text-sunset-500" aria-hidden="true"><use href="#i-chevron"/></svg>
-          </button>
-        </h3>
-        <div class="faq-answer" id="faq-5"><div><p class="text-slate-600 text-xs sm:text-sm leading-relaxed px-5 sm:px-6 pb-5">Estamos a solo 200 metros caminando de Playa Tuquillo, conocida como «la piscina del Pacífico» por su oleaje calmo y arena fina.</p></div></div>
-      </div>
-
-      <div class="faq-item border border-slate-100 rounded-2xl overflow-hidden">
-        <h3>
-          <button type="button" class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-5 sm:px-6 py-4 sm:py-5" aria-expanded="false" aria-controls="faq-6">
-            <span class="faq-question font-bold text-sm sm:text-base text-night-900 transition-colors">¿Cómo reservo y qué formas de pago aceptan?</span>
-            <svg class="icon faq-chevron text-sunset-500" aria-hidden="true"><use href="#i-chevron"/></svg>
-          </button>
-        </h3>
-        <div class="faq-answer" id="faq-6"><div><p class="text-slate-600 text-xs sm:text-sm leading-relaxed px-5 sm:px-6 pb-5">Puedes reservar en línea desde esta misma web: eliges habitación y fechas, pagas el 50% para asegurarla y el resto lo abonas al llegar, en efectivo o por transferencia.</p></div></div>
+      <div class="preguntas__contacto">
+        <p>¿Tu duda no está aquí? Te respondemos por WhatsApp.</p>
+        <a href="https://wa.me/51908925065?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20tengo%20una%20consulta" target="_blank" rel="noopener" class="boton boton--noche">
+          <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> Escríbenos
+        </a>
       </div>
     </div>
 
-    <div class="mt-8 sm:mt-10 text-center" data-reveal="up">
-      <p class="text-slate-500 text-sm mb-3">¿Tienes otra consulta?</p>
-      <a href="https://wa.me/51908925065?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20tengo%20una%20consulta"
-         target="_blank" rel="noopener"
-         class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white bg-eco-500 hover:bg-eco-600 shadow-md transition-all hover:-translate-y-0.5">
-        <svg class="icon text-lg" aria-hidden="true"><use href="#i-whatsapp"/></svg> Escríbenos por WhatsApp
-      </a>
+    <div class="acordeon">
+      <details>
+        <summary>¿A qué hora son el check-in y el check-out?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>El check-in es a partir de las 2:00 p. m. y el check-out hasta las 12:00 m. Si necesitas otro horario, escríbenos por WhatsApp y lo coordinamos según disponibilidad.</p>
+      </details>
+      <details>
+        <summary>¿Aceptan mascotas?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>Sí, somos 100% pet friendly. Tenemos espacios amplios y ventilados para que viajes con tu perro o tu gato, sin costo adicional.</p>
+      </details>
+      <details>
+        <summary>¿El hotel tiene estacionamiento?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>Sí, estacionamiento privado y seguro dentro del hotel para todos los huéspedes.</p>
+      </details>
+      <details>
+        <summary>¿El Varadero 319 Rooftop tiene costo adicional?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>El acceso a la azotea (billar, sapito y dardos) está incluido para todos los huéspedes. Abre de 7:00 p. m. a 1:00 a. m.</p>
+      </details>
+      <details>
+        <summary>¿A qué distancia está la playa?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>A 200 metros caminando de Playa Tuquillo, conocida como «la piscina del Pacífico» por su oleaje calmo y su arena fina.</p>
+      </details>
+      <details>
+        <summary>¿Cómo reservo y cómo se paga?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>Reservas en línea desde esta web: eliges habitación y fechas, pagas el 50% para asegurarla y el resto al llegar, en efectivo o por transferencia.</p>
+      </details>
     </div>
   </div>
 </section>
-
 </main>
 
 <!-- ============================ PIE ============================ -->
-<footer class="bg-night-950 text-slate-400 text-xs sm:text-sm pt-12 sm:pt-16 pb-24 sm:pb-10">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-      <div class="col-span-2 lg:col-span-1 space-y-4">
-        <img src="assets/img/logo.webp" width="320" height="320" alt="Hotel Bahía de Cuba" class="size-12 rounded-xl object-cover">
-        <p class="text-xs text-slate-500 leading-relaxed max-w-xs">
-          Eco hotel en Playa Tuquillo, Huarmey. Energía renovable, pet friendly y diversión nocturna en la azotea.
-        </p>
-        <div class="flex items-center gap-3 pt-1">
-          <a href="https://www.instagram.com/hotelbahiadecuba/" target="_blank" rel="noopener" aria-label="Instagram"
-             class="size-9 rounded-xl bg-white/5 hover:bg-sunset-500 hover:text-white flex items-center justify-center transition">
-            <svg class="icon" aria-hidden="true"><use href="#i-instagram"/></svg>
-          </a>
-          <a href="https://www.facebook.com/p/Hotel-Bah%C3%ADa-de-Cuba-100087618067557/" target="_blank" rel="noopener" aria-label="Facebook"
-             class="size-9 rounded-xl bg-white/5 hover:bg-sunset-500 hover:text-white flex items-center justify-center transition">
-            <svg class="icon" aria-hidden="true"><use href="#i-facebook"/></svg>
-          </a>
-          <a href="https://wa.me/51908925065" target="_blank" rel="noopener" aria-label="WhatsApp"
-             class="size-9 rounded-xl bg-white/5 hover:bg-eco-500 hover:text-white flex items-center justify-center transition">
-            <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg>
-          </a>
+<footer class="pie">
+  <div class="contenedor">
+    <div class="pie__cierre">
+      <p class="pie__rotulo" aria-hidden="true">
+        <span class="linea linea--rojo" style="--fit:19.7">Bahía de Cuba</span>
+      </p>
+      <a href="#reservar" class="boton boton--rojo boton--grande">Reservar tu fin de semana <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+    </div>
+
+    <div class="pie__columnas">
+      <div class="pie__marca">
+        <img src="assets/img/logo.webp" width="320" height="320" alt="Hotel Bahía de Cuba" class="pie__logo" loading="lazy">
+        <p>Eco hotel en Playa Tuquillo, Huarmey. Sol, viento, mascotas bienvenidas y noches en el Varadero 319 Rooftop.</p>
+        <div class="pie__redes">
+          <a href="https://www.instagram.com/hotelbahiadecuba/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="icon" aria-hidden="true"><use href="#i-instagram"/></svg></a>
+          <a href="https://www.facebook.com/p/Hotel-Bah%C3%ADa-de-Cuba-100087618067557/" target="_blank" rel="noopener" aria-label="Facebook"><svg class="icon" aria-hidden="true"><use href="#i-facebook"/></svg></a>
+          <a href="https://wa.me/51908925065" target="_blank" rel="noopener" aria-label="WhatsApp"><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg></a>
         </div>
       </div>
 
       <div>
-        <h2 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Servicios</h2>
-        <ul class="space-y-2 text-xs">
-          <li><a href="#habitaciones" class="hover:text-gold-400 transition">Habitaciones privadas</a></li>
-          <li><a href="#rooftop" class="hover:text-gold-400 transition">Rooftop Bar (noche)</a></li>
-          <li><a href="#eco-tech" class="hover:text-gold-400 transition">Energía renovable</a></li>
-          <li><span class="text-eco-400">100% pet friendly</span></li>
+        <h2 class="pie__titulo">Horarios</h2>
+        <ul class="pie__lista">
+          <li>Check-in: 2:00 p. m.</li>
+          <li>Check-out: 12:00 m.</li>
+          <li>Rooftop: 7:00 p. m. – 1:00 a. m.</li>
         </ul>
       </div>
 
       <div>
-        <h2 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Horarios</h2>
-        <ul class="space-y-2 text-xs">
-          <li>Check-in: 14:00</li>
-          <li>Check-out: 12:00</li>
-          <li>Rooftop: 19:00 – 01:00</li>
+        <h2 class="pie__titulo">Contacto</h2>
+        <ul class="pie__lista">
+          <li><a href="https://wa.me/51908925065" target="_blank" rel="noopener">+51 908 925 065</a></li>
+          <li><a href="https://maps.app.goo.gl/VjK2jiX3JxyvwxtC9" target="_blank" rel="noopener">Playa Tuquillo s/n, Huarmey 02651, Áncash</a></li>
         </ul>
       </div>
 
       <div>
-        <h2 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Contacto</h2>
-        <ul class="space-y-2.5 text-xs">
-          <li class="flex items-start gap-2">
-            <svg class="icon mt-0.5 text-sunset-400" aria-hidden="true"><use href="#i-pin"/></svg>
-            <a href="https://maps.app.goo.gl/VjK2jiX3JxyvwxtC9" target="_blank" rel="noopener" class="hover:text-gold-400 transition">
-              Playa Tuquillo s/n, Huarmey 02651<br>Áncash, Perú — a 200 m de la orilla
-            </a>
-          </li>
-          <li class="flex items-start gap-2">
-            <svg class="icon mt-0.5 text-eco-400" aria-hidden="true"><use href="#i-phone"/></svg>
-            <a href="https://wa.me/51908925065" target="_blank" rel="noopener" class="hover:text-gold-400 transition">+51 908 925 065</a>
-          </li>
+        <h2 class="pie__titulo">Legal</h2>
+        <ul class="pie__lista">
+          <li><a href="https://bahia-cuba-app.netlify.app/es/terminos">Términos y Condiciones</a></li>
+          <li><a href="https://bahia-cuba-app.netlify.app/es/privacidad">Política de Privacidad</a></li>
+          <li><a href="https://bahia-cuba-app.netlify.app/es/cancelacion">Política de Cancelación</a></li>
         </ul>
+        <a href="https://bahia-cuba-app.netlify.app/es/reclamos" class="pie__reclamos">
+          <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg> Libro de reclamaciones
+        </a>
       </div>
     </div>
 
-    <div class="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] text-slate-600">
-      <p>© <span id="year">2026</span> Hotel Bahía de Cuba — RUC 20612706230 — Huarmey, Áncash. Todos los derechos reservados.</p>
-            <!-- Documentos legales: viven en la app de reservas, que es donde se
-           aceptan al reservar. -->
-      <nav class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-        <a href="https://bahia-cuba-app.netlify.app/es/terminos" class="hover:text-gold-400 transition">T&eacute;rminos y Condiciones</a>
-        <a href="https://bahia-cuba-app.netlify.app/es/privacidad" class="hover:text-gold-400 transition">Pol&iacute;tica de Privacidad</a>
-        <a href="https://bahia-cuba-app.netlify.app/es/cancelacion" class="hover:text-gold-400 transition">Pol&iacute;tica de Cancelaci&oacute;n</a>
-      </nav>
-      <!-- Libro de reclamaciones: es obligatorio y tiene que estar a la vista -->
-      <a href="https://bahia-cuba-app.netlify.app/es/reclamos"
-         class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/15 text-slate-300 hover:text-gold-400 hover:border-gold-400/40 transition">
-        <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
-        Libro de reclamaciones
-      </a>
-    </div>
+    <p class="pie__base">© <span id="year">2026</span> Hotel Bahía de Cuba · RUC 20612706230 · Huarmey, Áncash. Todos los derechos reservados.</p>
   </div>
 </footer>
 
 <!-- ============================ ACCIONES FLOTANTES ============================ -->
 <!-- Móvil: barra fija con las dos acciones que más convierten -->
-<div class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200 px-3 py-2.5 flex gap-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
-  <a href="https://bahia-cuba-app.netlify.app/es/reservar" class="flex-1 py-3 rounded-xl font-bold text-xs text-white bg-linear-to-r from-sunset-500 to-sunset-600 flex items-center justify-center gap-2">
-    <svg class="icon" aria-hidden="true"><use href="#i-reservar"/></svg> Reservar
-  </a>
-  <a href="https://wa.me/51908925065?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20deseo%20informaci%C3%B3n"
-     target="_blank" rel="noopener"
-     class="flex-1 py-3 rounded-xl font-bold text-xs text-white bg-eco-500 flex items-center justify-center gap-2">
-    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> WhatsApp
+<div class="barra-movil" id="barraMovil">
+  <a href="#reservar" class="boton boton--rojo">Reservar <span class="boton__precio">desde S/ <span data-precio-min>180</span></span></a>
+  <a href="https://wa.me/51908925065?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20deseo%20informaci%C3%B3n" target="_blank" rel="noopener" class="boton boton--noche" aria-label="Escribir por WhatsApp">
+    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg>
   </a>
 </div>
 
-<!-- Escritorio: burbuja de WhatsApp -->
+<!-- Escritorio: WhatsApp siempre a mano -->
 <a href="https://wa.me/51908925065?text=Hola%20Hotel%20Bah%C3%ADa%20de%20Cuba%2C%20deseo%20informaci%C3%B3n"
-   target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"
-   class="hidden sm:flex fixed bottom-6 right-6 z-40 group">
-  <span class="wa-pulse relative bg-eco-500 hover:bg-eco-600 text-white size-14 rounded-full flex items-center justify-center text-2xl shadow-xl shadow-eco-500/40 transition-all duration-300 hover:scale-105">
-    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg>
-  </span>
-  <span class="absolute right-[68px] top-1/2 -translate-y-1/2 px-3.5 py-1.5 rounded-xl bg-night-900 text-white text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-xl pointer-events-none">
-    ¿Consultas? Escríbenos
-  </span>
+   target="_blank" rel="noopener" class="wa-flotante" aria-label="Escribir por WhatsApp">
+  <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg>
+  <span>¿Dudas? Escríbenos</span>
 </a>
-
-<button type="button" id="backToTop" data-state="hidden" aria-label="Volver arriba"
-        class="hidden sm:flex fixed bottom-24 right-6 z-40 size-11 rounded-full bg-night-900/90 text-white items-center justify-center shadow-lg backdrop-blur-sm hover:bg-night-800">
-  <svg class="icon" aria-hidden="true"><use href="#i-up"/></svg>
-</button>
 
 </body>
 </html>

@@ -1,0 +1,326 @@
+/* --------------------------------------------------------------------------
+   3. SISTEMA DEL CARTEL — rótulos, botones, secciones, leyendas cosidas
+   -------------------------------------------------------------------------- */
+
+/* Contenedor de página */
+.contenedor {
+  width: 100%;
+  max-width: var(--ancho);
+  margin-inline: auto;
+  padding-inline: var(--margen);
+}
+
+/* ---------- Rótulos apilados ----------
+   Como en un cartel chicha, cada línea llena el ancho de su columna a un
+   tamaño distinto. `--fit` es el tamaño de la línea en % del ancho del
+   rótulo (unidades cqi): la línea escala con su columna, sin JavaScript y
+   sin saltos al cargar la fuente. */
+.rotulo-seccion,
+.cartel__titulo,
+.pie__rotulo {
+  container-type: inline-size;
+  margin: 0;
+  font-family: var(--font-rotulo);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 0.86;
+  letter-spacing: -0.005em;
+  color: var(--tinta);
+}
+
+.linea {
+  display: block;
+  font-size: calc(var(--fit, 20) * 1cqi);
+  white-space: nowrap;
+  padding-block: 0.02em;
+}
+
+.rotulo-seccion {
+  max-width: 34rem;
+  --sombra-letra: transparent;
+}
+.rotulo-seccion .linea + .linea {
+  margin-top: 0.06em;
+}
+
+/* Sombra desplazada de rótulo pintado: solo en la línea de color */
+.linea--rojo {
+  color: var(--rojo);
+  text-shadow: 0.035em 0.035em 0 var(--sombra-letra, transparent);
+}
+.linea--amarillo {
+  color: var(--amarillo);
+  text-shadow: 0.035em 0.035em 0 var(--sombra-letra, transparent);
+}
+
+.rotulo-seccion--noche { color: #fff; --sombra-letra: var(--rojo-boton); }
+.rotulo-seccion--morado { color: #fff; --sombra-letra: var(--morado-hondo); }
+.rotulo-seccion--rojo { color: #fff; --sombra-letra: var(--rojo-hondo); }
+.seccion--cal .rotulo-seccion { --sombra-letra: var(--amarillo); }
+/* Sobre cal, el rojo de texto es el hondo: pasa AA incluso en tamaños medianos */
+.seccion--cal .linea--rojo,
+.seccion--cal .casa__titulo,
+.seccion--cal .fila__cap {
+  color: var(--rojo-texto);
+}
+.seccion--amarillo .rotulo-seccion { --sombra-letra: #fff; }
+
+/* ---------- Texto ---------- */
+.parrafo {
+  max-width: 38rem;
+  margin: 1.5rem 0 0;
+  font-size: clamp(1.0625rem, 1vw + 0.8rem, 1.25rem);
+  line-height: 1.55;
+  color: var(--tinta-2);
+  text-wrap: pretty;
+}
+.parrafo--noche { color: var(--niebla); }
+.parrafo--morado { color: #fff; }
+.parrafo--rojo { color: #fff1ef; }
+.seccion--amarillo .parrafo { color: var(--tinta-amarilla); }
+
+/* ---------- Botones ---------- */
+.boton {
+  --b-fondo: var(--noche);
+  --b-texto: #fff;
+  --b-hover: var(--noche-3);
+  --b-sombra: rgb(16 22 43 / 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  min-height: 3rem;
+  padding: 0.8em 1.35em;
+  border: 0;
+  border-radius: 4px;
+  background: var(--b-fondo);
+  color: var(--b-texto);
+  font-family: var(--font-rotulo);
+  font-weight: 800;
+  font-stretch: 80%;
+  font-size: 1.0625rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -12px var(--b-sombra);
+  transition:
+    background-color 0.2s var(--ease-suave),
+    transform 0.25s var(--ease-salida),
+    box-shadow 0.25s var(--ease-salida);
+}
+.boton .icon {
+  transition: transform 0.3s var(--ease-salida);
+}
+@media (hover: hover) {
+  .boton:hover {
+    background: var(--b-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 26px -14px var(--b-sombra);
+  }
+  .boton:hover .icon:last-child {
+    transform: translateX(3px);
+  }
+}
+.boton:active {
+  transform: translateY(1px) scale(0.98);
+  transition-duration: 0.08s;
+}
+
+.boton--rojo {
+  --b-fondo: var(--rojo-boton);
+  --b-hover: var(--rojo-hondo);
+  --b-sombra: rgb(16 22 43 / 0.45);
+}
+.boton--amarillo {
+  --b-fondo: var(--amarillo);
+  --b-texto: var(--noche);
+  --b-hover: #ffd34d;
+  --b-sombra: rgb(0 0 0 / 0.45);
+}
+.boton--claro {
+  --b-fondo: #fff;
+  --b-texto: var(--noche);
+  --b-hover: var(--cal-2);
+}
+.boton--noche {
+  --b-fondo: var(--noche);
+  --b-hover: var(--noche-3);
+}
+.boton--chico {
+  min-height: 2.5rem;
+  padding: 0.6em 1.1em;
+  font-size: 0.9375rem;
+}
+.boton--grande {
+  min-height: 3.75rem;
+  padding: 1em 1.6em;
+  font-size: 1.25rem;
+}
+.boton--ancho {
+  width: 100%;
+}
+.boton__precio {
+  font-weight: 600;
+  font-stretch: 75%;
+  opacity: 0.88;
+  font-variant-numeric: tabular-nums;
+}
+
+.enlace-cartel {
+  font-family: var(--font-rotulo);
+  font-weight: 800;
+  font-stretch: 80%;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3em;
+}
+.enlace-cartel:hover {
+  text-decoration-color: var(--rojo);
+}
+.enlace-cartel--noche:hover { text-decoration-color: var(--amarillo); }
+
+.enlace-flecha {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 700;
+  color: inherit;
+}
+.enlace-flecha .icon { transition: transform 0.3s var(--ease-salida); }
+@media (hover: hover) {
+  .enlace-flecha:hover .icon { transform: translateX(4px); }
+}
+
+.enlace-claro {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ---------- Campos ---------- */
+.campo {
+  display: grid;
+  gap: 0.4rem;
+}
+.campo > span {
+  font-family: var(--font-rotulo);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.campo input,
+.campo select {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.65rem 0.85rem;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--tinta);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.campo input:focus-visible,
+.campo select:focus-visible {
+  outline: none;
+  border-color: var(--rojo-boton);
+  box-shadow: 0 0 0 4px rgb(214 31 27 / 0.22);
+}
+
+/* ---------- Secciones como campos de color ---------- */
+.seccion {
+  position: relative;
+  padding-block: clamp(4.5rem, 9vw, 8.5rem);
+}
+.seccion--cal { background: var(--cal); color: var(--tinta); --foco: var(--noche); }
+.seccion--amarillo { background: var(--amarillo); color: var(--noche); --foco: var(--noche); }
+.seccion--noche { background: var(--noche); color: #fff; --foco: var(--amarillo); }
+.seccion--noche2 { background: var(--noche-2); color: #fff; --foco: var(--amarillo); }
+.seccion--morado { background: var(--morado); color: #fff; --foco: var(--amarillo); }
+.seccion--rojo { background: var(--rojo-boton); color: #fff; --foco: var(--amarillo); }
+
+/* Transición de trama de puntos: el color de arriba se deshace en puntos
+   cada vez más pequeños, como el sol del logo. */
+.seccion::before,
+.pie::before {
+  content: "";
+  position: absolute;
+  inset: -1px 0 auto;
+  height: 2.75rem;
+  background: var(--antes, transparent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='44'%3E%3Ccircle cx='11' cy='0' r='12'/%3E%3Ccircle cx='0' cy='9' r='8'/%3E%3Ccircle cx='22' cy='9' r='8'/%3E%3Ccircle cx='11' cy='17' r='5.6'/%3E%3Ccircle cx='0' cy='25' r='3.8'/%3E%3Ccircle cx='22' cy='25' r='3.8'/%3E%3Ccircle cx='11' cy='32' r='2.4'/%3E%3Ccircle cx='0' cy='39' r='1.3'/%3E%3Ccircle cx='22' cy='39' r='1.3'/%3E%3C/svg%3E") 0 0 / 22px 44px repeat-x;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='44'%3E%3Ccircle cx='11' cy='0' r='12'/%3E%3Ccircle cx='0' cy='9' r='8'/%3E%3Ccircle cx='22' cy='9' r='8'/%3E%3Ccircle cx='11' cy='17' r='5.6'/%3E%3Ccircle cx='0' cy='25' r='3.8'/%3E%3Ccircle cx='22' cy='25' r='3.8'/%3E%3Ccircle cx='11' cy='32' r='2.4'/%3E%3Ccircle cx='0' cy='39' r='1.3'/%3E%3Ccircle cx='22' cy='39' r='1.3'/%3E%3C/svg%3E") 0 0 / 22px 44px repeat-x;
+  pointer-events: none;
+}
+#habitaciones { --antes: var(--morado); }
+#atardecer { --antes: var(--cal); }
+#rooftop { --antes: var(--amarillo); }
+#energia { --antes: var(--noche); }
+#ruta { --antes: var(--cal); }
+#huespedes { --antes: var(--noche-2); }
+#reservar { --antes: var(--morado); }
+#preguntas { --antes: var(--rojo-boton); }
+.pie { --antes: var(--cal); }
+
+/* ---------- Leyenda cosida: los datos reales, pegados a su foto ---------- */
+.costura {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 0.6rem;
+  padding: 0.35rem 0.7rem;
+  background: var(--cal);
+  color: var(--tinta);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  border-radius: 3px;
+  outline: 1.5px dashed var(--rojo);
+  outline-offset: -5px;
+  padding-inline: 0.9rem;
+  padding-block: 0.5rem;
+}
+
+/* ---------- Foto pegada en el muro ---------- */
+.foto-pegada {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.foto-pegada img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  border: 6px solid #fff;
+  border-radius: 2px;
+  box-shadow: 0 18px 30px -18px rgb(0 0 0 / 0.55);
+}
+
+/* Los hijos de las rejillas pueden encogerse: sin esto, un input de fecha
+   o una palabra larga empuja la columna más allá de la pantalla en móvil. */
+.cartel__rejilla > *,
+.habitaciones__cabeza > *,
+.atardecer > *,
+.rooftop__rejilla > *,
+.energia__cabeza > *,
+.llegada > *,
+.comunidad__cabeza > *,
+.reserva > *,
+.preguntas > *,
+.boleto__campos > * {
+  min-width: 0;
+}
+.campo input,
+.campo select {
+  min-width: 0;
+}

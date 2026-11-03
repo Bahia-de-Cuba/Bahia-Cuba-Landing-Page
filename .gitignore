@@ -2,3 +2,8 @@ node_modules/
 tools/shots/
 .DS_Store
 preview.html
+
+# Capturas y utilidades de revisión de diseño (se regeneran)
+.impeccable/review/
+.impeccable/capturar.mjs
+.impeccable/direction-payload.json

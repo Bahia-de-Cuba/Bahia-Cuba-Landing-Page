@@ -1,0 +1,635 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-03T00:57:06.247Z",
+  "title": "Design System: Hotel Bahía de Cuba",
+  "extensions": {
+    "colorMeta": {
+      "noche": {
+        "role": "neutral",
+        "displayName": "Azul noche",
+        "canonical": "oklch(20.6% 0.043 270.3)",
+        "tonalRamp": [
+          "oklch(15% 0.026 270.3)",
+          "oklch(26% 0.043 270.3)",
+          "oklch(37% 0.043 270.3)",
+          "oklch(48% 0.043 270.3)",
+          "oklch(59% 0.043 270.3)",
+          "oklch(70% 0.043 270.3)",
+          "oklch(82% 0.043 270.3)",
+          "oklch(95% 0.015 270.3)"
+        ]
+      },
+      "noche-2": {
+        "role": "neutral",
+        "displayName": "Noche 2",
+        "canonical": "oklch(25.6% 0.058 269.4)",
+        "tonalRamp": [
+          "oklch(15% 0.035 269.4)",
+          "oklch(26% 0.058 269.4)",
+          "oklch(37% 0.058 269.4)",
+          "oklch(48% 0.058 269.4)",
+          "oklch(59% 0.058 269.4)",
+          "oklch(70% 0.058 269.4)",
+          "oklch(82% 0.058 269.4)",
+          "oklch(95% 0.020 269.4)"
+        ]
+      },
+      "noche-3": {
+        "role": "neutral",
+        "displayName": "Noche 3",
+        "canonical": "oklch(32.2% 0.076 269.7)",
+        "tonalRamp": [
+          "oklch(15% 0.046 269.7)",
+          "oklch(26% 0.076 269.7)",
+          "oklch(37% 0.076 269.7)",
+          "oklch(48% 0.076 269.7)",
+          "oklch(59% 0.076 269.7)",
+          "oklch(70% 0.076 269.7)",
+          "oklch(82% 0.076 269.7)",
+          "oklch(95% 0.027 269.7)"
+        ]
+      },
+      "niebla": {
+        "role": "neutral",
+        "displayName": "Niebla",
+        "canonical": "oklch(85.3% 0.026 273.5)",
+        "tonalRamp": [
+          "oklch(15% 0.015 273.5)",
+          "oklch(26% 0.026 273.5)",
+          "oklch(37% 0.026 273.5)",
+          "oklch(48% 0.026 273.5)",
+          "oklch(59% 0.026 273.5)",
+          "oklch(70% 0.026 273.5)",
+          "oklch(82% 0.026 273.5)",
+          "oklch(95% 0.009 273.5)"
+        ]
+      },
+      "niebla-2": {
+        "role": "neutral",
+        "displayName": "Niebla 2",
+        "canonical": "oklch(67.7% 0.044 274.5)",
+        "tonalRamp": [
+          "oklch(15% 0.026 274.5)",
+          "oklch(26% 0.044 274.5)",
+          "oklch(37% 0.044 274.5)",
+          "oklch(48% 0.044 274.5)",
+          "oklch(59% 0.044 274.5)",
+          "oklch(70% 0.044 274.5)",
+          "oklch(82% 0.044 274.5)",
+          "oklch(95% 0.015 274.5)"
+        ]
+      },
+      "rojo": {
+        "role": "primary",
+        "displayName": "Rojo atardecer",
+        "canonical": "oklch(59.7% 0.228 28.5)",
+        "tonalRamp": [
+          "oklch(15% 0.120 28.5)",
+          "oklch(26% 0.200 28.5)",
+          "oklch(37% 0.200 28.5)",
+          "oklch(48% 0.200 28.5)",
+          "oklch(59% 0.200 28.5)",
+          "oklch(70% 0.200 28.5)",
+          "oklch(82% 0.200 28.5)",
+          "oklch(95% 0.070 28.5)"
+        ]
+      },
+      "rojo-boton": {
+        "role": "primary",
+        "displayName": "Rojo de botón",
+        "canonical": "oklch(56.1% 0.215 28.4)",
+        "tonalRamp": [
+          "oklch(15% 0.120 28.4)",
+          "oklch(26% 0.200 28.4)",
+          "oklch(37% 0.200 28.4)",
+          "oklch(48% 0.200 28.4)",
+          "oklch(59% 0.200 28.4)",
+          "oklch(70% 0.200 28.4)",
+          "oklch(82% 0.200 28.4)",
+          "oklch(95% 0.070 28.4)"
+        ]
+      },
+      "rojo-hondo": {
+        "role": "primary",
+        "displayName": "Rojo hondo",
+        "canonical": "oklch(49.4% 0.190 28.4)",
+        "tonalRamp": [
+          "oklch(15% 0.114 28.4)",
+          "oklch(26% 0.190 28.4)",
+          "oklch(37% 0.190 28.4)",
+          "oklch(48% 0.190 28.4)",
+          "oklch(59% 0.190 28.4)",
+          "oklch(70% 0.190 28.4)",
+          "oklch(82% 0.190 28.4)",
+          "oklch(95% 0.067 28.4)"
+        ]
+      },
+      "rojo-texto": {
+        "role": "primary",
+        "displayName": "Rojo de texto",
+        "canonical": "oklch(53.2% 0.205 28.4)",
+        "tonalRamp": [
+          "oklch(15% 0.120 28.4)",
+          "oklch(26% 0.200 28.4)",
+          "oklch(37% 0.200 28.4)",
+          "oklch(48% 0.200 28.4)",
+          "oklch(59% 0.200 28.4)",
+          "oklch(70% 0.200 28.4)",
+          "oklch(82% 0.200 28.4)",
+          "oklch(95% 0.070 28.4)"
+        ]
+      },
+      "rojo-vivo": {
+        "role": "primary",
+        "displayName": "Rojo vivo",
+        "canonical": "oklch(66.8% 0.219 28.6)",
+        "tonalRamp": [
+          "oklch(15% 0.120 28.6)",
+          "oklch(26% 0.200 28.6)",
+          "oklch(37% 0.200 28.6)",
+          "oklch(48% 0.200 28.6)",
+          "oklch(59% 0.200 28.6)",
+          "oklch(70% 0.200 28.6)",
+          "oklch(82% 0.200 28.6)",
+          "oklch(95% 0.070 28.6)"
+        ]
+      },
+      "amarillo": {
+        "role": "secondary",
+        "displayName": "Amarillo letrero",
+        "canonical": "oklch(85.0% 0.171 86.1)",
+        "tonalRamp": [
+          "oklch(15% 0.103 86.1)",
+          "oklch(26% 0.171 86.1)",
+          "oklch(37% 0.171 86.1)",
+          "oklch(48% 0.171 86.1)",
+          "oklch(59% 0.171 86.1)",
+          "oklch(70% 0.171 86.1)",
+          "oklch(82% 0.171 86.1)",
+          "oklch(95% 0.060 86.1)"
+        ]
+      },
+      "amarillo-hondo": {
+        "role": "secondary",
+        "displayName": "Amarillo hondo",
+        "canonical": "oklch(77.0% 0.158 82.9)",
+        "tonalRamp": [
+          "oklch(15% 0.095 82.9)",
+          "oklch(26% 0.158 82.9)",
+          "oklch(37% 0.158 82.9)",
+          "oklch(48% 0.158 82.9)",
+          "oklch(59% 0.158 82.9)",
+          "oklch(70% 0.158 82.9)",
+          "oklch(82% 0.158 82.9)",
+          "oklch(95% 0.055 82.9)"
+        ]
+      },
+      "tinta-amarilla": {
+        "role": "secondary",
+        "displayName": "Tinta amarilla",
+        "canonical": "oklch(30.0% 0.062 82.0)",
+        "tonalRamp": [
+          "oklch(15% 0.037 82.0)",
+          "oklch(26% 0.062 82.0)",
+          "oklch(37% 0.062 82.0)",
+          "oklch(48% 0.062 82.0)",
+          "oklch(59% 0.062 82.0)",
+          "oklch(70% 0.062 82.0)",
+          "oklch(82% 0.062 82.0)",
+          "oklch(95% 0.022 82.0)"
+        ]
+      },
+      "morado": {
+        "role": "tertiary",
+        "displayName": "Morado del letrero pintado",
+        "canonical": "oklch(56.8% 0.179 291.3)",
+        "tonalRamp": [
+          "oklch(15% 0.108 291.3)",
+          "oklch(26% 0.179 291.3)",
+          "oklch(37% 0.179 291.3)",
+          "oklch(48% 0.179 291.3)",
+          "oklch(59% 0.179 291.3)",
+          "oklch(70% 0.179 291.3)",
+          "oklch(82% 0.179 291.3)",
+          "oklch(95% 0.063 291.3)"
+        ]
+      },
+      "morado-hondo": {
+        "role": "tertiary",
+        "displayName": "Morado hondo",
+        "canonical": "oklch(47.7% 0.191 286.7)",
+        "tonalRamp": [
+          "oklch(15% 0.115 286.7)",
+          "oklch(26% 0.191 286.7)",
+          "oklch(37% 0.191 286.7)",
+          "oklch(48% 0.191 286.7)",
+          "oklch(59% 0.191 286.7)",
+          "oklch(70% 0.191 286.7)",
+          "oklch(82% 0.191 286.7)",
+          "oklch(95% 0.067 286.7)"
+        ]
+      },
+      "morado-claro": {
+        "role": "tertiary",
+        "displayName": "Morado claro",
+        "canonical": "oklch(77.4% 0.126 292.0)",
+        "tonalRamp": [
+          "oklch(15% 0.076 292.0)",
+          "oklch(26% 0.126 292.0)",
+          "oklch(37% 0.126 292.0)",
+          "oklch(48% 0.126 292.0)",
+          "oklch(59% 0.126 292.0)",
+          "oklch(70% 0.126 292.0)",
+          "oklch(82% 0.126 292.0)",
+          "oklch(95% 0.044 292.0)"
+        ]
+      },
+      "cal": {
+        "role": "neutral",
+        "displayName": "Cal",
+        "canonical": "oklch(97.3% 0.005 95.1)",
+        "tonalRamp": [
+          "oklch(15% 0.003 95.1)",
+          "oklch(26% 0.005 95.1)",
+          "oklch(37% 0.005 95.1)",
+          "oklch(48% 0.005 95.1)",
+          "oklch(59% 0.005 95.1)",
+          "oklch(70% 0.005 95.1)",
+          "oklch(82% 0.005 95.1)",
+          "oklch(95% 0.002 95.1)"
+        ]
+      },
+      "cal-2": {
+        "role": "neutral",
+        "displayName": "Cal 2",
+        "canonical": "oklch(93.1% 0.011 89.7)",
+        "tonalRamp": [
+          "oklch(15% 0.007 89.7)",
+          "oklch(26% 0.011 89.7)",
+          "oklch(37% 0.011 89.7)",
+          "oklch(48% 0.011 89.7)",
+          "oklch(59% 0.011 89.7)",
+          "oklch(70% 0.011 89.7)",
+          "oklch(82% 0.011 89.7)",
+          "oklch(95% 0.004 89.7)"
+        ]
+      },
+      "tinta-2": {
+        "role": "neutral",
+        "displayName": "Tinta 2",
+        "canonical": "oklch(44.2% 0.052 274.3)",
+        "tonalRamp": [
+          "oklch(15% 0.031 274.3)",
+          "oklch(26% 0.052 274.3)",
+          "oklch(37% 0.052 274.3)",
+          "oklch(48% 0.052 274.3)",
+          "oklch(59% 0.052 274.3)",
+          "oklch(70% 0.052 274.3)",
+          "oklch(82% 0.052 274.3)",
+          "oklch(95% 0.018 274.3)"
+        ]
+      },
+      "tinta": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "oklch(20.6% 0.043 270.3)",
+        "tonalRamp": [
+          "oklch(15% 0.026 270.3)",
+          "oklch(26% 0.043 270.3)",
+          "oklch(37% 0.043 270.3)",
+          "oklch(48% 0.043 270.3)",
+          "oklch(59% 0.043 270.3)",
+          "oklch(70% 0.043 270.3)",
+          "oklch(82% 0.043 270.3)",
+          "oklch(95% 0.015 270.3)"
+        ]
+      },
+      "blanco": {
+        "role": "neutral",
+        "displayName": "Blanco",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(59% 0 0)",
+          "oklch(70% 0 0)",
+          "oklch(82% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Rótulo apilado",
+        "purpose": "Rótulos de sección, cartel principal y pie; cada línea con su --fit en cqi."
+      },
+      "headline": {
+        "displayName": "Cifra de pieza",
+        "purpose": "Lugar o cifra protagonista del letrero y el veredicto."
+      },
+      "title": {
+        "displayName": "Título",
+        "purpose": "Preguntas del acordeón y nombres en listas."
+      },
+      "lead": {
+        "displayName": "Entrada",
+        "purpose": "Párrafo bajo un rótulo, máx. 38rem."
+      },
+      "body": {
+        "displayName": "Texto",
+        "purpose": "Texto corrido en Archivo."
+      },
+      "label": {
+        "displayName": "Etiqueta de campo",
+        "purpose": "Etiquetas de formulario en mayúsculas."
+      },
+      "button": {
+        "displayName": "Botón",
+        "purpose": "Botones y enlaces de cartel."
+      },
+      "caption": {
+        "displayName": "Leyenda cosida",
+        "purpose": "Datos reales bajo las fotos."
+      }
+    },
+    "shadows": [
+      {
+        "name": "boton",
+        "value": "0 10px 22px -12px rgb(16 22 43 / 0.35)",
+        "purpose": "Botón en reposo; hover 0 16px 26px -14px."
+      },
+      {
+        "name": "foto-pegada",
+        "value": "0 18px 30px -18px rgb(0 0 0 / 0.55)",
+        "purpose": "Foto con marco blanco de 6px."
+      },
+      {
+        "name": "boleto",
+        "value": "0 30px 60px -30px rgb(60 0 0 / 0.75)",
+        "purpose": "Boleto de reserva sobre el campo rojo."
+      },
+      {
+        "name": "cabecera-abajo",
+        "value": "0 10px 30px -18px rgb(0 0 0 / 0.8)",
+        "purpose": "Cabecera tras bajar."
+      },
+      {
+        "name": "foco-campo",
+        "value": "0 0 0 4px rgb(214 31 27 / 0.22)",
+        "purpose": "Anillo de input enfocado."
+      },
+      {
+        "name": "letra-pintada",
+        "value": "text-shadow: 0.035em 0.035em 0 var(--sombra-letra)",
+        "purpose": "Solo la línea de color de un rótulo grande; color según el campo."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-salida",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Entradas, levantamientos y el gesto de pegar."
+      },
+      {
+        "name": "ease-suave",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Fundidos de color, incluido el cambio de hora del cartel (0.8s)."
+      },
+      {
+        "name": "pegar",
+        "value": "clip-path inset(0 0 100% 0) → inset(0 0 -0.2em 0) + translateY(0.22em) → none, 0.85–0.9s, 0.09s entre líneas",
+        "purpose": "Revelado de rótulos como cartel recién pegado."
+      },
+      {
+        "name": "destapar",
+        "value": "clip-path inset(0 0 100% 0) → inset(0), 1s",
+        "purpose": "Revelado de fotos."
+      },
+      {
+        "name": "asomar",
+        "value": "opacity 0 + translateY(1–1.25rem), 0.7–0.8s, 70ms por elemento",
+        "purpose": "Listas y piezas secundarias."
+      },
+      {
+        "name": "encender",
+        "value": "scale 0.3 + opacity 0, 0.6s, retardo por punto (--d)",
+        "purpose": "El sol de puntos se arma punto a punto."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animaciones a 0.01ms; transiciones solo de color, fondo, borde, opacidad, fill y filter",
+        "purpose": "Sin desplazamientos ni bucles; los fundidos día/noche se conservan."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "560px"
+      },
+      {
+        "name": "md",
+        "value": "640px"
+      },
+      {
+        "name": "tablet",
+        "value": "768px"
+      },
+      {
+        "name": "tablet-ancho",
+        "value": "900px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1200px"
+      }
+    ],
+    "horaTokens": {
+      "note": "Tokens del cartel principal bajo html[data-hora]; noche es el estado por defecto y sin JavaScript.",
+      "noche": {
+        "suelo": "#10162b",
+        "l1": "#ffc414",
+        "l2": "#ff4a3d",
+        "l3": "#fff",
+        "sombraLetra": "#5b3fc0",
+        "texto": "#c9cee0",
+        "sol": "#b7a6ff",
+        "estrellas": 1,
+        "foco": "#ffc414"
+      },
+      "dia": {
+        "suelo": "#ffc414",
+        "l1": "#10162b",
+        "l2": "#e8231e",
+        "l3": "#10162b",
+        "sombraLetra": "#fff",
+        "texto": "#3d2a00",
+        "sol": "#e8231e",
+        "sol2": "#ff7a1a",
+        "estrellas": 0,
+        "foco": "#10162b"
+      },
+      "atardecer": {
+        "suelo": "#d61f1b",
+        "l1": "#ffc414",
+        "l2": "#ffc414",
+        "l3": "#fff",
+        "sombraLetra": "#10162b",
+        "texto": "#ffe9e4",
+        "sol": "#ffc414",
+        "sol2": "#fff3c4",
+        "estrellas": 0.25,
+        "foco": "#ffc414"
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Botón Reservar",
+      "kind": "button",
+      "refersTo": "button-reservar",
+      "description": "La acción de reservar, siempre en rojo de botón, con precio opcional.",
+      "html": "<a class=\"ds-btn-reservar\" href=\"#\">Reservar <span class=\"ds-precio\">desde S/ 180</span> <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" aria-hidden=\"true\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></a>",
+      "css": ":host{--noche:#10162b;--noche-3:#24305a;--rojo:#e8231e;--rojo-boton:#d61f1b;--rojo-hondo:#b51714;--amarillo:#ffc414;--cal:#f7f6f2;--cal-2:#ebe8e0;--tinta:#10162b;--niebla:#c9cee0;--ease-salida:cubic-bezier(0.16,1,0.3,1);--ease-suave:cubic-bezier(0.22,1,0.36,1);--font-rotulo:\"Anybody\",\"Arial Narrow\",sans-serif;--font-texto:\"Archivo\",ui-sans-serif,system-ui,sans-serif} .ds-btn-reservar{display:inline-flex;align-items:center;justify-content:center;gap:0.55em;min-height:3rem;padding:0.8em 1.35em;border:0;border-radius:4px;font-family:var(--font-rotulo);font-weight:800;font-stretch:80%;font-size:1.0625rem;line-height:1;letter-spacing:0.02em;text-transform:uppercase;cursor:pointer;transition:background-color 0.2s var(--ease-suave),transform 0.25s var(--ease-salida),box-shadow 0.25s var(--ease-salida);background:var(--rojo-boton);color:#fff;box-shadow:0 10px 22px -12px rgb(16 22 43 / 0.45)} .ds-btn-reservar:hover{background:var(--rojo-hondo);transform:translateY(-2px);box-shadow:0 16px 26px -14px rgb(16 22 43 / 0.45)} .ds-btn-reservar:active{transform:translateY(1px) scale(0.98)} .ds-btn-reservar:focus-visible{outline:3px solid var(--noche);outline-offset:3px} .ds-btn-reservar{text-decoration:none} .ds-precio{font-weight:600;font-stretch:75%;opacity:0.88;font-variant-numeric:tabular-nums} .ds-btn-reservar svg{transition:transform 0.3s var(--ease-salida)} .ds-btn-reservar:hover svg{transform:translateX(3px)}"
+    },
+    {
+      "name": "Botón noche",
+      "kind": "button",
+      "refersTo": "button-noche",
+      "description": "Botón de estructura sobre cal y amarillo.",
+      "html": "<button class=\"ds-btn-noche\">Ver habitaciones</button>",
+      "css": ":host{--noche:#10162b;--noche-3:#24305a;--rojo:#e8231e;--rojo-boton:#d61f1b;--rojo-hondo:#b51714;--amarillo:#ffc414;--cal:#f7f6f2;--cal-2:#ebe8e0;--tinta:#10162b;--niebla:#c9cee0;--ease-salida:cubic-bezier(0.16,1,0.3,1);--ease-suave:cubic-bezier(0.22,1,0.36,1);--font-rotulo:\"Anybody\",\"Arial Narrow\",sans-serif;--font-texto:\"Archivo\",ui-sans-serif,system-ui,sans-serif} .ds-btn-noche{display:inline-flex;align-items:center;justify-content:center;gap:0.55em;min-height:3rem;padding:0.8em 1.35em;border:0;border-radius:4px;font-family:var(--font-rotulo);font-weight:800;font-stretch:80%;font-size:1.0625rem;line-height:1;letter-spacing:0.02em;text-transform:uppercase;cursor:pointer;transition:background-color 0.2s var(--ease-suave),transform 0.25s var(--ease-salida),box-shadow 0.25s var(--ease-salida);background:var(--noche);color:#fff;box-shadow:0 10px 22px -12px rgb(16 22 43 / 0.35)} .ds-btn-noche:hover{background:var(--noche-3);transform:translateY(-2px);box-shadow:0 16px 26px -14px rgb(16 22 43 / 0.35)} .ds-btn-noche:active{transform:translateY(1px) scale(0.98)} .ds-btn-noche:focus-visible{outline:3px solid var(--noche);outline-offset:3px}"
+    },
+    {
+      "name": "Botón amarillo",
+      "kind": "button",
+      "refersTo": "button-amarillo",
+      "description": "Botón sobre campos oscuros.",
+      "html": "<div class=\"ds-fondo\"><button class=\"ds-btn-amarillo\">Cómo llegar</button></div>",
+      "css": ":host{--noche:#10162b;--noche-3:#24305a;--rojo:#e8231e;--rojo-boton:#d61f1b;--rojo-hondo:#b51714;--amarillo:#ffc414;--cal:#f7f6f2;--cal-2:#ebe8e0;--tinta:#10162b;--niebla:#c9cee0;--ease-salida:cubic-bezier(0.16,1,0.3,1);--ease-suave:cubic-bezier(0.22,1,0.36,1);--font-rotulo:\"Anybody\",\"Arial Narrow\",sans-serif;--font-texto:\"Archivo\",ui-sans-serif,system-ui,sans-serif} .ds-btn-amarillo{display:inline-flex;align-items:center;justify-content:center;gap:0.55em;min-height:3rem;padding:0.8em 1.35em;border:0;border-radius:4px;font-family:var(--font-rotulo);font-weight:800;font-stretch:80%;font-size:1.0625rem;line-height:1;letter-spacing:0.02em;text-transform:uppercase;cursor:pointer;transition:background-color 0.2s var(--ease-suave),transform 0.25s var(--ease-salida),box-shadow 0.25s var(--ease-salida);background:var(--amarillo);color:var(--noche);box-shadow:0 10px 22px -12px rgb(0 0 0 / 0.45)} .ds-btn-amarillo:hover{background:#ffd34d;transform:translateY(-2px);box-shadow:0 16px 26px -14px rgb(0 0 0 / 0.45)} .ds-btn-amarillo:active{transform:translateY(1px) scale(0.98)} .ds-btn-amarillo:focus-visible{outline:3px solid var(--noche);outline-offset:3px} .ds-fondo{background:var(--noche);padding:1.5rem} .ds-btn-amarillo:focus-visible{outline-color:var(--amarillo)}"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "input-campo",
+      "description": "Campo de formulario con etiqueta de cartel.",
+      "html": "<label class=\"ds-campo\"><span>Llegada</span><input type=\"date\" value=\"2026-11-14\"></label>",
+      "css": ":host{--noche:#10162b;--noche-3:#24305a;--rojo:#e8231e;--rojo-boton:#d61f1b;--rojo-hondo:#b51714;--amarillo:#ffc414;--cal:#f7f6f2;--cal-2:#ebe8e0;--tinta:#10162b;--niebla:#c9cee0;--ease-salida:cubic-bezier(0.16,1,0.3,1);--ease-suave:cubic-bezier(0.22,1,0.36,1);--font-rotulo:\"Anybody\",\"Arial Narrow\",sans-serif;--font-texto:\"Archivo\",ui-sans-serif,system-ui,sans-serif} .ds-campo{display:grid;gap:0.4rem;color:var(--tinta);max-width:18rem} .ds-campo span{font-family:var(--font-rotulo);font-weight:800;font-stretch:75%;font-size:0.875rem;letter-spacing:0.04em;text-transform:uppercase} .ds-campo input{min-height:3rem;padding:0.65rem 0.85rem;border:2px solid currentColor;border-radius:4px;background:#fff;color:var(--tinta);font:inherit;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;transition:border-color 0.2s,box-shadow 0.2s} .ds-campo input:focus-visible{outline:none;border-color:var(--rojo-boton);box-shadow:0 0 0 4px rgb(214 31 27 / 0.22)}"
+    },
+    {
+      "name": "Chip con quién viajas",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Opción seleccionable en pastilla; seleccionada en azul noche.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\" aria-pressed=\"true\">En pareja</button><button class=\"ds-chip\" aria-pressed=\"false\">En familia</button></div>",
+      "css": ":host{--noche:#10162b;--noche-3:#24305a;--rojo:#e8231e;--rojo-boton:#d61f1b;--rojo-hondo:#b51714;--amarillo:#ffc414;--cal:#f7f6f2;--cal-2:#ebe8e0;--tinta:#10162b;--niebla:#c9cee0;--ease-salida:cubic-bezier(0.16,1,0.3,1);--ease-suave:cubic-bezier(0.22,1,0.36,1);--font-rotulo:\"Anybody\",\"Arial Narrow\",sans-serif;--font-texto:\"Archivo\",ui-sans-serif,system-ui,sans-serif} .ds-chips{display:flex;gap:0.5rem;flex-wrap:wrap} .ds-chip{display:inline-flex;align-items:center;min-height:2.875rem;padding:0 1rem;border:2px solid var(--noche);border-radius:999px;background:transparent;color:var(--noche);font:700 1rem var(--font-texto);cursor:pointer;transition:background-color 0.2s,color 0.2s,transform 0.2s var(--ease-salida)} .ds-chip[aria-pressed=true]{background:var(--noche);color:#fff} .ds-chip:hover:not([aria-pressed=true]){background:var(--cal-2)} .ds-chip:active{transform:scale(0.96)} .ds-chip:focus-visible{outline:3px solid var(--rojo-boton);outline-offset:3px}"
+    },
+    {
+      "name": "Navegación",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Cabecera fija azul noche con marca en letra de cartel y Reservar.",
+      "html": "<header class=\"ds-cab\"><span class=\"ds-marca\">Bahía de Cuba</span><nav><a href=\"#\">Habitaciones</a><a href=\"#\">Rooftop</a><a href=\"#\">Cómo llegar</a></nav><a class=\"ds-res\" href=\"#\">Reservar</a></header>",
+      "css": ":host{--noche:#10162b;--noche-3:#24305a;--rojo:#e8231e;--rojo-boton:#d61f1b;--rojo-hondo:#b51714;--amarillo:#ffc414;--cal:#f7f6f2;--cal-2:#ebe8e0;--tinta:#10162b;--niebla:#c9cee0;--ease-salida:cubic-bezier(0.16,1,0.3,1);--ease-suave:cubic-bezier(0.22,1,0.36,1);--font-rotulo:\"Anybody\",\"Arial Narrow\",sans-serif;--font-texto:\"Archivo\",ui-sans-serif,system-ui,sans-serif} .ds-cab{display:flex;align-items:center;gap:1.25rem;height:4.25rem;padding:0 1.5rem;background:rgb(16 22 43 / 0.94);color:#fff} .ds-marca{margin-right:auto;font-family:var(--font-rotulo);font-weight:900;font-stretch:62%;font-size:1.5rem;text-transform:uppercase;letter-spacing:0.01em} .ds-cab nav{display:flex;gap:1.25rem} .ds-cab nav a{color:#fff;text-decoration:none;font-weight:600} .ds-cab nav a:hover{text-decoration:underline;text-decoration-color:var(--amarillo);text-underline-offset:0.3em} .ds-cab a:focus-visible{outline:3px solid var(--amarillo);outline-offset:3px} .ds-res{display:inline-flex;align-items:center;justify-content:center;gap:0.55em;min-height:3rem;padding:0.8em 1.35em;border:0;border-radius:4px;font-family:var(--font-rotulo);font-weight:800;font-stretch:80%;font-size:1.0625rem;line-height:1;letter-spacing:0.02em;text-transform:uppercase;cursor:pointer;transition:background-color 0.2s var(--ease-suave),transform 0.25s var(--ease-salida),box-shadow 0.25s var(--ease-salida);min-height:2.5rem;padding:0.6em 1.1em;font-size:0.9375rem;background:var(--rojo-boton);color:#fff;text-decoration:none} .ds-res:hover{background:var(--rojo-hondo)}"
+    },
+    {
+      "name": "Rótulo apilado",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Rótulo de sección: líneas a distinto tamaño que llenan la columna (--fit en cqi) con sombra pintada en la línea de color.",
+      "html": "<h2 class=\"ds-rotulo\"><span class=\"ds-linea\" style=\"--fit:31\">Encuentra</span><span class=\"ds-linea ds-roja\" style=\"--fit:21\">tu cuarto</span></h2>",
+      "css": ":host{--noche:#10162b;--noche-3:#24305a;--rojo:#e8231e;--rojo-boton:#d61f1b;--rojo-hondo:#b51714;--amarillo:#ffc414;--cal:#f7f6f2;--cal-2:#ebe8e0;--tinta:#10162b;--niebla:#c9cee0;--ease-salida:cubic-bezier(0.16,1,0.3,1);--ease-suave:cubic-bezier(0.22,1,0.36,1);--font-rotulo:\"Anybody\",\"Arial Narrow\",sans-serif;--font-texto:\"Archivo\",ui-sans-serif,system-ui,sans-serif} .ds-rotulo{container-type:inline-size;max-width:34rem;margin:0;font-family:var(--font-rotulo);font-weight:900;font-stretch:62%;text-transform:uppercase;line-height:0.86;letter-spacing:-0.005em;color:var(--tinta)} .ds-linea{display:block;font-size:calc(var(--fit,20) * 1cqi);white-space:nowrap;padding-block:0.02em} .ds-linea + .ds-linea{margin-top:0.06em} .ds-roja{color:#c81a17;text-shadow:0.035em 0.035em 0 var(--amarillo)}"
+    },
+    {
+      "name": "Leyenda cosida",
+      "kind": "custom",
+      "refersTo": "costura",
+      "description": "Datos reales pegados a su foto con pespunte rojo discontinuo.",
+      "html": "<figure class=\"ds-foto\"><div class=\"ds-img\"></div><figcaption class=\"ds-costura\">Cama de 2 plazas · hasta 2 personas · S/ 220</figcaption></figure>",
+      "css": ":host{--noche:#10162b;--noche-3:#24305a;--rojo:#e8231e;--rojo-boton:#d61f1b;--rojo-hondo:#b51714;--amarillo:#ffc414;--cal:#f7f6f2;--cal-2:#ebe8e0;--tinta:#10162b;--niebla:#c9cee0;--ease-salida:cubic-bezier(0.16,1,0.3,1);--ease-suave:cubic-bezier(0.22,1,0.36,1);--font-rotulo:\"Anybody\",\"Arial Narrow\",sans-serif;--font-texto:\"Archivo\",ui-sans-serif,system-ui,sans-serif} .ds-foto{margin:0;display:flex;flex-direction:column;align-items:flex-start;max-width:20rem} .ds-img{width:100%;aspect-ratio:4/3;background:linear-gradient(var(--cal-2),#d8d3c6);border:6px solid #fff;border-radius:2px;box-shadow:0 18px 30px -18px rgb(0 0 0 / 0.55)} .ds-costura{display:inline-flex;align-items:center;gap:0.5em;margin-top:0.6rem;padding:0.5rem 0.9rem;background:var(--cal);color:var(--tinta);font:600 0.8125rem/1.3 var(--font-texto);border-radius:3px;outline:1.5px dashed var(--rojo);outline-offset:-5px}"
+    },
+    {
+      "name": "Letrero",
+      "kind": "card",
+      "refersTo": "letrero",
+      "description": "Panel tipo letrero de carretera con doble filete blanco.",
+      "html": "<div class=\"ds-letrero\"><p class=\"ds-lugar\">Tuquillo</p><p class=\"ds-datos\"><span><strong>Huarmey</strong> · Áncash</span></p></div>",
+      "css": ":host{--noche:#10162b;--noche-3:#24305a;--rojo:#e8231e;--rojo-boton:#d61f1b;--rojo-hondo:#b51714;--amarillo:#ffc414;--cal:#f7f6f2;--cal-2:#ebe8e0;--tinta:#10162b;--niebla:#c9cee0;--ease-salida:cubic-bezier(0.16,1,0.3,1);--ease-suave:cubic-bezier(0.22,1,0.36,1);--font-rotulo:\"Anybody\",\"Arial Narrow\",sans-serif;--font-texto:\"Archivo\",ui-sans-serif,system-ui,sans-serif} .ds-letrero{display:inline-grid;gap:0.35rem;padding:1.1rem 1.4rem 1.2rem;background:var(--noche-3);border-radius:8px;box-shadow:inset 0 0 0 3px var(--noche-3),inset 0 0 0 5px #fff} .ds-lugar{margin:0;font-family:var(--font-rotulo);font-weight:900;font-stretch:62%;font-size:clamp(2.75rem,6vw,4rem);line-height:0.9;text-transform:uppercase;color:#fff} .ds-datos{display:flex;gap:0.25rem 1.25rem;margin:0;color:var(--niebla);font-family:var(--font-texto);font-variant-numeric:tabular-nums} .ds-datos strong{color:var(--amarillo)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "El cartel chicha de la Panamericana",
+    "overview": "La página es una sucesión de carteles pintados a mano junto a la carretera. Cada sección es un campo entero de un solo color (azul noche, amarillo letrero, rojo atardecer, morado, cal) con un rótulo negro y condensado que llena el ancho de su columna, y cada cartel avisa algo verdadero: a qué hora cae el sol hoy, qué cuarto te sirve, si el rooftop está abierto, cuánto falta desde Lima. El color tiene oficio, no adorno.\n\nEl sol de puntos del logo es el sistema de luz. Los mismos anillos de puntos dibujan el sol del cartel principal (que sube y baja con la hora real de Huarmey), el arco del atardecer, los diales de energía y la costura entre secciones, donde el color de arriba se deshace en puntos cada vez más pequeños. El cartel principal cambia de color entre día, atardecer y noche solo cambiando tokens.\n\nDensidad media, contraste alto, nada de vidrio ni degradados de agencia. Las fotos son reales, enmarcadas en blanco como pegadas en un muro, y llevan sus datos cosidos debajo. Se rechaza la foto de playa a pantalla completa con barra de fechas y titular serif.",
+    "keyCharacteristics": [
+      "Campos de color planos a sangre, uno por sección, unidos por una trama de puntos.",
+      "Rótulos apilados en Anybody 900 al 62 % de ancho, cada línea a su propio tamaño.",
+      "Color por función: rojo reserva, amarillo marca el sol y la hora, morado es la segunda voz.",
+      "El sol de puntos como única fuente de luz y de transición.",
+      "Fotos reales con marco blanco y leyenda cosida de datos verdaderos."
+    ],
+    "rules": [
+      {
+        "name": "La regla del color con oficio",
+        "body": "Rojo solo para reservar y la marca, amarillo solo para el sol y la hora, morado para la segunda voz. Un color nuevo no entra sin un oficio que los demás no cumplan.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del rojo según el muro",
+        "body": "El rojo cambia de valor según el fondo: rojo-boton bajo texto blanco, rojo-texto sobre cal, rojo-vivo sobre noche. Nunca el rojo de rótulo como texto pequeño sobre cal.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del campo entero",
+        "body": "Una sección es un solo color a sangre (cal, amarillo, noche, noche-2, morado o rojo); dos campos seguidos nunca repiten color.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del rótulo apilado",
+        "body": "Un rótulo grande se escribe en líneas `.linea`, cada una con su `--fit` (porcentaje del ancho en cqi) para que llene la columna sin JavaScript. Nunca un titular en párrafo con salto automático.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla de la sombra pintada",
+        "body": "La sombra desplazada (0.035em 0.035em, sin desenfoque) es de rótulo pintado y va solo en la línea de color de un rótulo grande, con color según el campo: amarillo sobre cal, blanco sobre amarillo, rojo-boton sobre noche, morado-hondo sobre morado, rojo-hondo sobre rojo.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla de las cifras",
+        "body": "Precios, horas y totales usan cifras tabulares; las horas se escriben «6:12 p. m.» con espacios de no separación, en hora de Lima.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla de la costura de puntos",
+        "body": "El paso de una sección a otra es una franja de 2.75rem donde el color anterior se deshace en una trama de círculos decrecientes (máscara SVG de 22×44px repetida en horizontal). Cada sección declara el color de arriba en `--antes`; nunca una línea recta ni un degradado.",
+        "section": "layout"
+      },
+      {
+        "name": "La regla de la luz de puntos",
+        "body": "Lo que brilla se dibuja con puntos: el sol, los diales encendidos, las estrellas del cielo nocturno. No hay resplandores, halos ni degradados radiales de luz.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do dar a cada sección un campo entero de color y declarar en `--antes` el color de la sección anterior para la costura de puntos.",
+      "Do escribir los rótulos grandes como líneas apiladas con su propio `--fit`, y poner color y sombra pintada solo en una de ellas.",
+      "Do usar rojo-boton para toda acción de reservar y mantener Reservar visible en cada tramo.",
+      "Do dibujar cualquier luz, sol o medidor con anillos de puntos del ayudante común.",
+      "Do colgar los colores del cartel principal de sus tokens (`--suelo`, `--l1`…`--l3`, `--sol`) para que día, atardecer y noche sean solo un cambio de tokens bajo `html[data-hora]`.",
+      "Do coser los datos reales bajo cada foto con la leyenda cosida.",
+      "Do ajustar el color de foco al campo: azul noche sobre claros, amarillo sobre oscuros."
+    ],
+    "donts": [
+      "Don't usar la foto de playa a pantalla completa con barra de fechas y titular serif.",
+      "Don't usar rojo para algo que no sea reservar o la marca, ni amarillo para algo que no sea sol, hora o dato destacado.",
+      "Don't separar secciones con líneas rectas, ondas o degradados; la transición es la trama de puntos.",
+      "Don't usar sombras de caja duras y desplazadas; la sombra sin desenfoque pertenece solo a la letra pintada.",
+      "Don't poner antetítulos ni etiquetas decorativas sobre los rótulos; el rótulo apilado se presenta solo. Lo único que puede precederlo es un estado vivo con dato real (la pastilla abierto/cerrado del rooftop).",
+      "Don't escribir en la leyenda cosida nada que no sea un dato verificable."
+    ]
+  }
+}

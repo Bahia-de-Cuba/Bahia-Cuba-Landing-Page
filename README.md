@@ -84,8 +84,7 @@ ya compilados. Si no los encuentra, falla con un mensaje que explica el orden.
 Ese hash no es cosmético: GitHub Pages sirve los assets con
 `Cache-Control: max-age=600`, y el HTML y el CSS se cachean por separado. Sin él,
 tras un despliegue un visitante puede quedarse con el HTML nuevo y el CSS viejo
-—y como el hero depende del CSS para posicionar sus capas, la página se rompe
-entera en vez de degradarse. Con el hash, un asset distinto es una URL distinta.
+—y la página se vería rota en vez de degradarse. Con el hash, un asset distinto es una URL distinta.
 
 `build:img` va aparte porque solo hace falta cuando cambian las fotos, y tarda.
 
@@ -94,43 +93,65 @@ entera en vez de degradarse. Con el hash, un asset distinto es una URL distinta.
 ## Cómo está partido el código
 
 **HTML** — `src/html/03-secciones/` tiene un archivo por sección visible de la
-página: `07-habitaciones.html`, `10-ubicacion.html`, `13-preguntas-frecuentes.html`…
-Para tocar una sección, abre solo su archivo.
+página: `05-hero.html`, `07-habitaciones.html`, `11-ruta.html`… Para tocar una
+sección, abre solo su archivo.
 
-**CSS** — `src/css/partes/` tiene un archivo por bloque de estilos, en el mismo
-orden en el que se cargan: tema y paleta, base, iconos, utilidades de marca y
-después un archivo por componente (intro, header, menú, FAQ, mapa…).
-`src/css/input.css` solo importa Tailwind y las partes, y le dice qué carpetas
-escanear para generar únicamente las clases que se usan.
+**CSS** — `src/css/partes/` tiene un archivo por bloque, en el orden en que se
+cargan: tipografías, tema (paleta), base, sistema del cartel (rótulos, botones,
+secciones) y luego uno por sección. `src/css/input.css` solo importa Tailwind
+(por su reset) y las partes.
 
-**JS** — `src/js/` tiene un archivo por comportamiento: `07-cotizador.js`,
-`09-mapa.js`, `10-cielo-estrellado.js`… `00-base.js` declara lo compartido
-(`$`, `$$`, `WHATSAPP`, `reduceMotion`) y el build envuelve todo en una sola
-clausura, por eso el resto de archivos puede usar esos ayudantes directamente.
-El resultado sigue siendo **un único archivo sin dependencias**.
+**JS** — `src/js/` tiene un archivo por comportamiento: `08-con-quien-viajas.js`,
+`10-atardecer.js`, `12-ruta-desde-lima.js`… `00-base.js` declara lo compartido
+(`$`, `$$`, `WHATSAPP`, `reduceMotion`, `hora()`, `precioDe()`) y el build
+envuelve todo en una sola clausura. El resultado sigue siendo **un único archivo
+sin dependencias**.
 
 ---
 
-## El hero
+## El diseño: un cartel chicha
 
-El hero no es una foto de fondo: es una escena por capas, de atrás hacia
-delante **cielo → hotel recortado → velo → banco de niebla → texto**.
+La página se anuncia como los carteles fosforescentes de la Panamericana: cada
+sección es un cartel que avisa algo verdadero. Los colores tienen un papel fijo
+(definidos en `src/css/partes/01-tema.css`):
 
-- El **cielo** es un degradado hecho solo con tokens de la paleta
-  (`night-950` arriba → `sunset` → `gold` → `sand` en el horizonte): es el
-  atardecer de Tuquillo y pesa 0 KB.
-- El **hotel** es un PNG recortado (`assets/img/hotel-recorte.webp`) con una
-  máscara CSS que funde los lados y la base, para que salga de la niebla en vez
-  de quedar pegado encima como un rectángulo.
-- El **velo** va por delante del hotel a propósito: garantiza el contraste del
-  texto y deja el edificio como silueta a contraluz.
-- Todo el movimiento cuelga de una sola variable, **`--hero-p`** (0 arriba del
-  todo, 1 al salir del hero), que escribe el único rAF de scroll de
-  `src/js/02-scroll.js`; el CSS la reparte entre hotel, niebla y texto. Con
-  `prefers-reduced-motion` no se anima nada y el hero se queda en su estado
-  inicial, que ya es el legible.
+| Color | Papel |
+|---|---|
+| Rojo atardecer | Reservar y la marca |
+| Amarillo letrero | El sol y la hora |
+| Morado | La segunda voz del cartel |
+| Azul noche | Fondo y estructura |
+| Cal | Las paredes del hotel |
 
-Los estilos están en `src/css/partes/04-utilidades-marca.css`.
+Tipografías propias: **Anybody** (rótulos, condensada y negra) y **Archivo**
+(texto). Los rótulos apilados llenan su columna con `--fit`: el tamaño de cada
+línea en % del ancho del rótulo (unidades `cqi`). Si cambias un texto de rótulo,
+ajusta su `--fit` para que vuelva a llenar el ancho.
+
+El sol de puntos del logo es el sistema de luz: se dibuja con la función
+`anillos()` de `00-base.js` (cartel principal, arco del atardecer y los diales de
+energía), y las transiciones entre secciones son una trama de puntos.
+
+## Funciones vivas
+
+- **Día, atardecer y noche.** Un script en línea del `<head>`
+  (`src/html/01-head/03-recursos.html`) calcula la posición del sol en las
+  coordenadas exactas del hotel y pone `data-hora` en `<html>` antes de pintar.
+  El cartel principal cambia de colores con eso; el visitante puede verlo en
+  otra hora con el selector.
+- **Atardecer en vivo** (`10-atardecer.js`): puesta, salida y hora dorada de hoy
+  o de la fecha que elija, y los próximos siete atardeceres. El cotizador también
+  dice a qué hora cae el sol el día de llegada.
+- **¿Con quién viajas?** (`08-con-quien-viajas.js`): recomienda la habitación,
+  marca en la lista las que sirven y deja el cotizador con la misma elección.
+- **Ruta desde Lima** (`12-ruta-desde-lima.js`): un `<input type="range">` con
+  forma de carretera. Kilómetros y tiempos son aproximados (así lo dice la
+  página); se editan en el arreglo `TRAMO`.
+- **Varadero 319 abierto o cerrado** (`14-rooftop-y-energia.js`), según la hora
+  de Huarmey.
+
+Con `prefers-reduced-motion` no hay desplazamientos ni bucles; los cambios de
+color se mantienen.
 
 ---
 
@@ -139,16 +160,17 @@ Los estilos están en `src/css/partes/04-utilidades-marca.css`.
 | Qué | Dónde |
 |---|---|
 | Número de WhatsApp | `src/js/00-base.js` (constante `WHATSAPP`) y los enlaces `wa.me` en `src/html/` |
-| Tarifas por noche | `src/html/03-secciones/12-reserva-cotizador.html`, atributos `data-precio` |
+| Tarifas por noche (respaldo) | `src/html/03-secciones/13-reserva.html`, atributos `data-precio` |
 | Textos de habitaciones | `src/html/03-secciones/07-habitaciones.html` |
-| Preguntas frecuentes | `src/html/03-secciones/13-preguntas-frecuentes.html` |
-| Dirección, mapa y coordenadas | `src/html/03-secciones/10-ubicacion.html` y `src/js/09-mapa.js` |
-| Redes, horarios y contacto | `src/html/03-secciones/14-pie.html` y `src/html/01-head/04-datos-estructurados.html` |
+| Regla de recomendación | `src/js/08-con-quien-viajas.js`, función `elegir()` |
+| Preguntas frecuentes | `src/html/03-secciones/14-preguntas.html` |
+| Dirección, mapa y coordenadas | `src/html/03-secciones/11-ruta.html`, `src/js/13-mapa.js` y el script del `<head>` |
+| Horario del rooftop | `src/html/03-secciones/09-rooftop.html` y `src/js/14-rooftop-y-energia.js` |
+| Redes, horarios y contacto | `src/html/03-secciones/15-pie.html` y `src/html/01-head/04-datos-estructurados.html` |
 | Metadatos y vista previa al compartir | `src/html/01-head/` |
 
-Las tarifas se escriben **una sola vez**: los precios de las tarjetas de
-habitación los toma `src/js/06-precios-tarjetas.js` del propio cotizador, así
-nunca quedan desfasados.
+Las tarifas se escriben **una sola vez**: todo lo que muestra precios los toma
+del `<select>` del cotizador, y al cargar se actualizan desde la base del hotel.
 
 ---
 
@@ -213,7 +235,7 @@ visitante pulsa «Ver la ubicación exacta del hotel».
 | Fotos (todas) | 6.7 MB | 1.4 MB (WebP, dos anchos con `srcset`) |
 | CSS | Tailwind CDN: ~300 KB de JS que compila en el navegador | 58 KB estáticos (10 KB gzip) |
 | Iconos | Font Awesome completo (~300 KB con fuentes) | sprite SVG de 14 KB, incrustado |
-| Tipografías | 3 familias desde Google Fonts | 2 familias variables propias, 102 KB |
+| Tipografías | 3 familias desde Google Fonts | 2 familias variables propias (Anybody + Archivo), 90 KB |
 | Peticiones a terceros | 3 dominios | 0 |
 
 Primera visita, ya comprimido: **~140 KB** de HTML, CSS, JS y tipografías, más

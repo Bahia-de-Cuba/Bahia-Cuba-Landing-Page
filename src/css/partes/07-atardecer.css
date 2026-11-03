@@ -1,0 +1,158 @@
+/* --------------------------------------------------------------------------
+   7. ATARDECER EN VIVO
+   -------------------------------------------------------------------------- */
+.atardecer {
+  display: grid;
+  gap: 3rem;
+}
+@media (min-width: 1024px) {
+  .atardecer {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-areas:
+      "texto arco"
+      "semana semana";
+    column-gap: 4rem;
+    row-gap: 4rem;
+    align-items: center;
+  }
+  .atardecer__texto { grid-area: texto; }
+  .arco { grid-area: arco; }
+  .semana { grid-area: semana; }
+}
+
+/* La respuesta a la pregunta del rótulo, en la misma voz de cartel */
+.respuesta {
+  display: grid;
+  margin: 2rem 0 0;
+  font-family: var(--font-rotulo);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 0.86;
+}
+.respuesta__cuando {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  color: var(--noche);
+}
+.respuesta__hora {
+  font-weight: 900;
+  font-size: clamp(4.5rem, 11vw, 7.5rem);
+  color: var(--rojo-texto);
+  text-shadow: 0.03em 0.03em 0 #fff;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.lectura__falta {
+  margin: 1rem 0 0;
+  max-width: 34rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.lectura__detalle {
+  margin: 0.4rem 0 0;
+  max-width: 34rem;
+  color: var(--tinta-amarilla);
+}
+
+.campo--fecha {
+  margin-top: 1.75rem;
+  max-width: 17rem;
+}
+.campo--fecha input {
+  border-color: var(--noche);
+}
+
+/* El arco del sol */
+.arco {
+  margin: 0;
+}
+.arco__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.arco__camino {
+  fill: none;
+  stroke: var(--noche);
+  stroke-width: 2.5;
+  stroke-dasharray: 2 9;
+  stroke-linecap: round;
+}
+.arco__horizonte {
+  stroke: var(--noche);
+  stroke-width: 3;
+}
+.arco__mar circle {
+  fill: var(--noche);
+}
+.arco__sol circle {
+  fill: var(--rojo);
+}
+.arco__sol {
+  transition: transform 1.2s var(--ease-salida);
+}
+.arco__pie {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-family: var(--font-rotulo);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.arco__pie > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Próximos atardeceres */
+.semana__titulo {
+  margin: 0 0 1rem;
+  font-family: var(--font-rotulo);
+  font-weight: 900;
+  font-stretch: 65%;
+  font-size: 1.75rem;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.semana__lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+  border-top: 3px solid var(--noche);
+}
+.semana__lista li {
+  padding: 0.85rem 0.75rem 0.85rem 0;
+  border-bottom: 1px solid rgb(16 22 43 / 0.25);
+}
+.semana__dia {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--tinta-amarilla);
+  text-transform: capitalize;
+}
+.semana__hora {
+  display: block;
+  font-family: var(--font-rotulo);
+  font-weight: 900;
+  font-stretch: 65%;
+  font-size: 1.75rem;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+.semana__lista li[data-finde] .semana__hora {
+  color: var(--rojo-texto);
+}
+.semana__lista li[data-finde] .semana__dia::after {
+  content: " · finde";
+}

@@ -1,0 +1,129 @@
+/* --------------------------------------------------------------------------
+   8. VARADERO 319 ROOFTOP — siempre de noche
+   -------------------------------------------------------------------------- */
+.rooftop {
+  overflow: hidden;
+}
+.rooftop__estrellas {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgb(255 255 255 / 0.7) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 70% 60%, rgb(255 196 20 / 0.6) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 40% 80%, rgb(183 166 255 / 0.6) 0 1.2px, transparent 1.8px);
+  background-size: 150px 130px, 230px 190px, 320px 250px;
+  mask-image: linear-gradient(to bottom, transparent 3%, #000 30%, #000 70%, transparent);
+  pointer-events: none;
+}
+.rooftop__rejilla {
+  position: relative;
+  display: grid;
+  gap: 3.5rem;
+}
+@media (min-width: 1024px) {
+  .rooftop__rejilla {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 5rem;
+    align-items: center;
+  }
+}
+
+.estado-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.75rem;
+  padding: 0.5rem 0.9rem;
+  border: 2px solid rgb(255 255 255 / 0.2);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--niebla);
+}
+.estado-bar__luz {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--niebla-2);
+}
+.estado-bar[data-abierto="true"] {
+  border-color: var(--amarillo);
+  color: #fff;
+}
+.estado-bar[data-abierto="true"] .estado-bar__luz {
+  background: var(--amarillo);
+  box-shadow: 0 0 0 0 rgb(255 196 20 / 0.6);
+  animation: latido 2.2s var(--ease-suave) infinite;
+}
+@keyframes latido {
+  70% { box-shadow: 0 0 0 0.6rem rgb(255 196 20 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(255 196 20 / 0); }
+}
+
+.programa {
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.programa__item {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem 0;
+  border-top: 2px dotted rgb(255 255 255 / 0.3);
+}
+.programa__item:last-child {
+  border-bottom: 2px dotted rgb(255 255 255 / 0.3);
+}
+@media (min-width: 640px) {
+  .programa__item {
+    grid-template-columns: 11rem 1fr;
+    gap: 1.5rem;
+    align-items: baseline;
+  }
+}
+.programa__nombre {
+  font-family: var(--font-rotulo);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: clamp(2.25rem, 4vw, 3rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: var(--amarillo);
+}
+.programa__nombre--rojo { color: var(--rojo-vivo); }
+.programa__nombre--morado { color: var(--morado-claro); }
+.programa__item:last-child .programa__nombre { color: #fff; }
+.programa__desc {
+  color: var(--niebla);
+}
+
+.rooftop__fotos {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: start;
+}
+.rooftop__fotos .foto-pegada--ancha {
+  grid-column: 1 / 7;
+  grid-row: 1;
+  rotate: -1.5deg;
+}
+.rooftop__fotos .foto-pegada--ancha img {
+  aspect-ratio: 16 / 10;
+}
+.rooftop__fotos .foto-pegada--alta {
+  grid-column: 3 / 7;
+  grid-row: 2;
+  margin-top: -2.5rem;
+  rotate: 2deg;
+  position: relative;
+  z-index: 1;
+}
+.rooftop__fotos .foto-pegada--alta img {
+  aspect-ratio: 4 / 5;
+}
+@media (min-width: 1024px) {
+  .rooftop__fotos .foto-pegada--alta {
+    grid-column: 3 / 6;
+    margin-top: -4rem;
+  }
+}

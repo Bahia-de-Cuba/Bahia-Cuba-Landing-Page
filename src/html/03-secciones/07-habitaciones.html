@@ -1,217 +1,130 @@
 <!-- ============================ HABITACIONES ============================ -->
-<section id="habitaciones" class="py-16 sm:py-24 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="seccion seccion--cal" id="habitaciones" aria-labelledby="titulo-habitaciones">
+  <div class="contenedor">
+    <div class="habitaciones__cabeza">
+      <h2 class="rotulo-seccion" id="titulo-habitaciones">
+        <span class="linea" style="--fit:23.8">¿Con quién</span>
+        <span class="linea linea--rojo" style="--fit:32.8">viajas?</span>
+      </h2>
 
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12" data-reveal="up">
-      <div>
-        <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-widest text-sunset-600">Catálogo de confort</span>
-        <h2 class="font-heading text-[1.75rem] xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-night-900 mt-2 leading-tight">
-          Nuestras habitaciones
-        </h2>
-      </div>
+      <form class="buscador" id="buscador" aria-describedby="buscadorAyuda">
+        <p class="buscador__ayuda" id="buscadorAyuda">Dinos quiénes van y te decimos qué cuarto les queda.</p>
 
-      <div class="flex flex-wrap gap-2" role="group" aria-label="Filtrar habitaciones">
-        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="todas" aria-pressed="true">Todas</button>
-        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="solo" aria-pressed="false">Individual</button>
-        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="parejas" aria-pressed="false">Parejas</button>
-        <button type="button" class="room-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-sand-100 text-slate-700 hover:bg-sand-200" data-filter="familias" aria-pressed="false">Familias</button>
-      </div>
+        <fieldset class="buscador__grupo">
+          <legend>Viajo</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="quien" value="solo"><span><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg> Solo</span></label>
+            <label class="chip"><input type="radio" name="quien" value="pareja" checked><span><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg> En pareja</span></label>
+            <label class="chip"><input type="radio" name="quien" value="amigos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> Con amigos</span></label>
+            <label class="chip"><input type="radio" name="quien" value="familia"><span><svg class="icon" aria-hidden="true"><use href="#i-baby"/></svg> En familia</span></label>
+          </div>
+        </fieldset>
+
+        <div class="buscador__fila">
+          <div class="contador" role="group" aria-labelledby="contadorEtiqueta">
+            <span id="contadorEtiqueta" class="contador__etiqueta">Somos</span>
+            <button type="button" class="contador__boton" data-paso="-1" aria-label="Una persona menos"><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg></button>
+            <output class="contador__valor" id="buscadorN" aria-live="polite">2</output>
+            <button type="button" class="contador__boton" data-paso="1" aria-label="Una persona más"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          </div>
+          <label class="interruptor">
+            <input type="checkbox" id="buscadorMascota">
+            <span class="interruptor__pista" aria-hidden="true"></span>
+            <span>Con mascota</span>
+          </label>
+        </div>
+
+        <div class="veredicto" id="veredicto" aria-live="polite">
+          <p class="veredicto__linea">Les toca la <strong data-veredicto="nombre">Matrimonial</strong></p>
+          <p class="veredicto__razon" data-veredicto="razon">1 cama de 2 plazas, para descansar en pareja.</p>
+          <p class="veredicto__mascota" data-veredicto="mascota" hidden>
+            <svg class="icon" aria-hidden="true"><use href="#i-paw"/></svg>
+            Tu perro o tu gato entra contigo, sin costo extra.
+          </p>
+          <a class="boton boton--rojo" data-veredicto="reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=matrimonial">
+            <span>Reservar por S/&nbsp;<span data-veredicto="precio">220</span> la noche</span>
+            <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+          </a>
+        </div>
+      </form>
     </div>
 
-    <div class="flex items-center justify-between gap-4 mb-3" data-reveal="up">
-      <p class="flex items-center gap-2 text-[11px] font-semibold text-slate-400">
-        <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-        <span class="lg:hidden">Desliza para ver todas las habitaciones</span>
-        <span class="hidden lg:inline">Arrastra para recorrer el cat&aacute;logo, o d&eacute;jalo avanzar solo</span>
-      </p>
-
-      <!-- Controles del carrusel. La barra de desplazamiento va oculta
-           (no-scrollbar), asi que sin esto en escritorio no hay manera de
-           avanzar salvo shift+rueda, que casi nadie conoce. El script los
-           esconde solo si todas las tarjetas caben. -->
-      <div id="habControles" class="flex gap-2 shrink-0" hidden>
-        <button type="button" id="habAnterior" aria-label="Ver habitaciones anteriores"
-                class="size-10 rounded-xl border border-slate-200 bg-white text-night-900 flex items-center justify-center transition hover:border-sunset-500 hover:text-sunset-600 disabled:opacity-30 disabled:pointer-events-none">
-          <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
-        </button>
-        <button type="button" id="habSiguiente" aria-label="Ver m&aacute;s habitaciones"
-                class="size-10 rounded-xl border border-slate-200 bg-white text-night-900 flex items-center justify-center transition hover:border-sunset-500 hover:text-sunset-600 disabled:opacity-30 disabled:pointer-events-none">
-          <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Misma tecnica que el carrusel de visitantes: la pista se mueve con
-         transform y no con el desplazamiento, asi que no hay barra que
-         recolocar ni final al que llegar. -->
-    <div class="pista-habitaciones overflow-hidden pb-4 -mx-4 lg:mx-0">
-      <div id="gridHabitaciones" class="flex gap-5 px-4 lg:px-0">
-
-      <!-- Individual -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
-               data-category="solo" data-room="Individual" data-reveal="up">
-        <div class="room-media">
-          <img src="assets/img/hab-individual.webp"
-               srcset="assets/img/hab-individual-sm.webp 528w, assets/img/hab-individual.webp 960w"
-               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
-               width="960" height="1280" loading="lazy" decoding="async"
-               alt="Habitación individual del Hotel Bahía de Cuba"
-               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
+    <ol class="cartelera" id="cartelera" aria-label="Las cinco habitaciones">
+      <li class="fila" data-room="Individual" data-cap="1">
+        <figure class="fila__foto">
+          <img src="assets/img/hab-individual-sm.webp" srcset="assets/img/hab-individual-sm.webp 528w, assets/img/hab-individual.webp 960w"
+               sizes="(min-width:1024px) 340px, 92vw" width="960" height="1280" loading="lazy" decoding="async" alt="Habitación individual con cama de plaza y media">
+          <figcaption class="costura">Individual · 1 cama de 1.5 plazas · baño privado</figcaption>
+        </figure>
+        <p class="fila__cap" aria-hidden="true">1</p>
+        <div class="fila__cuerpo">
+          <h3 class="fila__nombre">Individual</h3>
+          <p class="fila__datos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> 1 persona</span><span><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 1.5 plazas</span><span><svg class="icon" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span></p>
+          <p class="fila__desc">Silenciosa y cómoda para descansar o trabajar frente al mar.</p>
         </div>
-        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
-        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">1 persona</span>
-          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
+        <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Individual">0</span><span class="fila__noche">por noche</span></p>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=individual" data-reservar-tipo="individual">Reservar<span class="sr"> la habitación Individual</span></a>
+      </li>
+      <li class="fila" data-room="Matrimonial" data-cap="2">
+        <figure class="fila__foto">
+          <img src="assets/img/hab-matrimonial-sm.webp" srcset="assets/img/hab-matrimonial-sm.webp 577w, assets/img/hab-matrimonial.webp 1050w"
+               sizes="(min-width:1024px) 340px, 92vw" width="1050" height="1400" loading="lazy" decoding="async" alt="Habitación matrimonial con cama de dos plazas y lámpara cálida">
+          <figcaption class="costura">Matrimonial · 1 cama de 2 plazas · baño privado</figcaption>
+        </figure>
+        <p class="fila__cap" aria-hidden="true">2</p>
+        <div class="fila__cuerpo">
+          <h3 class="fila__nombre">Matrimonial</h3>
+          <p class="fila__datos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> 2 personas</span><span><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 2 plazas</span><span><svg class="icon" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span></p>
+          <p class="fila__desc">Cálida y acogedora para desconectarse en pareja.</p>
         </div>
-        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
-          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Individual</h3>
-          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Silenciosa y cómoda para descansar o trabajar frente al mar.</p>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 1.5 plazas</span>
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span>
-          </div>
-        
-          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=individual"
-             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
-            Reservar
-          </a>
+        <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Matrimonial">0</span><span class="fila__noche">por noche</span></p>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=matrimonial" data-reservar-tipo="matrimonial">Reservar<span class="sr"> la habitación Matrimonial</span></a>
+      </li>
+      <li class="fila" data-room="Doble" data-cap="3">
+        <figure class="fila__foto">
+          <img src="assets/img/hab-doble-sm.webp" srcset="assets/img/hab-doble-sm.webp 495w, assets/img/hab-doble.webp 900w"
+               sizes="(min-width:1024px) 340px, 92vw" width="900" height="1200" loading="lazy" decoding="async" alt="Habitación doble con cama de dos plazas y camarote">
+          <figcaption class="costura">Doble · 1 cama de 2 plazas + camarote · baño privado</figcaption>
+        </figure>
+        <p class="fila__cap" aria-hidden="true">3</p>
+        <div class="fila__cuerpo">
+          <h3 class="fila__nombre">Doble</h3>
+          <p class="fila__datos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> Hasta 3 personas</span><span><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 2 plazas + camarote</span><span><svg class="icon" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span></p>
+          <p class="fila__desc">Buena distribución para compartir cómodamente.</p>
         </div>
-      </article>
-
-      <!-- Matrimonial -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
-               data-category="parejas" data-room="Matrimonial" data-reveal="up" style="--reveal-delay:80">
-        <div class="room-media">
-          <img src="assets/img/hab-matrimonial.webp"
-               srcset="assets/img/hab-matrimonial-sm.webp 577w, assets/img/hab-matrimonial.webp 1050w"
-               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
-               width="1050" height="1400" loading="lazy" decoding="async"
-               alt="Habitación matrimonial con cama de dos plazas"
-               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
+        <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Doble">0</span><span class="fila__noche">por noche</span></p>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=doble" data-reservar-tipo="doble">Reservar<span class="sr"> la habitación Doble</span></a>
+      </li>
+      <li class="fila" data-room="Triple" data-cap="4">
+        <figure class="fila__foto">
+          <img src="assets/img/hab-triple-sm.webp" srcset="assets/img/hab-triple-sm.webp 577w, assets/img/hab-triple.webp 1050w"
+               sizes="(min-width:1024px) 340px, 92vw" width="1050" height="1400" loading="lazy" decoding="async" alt="Habitación triple con tres camas individuales">
+          <figcaption class="costura">Triple · 3 camas individuales · baño privado</figcaption>
+        </figure>
+        <p class="fila__cap" aria-hidden="true">4</p>
+        <div class="fila__cuerpo">
+          <h3 class="fila__nombre">Triple</h3>
+          <p class="fila__datos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> Hasta 4 personas</span><span><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> 3 camas individuales</span><span><svg class="icon" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span></p>
+          <p class="fila__desc">Cada uno en su cama: ideal para amigos o familias pequeñas.</p>
         </div>
-        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
-        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">2 personas</span>
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-gold-500 text-night-900 flex items-center gap-1">
-            <svg class="icon text-[9px]" aria-hidden="true"><use href="#i-star"/></svg> Más solicitada
-          </span>
+        <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Triple">0</span><span class="fila__noche">por noche</span></p>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=triple" data-reservar-tipo="triple">Reservar<span class="sr"> la habitación Triple</span></a>
+      </li>
+      <li class="fila" data-room="Familiar" data-cap="6">
+        <figure class="fila__foto">
+          <img src="assets/img/hab-familiar-sm.webp" srcset="assets/img/hab-familiar-sm.webp 660w, assets/img/hab-familiar.webp 1200w"
+               sizes="(min-width:1024px) 340px, 92vw" width="1200" height="900" loading="lazy" decoding="async" alt="Habitación familiar con dos camarotes">
+          <figcaption class="costura">Familiar · 2 camarotes · baño privado</figcaption>
+        </figure>
+        <p class="fila__cap" aria-hidden="true">6</p>
+        <div class="fila__cuerpo">
+          <h3 class="fila__nombre">Familiar</h3>
+          <p class="fila__datos"><span><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> Hasta 6 personas</span><span><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg> 2 camarotes</span><span><svg class="icon" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span></p>
+          <p class="fila__desc">Toda la familia descansa junta en un solo cuarto.</p>
         </div>
-        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
-          <div class="flex items-center gap-2 mb-1">
-            <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Matrimonial</h3>
-            <span class="js-precio text-[11px] font-bold text-gold-300"></span>
-          </div>
-          <p class="text-slate-200 text-xs sm:text-sm mt-1 leading-relaxed max-w-xs">Ambiente cálido y acogedor para desconectarse en pareja.</p>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 2 plazas</span>
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span>
-          </div>
-        
-          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=matrimonial"
-             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
-            Reservar
-          </a>
-        </div>
-      </article>
-
-      <!-- Doble -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
-               data-category="familias" data-room="Doble" data-reveal="up">
-        <div class="room-media">
-          <img src="assets/img/hab-doble.webp"
-               srcset="assets/img/hab-doble-sm.webp 495w, assets/img/hab-doble.webp 900w"
-               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
-               width="900" height="1200" loading="lazy" decoding="async"
-               alt="Habitación doble del Hotel Bahía de Cuba"
-               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
-        </div>
-        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
-        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">Hasta 3 personas</span>
-          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
-        </div>
-        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
-          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Habitación doble</h3>
-          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Excelente distribución para compartir cómodamente en grupo.</p>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 1 cama de 2 plazas + camarote</span>
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado</span>
-          </div>
-        
-          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=doble"
-             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
-            Reservar
-          </a>
-        </div>
-      </article>
-
-
-      <!-- Triple -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
-               data-category="familias" data-room="Triple" data-reveal="up" style="--reveal-delay:80">
-        <div class="room-media">
-          <img src="assets/img/hab-triple.webp"
-               srcset="assets/img/hab-triple-sm.webp 577w, assets/img/hab-triple.webp 1050w"
-               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
-               width="1050" height="1400" loading="lazy" decoding="async"
-               alt="Habitaci&oacute;n triple del Hotel Bah&iacute;a de Cuba"
-               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
-        </div>
-        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
-        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">Hasta 4 personas</span>
-          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
-        </div>
-        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
-          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Habitaci&oacute;n triple</h3>
-          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Tres camas individuales, ideal para grupos de amigos o familias peque&ntilde;as.</p>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 3 camas individuales</span>
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Ba&ntilde;o privado</span>
-          </div>
-
-          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=triple"
-             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
-            Reservar
-          </a>
-        </div>
-      </article>
-
-      <!-- Familiar -->
-      <article class="room-item shrink-0 w-[78%] xs:w-[68%] sm:w-[46%] lg:w-[calc(40%-0.5rem)] relative rounded-3xl overflow-hidden group"
-               data-category="familias" data-room="Familiar" data-reveal="up" style="--reveal-delay:80">
-        <div class="room-media">
-          <img src="assets/img/hab-familiar.webp"
-               srcset="assets/img/hab-familiar-sm.webp 660w, assets/img/hab-familiar.webp 1200w"
-               sizes="(min-width:1024px) 608px, (min-width:640px) 48vw, 78vw"
-               width="1200" height="900" loading="lazy" decoding="async"
-               alt="Habitación familiar con dos camarotes"
-               class="w-full h-[380px] sm:h-[440px] lg:h-[500px] object-cover">
-        </div>
-        <div class="absolute inset-0 bg-linear-to-t from-night-950/95 via-night-950/20 to-transparent"></div>
-        <div class="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-start justify-between gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-night-900 backdrop-blur-sm">Hasta 6 personas</span>
-          <span class="js-precio px-3 py-1 rounded-full text-[10px] font-bold bg-night-950/70 text-gold-300 backdrop-blur-sm"></span>
-        </div>
-        <div class="absolute bottom-0 inset-x-0 p-5 sm:p-7">
-          <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Familiar</h3>
-          <p class="text-slate-200 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xs">Máxima capacidad para que toda la familia descanse unida.</p>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] sm:text-xs text-slate-300 font-semibold">
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-bed"/></svg> 2 camarotes confortables</span>
-            <span class="flex items-center gap-1.5"><svg class="icon text-gold-400" aria-hidden="true"><use href="#i-shower"/></svg> Baño privado amplio</span>
-          </div>
-        
-          <a href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=familiar"
-             class="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-night-900 bg-linear-to-r from-gold-400 to-gold-500 shadow-md transition-all hover:from-gold-300 hover:to-gold-400 hover:-translate-y-0.5">
-            Reservar
-          </a>
-        </div>
-      </article>
-      </div>
-    </div>
-
-    <p id="roomsEmpty" hidden class="text-center text-sm text-slate-500 py-10">
-      No hay habitaciones en esa categoría.
-    </p>
+        <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Familiar">0</span><span class="fila__noche">por noche</span></p>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=familiar" data-reservar-tipo="familiar">Reservar<span class="sr"> la habitación Familiar</span></a>
+      </li>
+    </ol>
   </div>
 </section>

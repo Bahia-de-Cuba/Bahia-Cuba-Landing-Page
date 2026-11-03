@@ -1,0 +1,44 @@
+<!-- ============================ ATARDECER EN VIVO ============================ -->
+<section class="seccion seccion--amarillo" id="atardecer" aria-labelledby="titulo-atardecer">
+  <div class="contenedor atardecer">
+    <div class="atardecer__texto">
+      <h2 class="rotulo-seccion" id="titulo-atardecer">
+        <span class="linea" style="--fit:22.8">¿A qué hora</span>
+        <span class="linea linea--rojo" style="--fit:25.3">cae el sol?</span>
+      </h2>
+      <p class="parrafo">En Tuquillo el sol se esconde en el mar. Lo calculamos para la ubicación exacta del hotel, para hoy y para el día que llegues.</p>
+
+      <p class="respuesta" aria-live="polite">
+        <span class="respuesta__cuando" data-atardecer="etiqueta">Hoy, a las</span>
+        <strong class="respuesta__hora" data-atardecer="hora">6:00 p. m.</strong>
+      </p>
+      <p class="lectura__falta" data-atardecer="falta"></p>
+      <p class="lectura__detalle" data-atardecer="detalle"></p>
+
+      <label class="campo campo--fecha">
+        <span>¿Qué día llegas?</span>
+        <input type="date" id="fechaSol">
+      </label>
+    </div>
+
+    <figure class="arco">
+      <svg class="arco__svg" id="arcoSol" viewBox="0 0 640 340" aria-hidden="true" focusable="false">
+        <path class="arco__camino" id="arcoCamino" d="M40 290 Q320 -70 600 290" />
+        <g class="arco__mar" id="arcoMar"></g>
+        <line class="arco__horizonte" x1="0" y1="290" x2="640" y2="290" />
+        <g class="arco__sol" id="arcoSolPuntos"></g>
+      </svg>
+      <figcaption class="arco__pie">
+        <span><svg class="icon" aria-hidden="true"><use href="#i-sunrise"/></svg> <span data-atardecer="salida-corta">—</span></span>
+        <span data-atardecer="ahora">El sol, ahora</span>
+        <span><span data-atardecer="puesta-corta">—</span> <svg class="icon" aria-hidden="true"><use href="#i-sunset"/></svg></span>
+      </figcaption>
+    </figure>
+
+    <div class="semana">
+      <h3 class="semana__titulo">Los próximos atardeceres</h3>
+      <ol class="semana__lista" id="semanaSol"></ol>
+      <a href="#rooftop" class="enlace-flecha">Después del atardecer, sube al Varadero 319 <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+    </div>
+  </div>
+</section>

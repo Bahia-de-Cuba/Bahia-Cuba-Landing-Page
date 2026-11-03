@@ -2,15 +2,72 @@
 <link rel="stylesheet" href="assets/css/styles.css">
 
 <!-- Tipografías alojadas en el propio sitio: sin peticiones a terceros -->
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/plus-jakarta-sans-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-display-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/anybody-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-latin.woff2" crossorigin>
 
-<!-- El hotel recortado es el elemento más grande del hero: lo pedimos cuanto antes -->
+<!-- El hotel recortado es la imagen más grande del primer pantallazo -->
 <link rel="preload" as="image" href="assets/img/hotel-recorte.webp"
       imagesrcset="assets/img/hotel-recorte-sm.webp 622w, assets/img/hotel-recorte.webp 1130w"
-      imagesizes="(min-width:1130px) 1130px, 112vw">
+      imagesizes="(min-width:1024px) 46vw, 100vw">
 
-<!-- Marca que hay JavaScript: sin él, las animaciones de entrada se desactivan
-     y todo el contenido se ve igual (nada queda invisible). -->
-<script>document.documentElement.classList.add("js");</script>
+<!-- Sol de Tuquillo. Va en línea y antes de pintar por una razón: el cartel
+     cambia de color según la hora real (día, atardecer, noche) y, si esto
+     esperase a main.js, la página se pintaría primero de noche y luego
+     saltaría al color del día. Es el cálculo solar estándar (el de SunCalc),
+     reducido a lo que la página usa. -->
+<script>
+(function (w, d) {
+  var R = Math.PI / 180, DIA = 864e5, J2000 = 2451545, E = R * 23.4397;
+  var LAT = -10.0158125, LON = -78.1918125;
+  function dias(f) { return f / DIA - 0.5 + 2440588 - J2000; }
+  function fecha(j) { return new Date((j + 0.5 - 2440588) * DIA); }
+  function anom(x) { return R * (357.5291 + 0.98560028 * x); }
+  function lonEcl(M) {
+    return M + R * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M)) + R * 102.9372 + Math.PI;
+  }
+  function decl(L) { return Math.asin(Math.sin(E) * Math.sin(L)); }
+  function asc(L) { return Math.atan2(Math.sin(L) * Math.cos(E), Math.cos(L)); }
+  var lw = R * -LON, phi = R * LAT;
+
+  /* Altura del sol (grados) en un instante */
+  function altura(t) {
+    var x = dias(+t), L = lonEcl(anom(x));
+    var H = R * (280.16 + 360.9856235 * x) - lw - asc(L);
+    return Math.asin(Math.sin(phi) * Math.sin(decl(L)) + Math.cos(phi) * Math.cos(decl(L)) * Math.cos(H)) / R;
+  }
+
+  /* Salida, mediodía, puesta y hora dorada del día que contiene `t` */
+  function horas(t) {
+    var x = dias(+t), n = Math.round(x - 0.0009 - lw / (2 * Math.PI));
+    var ds = 0.0009 + lw / (2 * Math.PI) + n, M = anom(ds), L = lonEcl(M), dc = decl(L);
+    var tr = J2000 + ds + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L);
+    function puesta(h) {
+      var w0 = Math.acos((Math.sin(h * R) - Math.sin(phi) * Math.sin(dc)) / (Math.cos(phi) * Math.cos(dc)));
+      var a = 0.0009 + (w0 + lw) / (2 * Math.PI) + n;
+      return J2000 + a + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L);
+    }
+    var js = puesta(-0.833), jd = puesta(6);
+    return { salida: fecha(tr - (js - tr)), mediodia: fecha(tr), puesta: fecha(js), dorada: fecha(jd) };
+  }
+
+  /* Huarmey vive en UTC-5 todo el año: el mediodía local son las 17:00 UTC */
+  function mediodiaLima(y, m, dd) { return new Date(Date.UTC(y, m, dd, 17, 0, 0)); }
+  function hoyLima(t) {
+    var p = new Date(+t - 5 * 3600e3);
+    return mediodiaLima(p.getUTCFullYear(), p.getUTCMonth(), p.getUTCDate());
+  }
+
+  /* dia | atardecer | noche, a partir de la hora real en Tuquillo */
+  function estado(t) {
+    var h = horas(hoyLima(t)), m = +t;
+    if (m >= +h.puesta - 60 * 6e4 && m < +h.puesta + 30 * 6e4) return "atardecer";
+    if (m >= +h.salida + 20 * 6e4 && m < +h.puesta - 60 * 6e4) return "dia";
+    return "noche";
+  }
+
+  w.SOL = { altura: altura, horas: horas, estado: estado, hoyLima: hoyLima, mediodiaLima: mediodiaLima };
+  d.documentElement.classList.add("js");
+  d.documentElement.dataset.hora = estado(new Date());
+})(window, document);
+</script>
 <script src="assets/js/main.js" defer></script>
