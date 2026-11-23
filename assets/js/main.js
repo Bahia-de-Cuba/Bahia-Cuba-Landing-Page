@@ -14,11 +14,13 @@
   var URL_RESERVAS = "https://bahia-cuba-app.netlify.app/es/reservar";
 
   /* Lectura de tarifas desde la base del hotel.
-     La clave es la pública (anon): viaja al navegador por diseño y la tabla
-     `habitaciones` solo permite leer. Con esto las tarifas se cambian desde el
+     La clave es la publicable (sb_publishable_): viaja al navegador por
+     diseño y `habitaciones` solo permite leer. Sustituye a la anon JWT
+     antigua, que se desactivó en noviembre al rotar las claves: la
+     publicable se puede revocar sola, sin tocar la clave de servidor. Con esto las tarifas se cambian desde el
      panel y esta web las refleja sin volver a publicarla. */
   var SUPABASE_URL = "https://xahrwafxzymxnuphpacl.supabase.co";
-  var SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhaHJ3YWZ4enlteG51cGhwYWNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2MTAzMDIsImV4cCI6MjEwNDE4NjMwMn0.zB3BD7vMEcX0SDzk_uP9FXHBSpchmPDGSyrfd-AGKOc";
+  var SUPABASE_ANON = "sb_publishable_ruQp0GStCznTnesz8UIhgA_xoHaatXa";
 
   var $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
   var $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
