@@ -9,10 +9,14 @@
 # `unsafe-inline` en script-src cubre los <script> en línea del index (incluido
 # el JSON-LD de schema.org). Sin ellos la página no arranca; el resto de la
 # política sigue en pie.
+#
+# form-action: la app de reservas vive en Cloudflare Workers
+# (bahia-cuba-app.bahiadecuba.workers.dev). Netlify sigue en la lista solo
+# mientras exista la app vieja; se quita al borrarla (tarea 4.5 del plan).
 # ===========================================================================
 
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://xahrwafxzymxnuphpacl.supabase.co; frame-src https://www.google.com https://maps.google.com; form-action 'self' https://bahia-cuba-app.netlify.app; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://xahrwafxzymxnuphpacl.supabase.co; frame-src https://www.google.com https://maps.google.com; form-action 'self' https://bahia-cuba-app.bahiadecuba.workers.dev https://bahia-cuba-app.netlify.app; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
