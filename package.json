@@ -23,7 +23,7 @@
     "@tailwindcss/cli": "^4.3.3",
     "lucide-static": "^1.39.0",
     "playwright": "^1.62.1",
-    "simple-icons": "^15.16.0",
+    "simple-icons": "^16.38.0",
     "tailwindcss": "^4.3.3"
   }
 }
