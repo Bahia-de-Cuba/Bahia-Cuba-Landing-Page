@@ -11,7 +11,7 @@
      calcula tools/build-html.mjs en cada build; la de aquí se sobrescribe.
      frame-ancestors no funciona desde una etiqueta meta: contra el
      enmarcado haría falta mover la landing a un alojamiento con cabeceras. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-x2TnBHbvcqfVJXxy9sTTkYyX4xhy2aRHHMQzecDSUC8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://xahrwafxzymxnuphpacl.supabase.co; frame-src https://www.google.com https://maps.google.com; form-action 'self' https://bahia-cuba-app.netlify.app; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-x2TnBHbvcqfVJXxy9sTTkYyX4xhy2aRHHMQzecDSUC8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://xahrwafxzymxnuphpacl.supabase.co; frame-src https://www.google.com https://maps.google.com; form-action 'self' https://bahia-cuba-app.bahiadecuba.workers.dev; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Hotel Bahía de Cuba | Eco Hotel & Rooftop Bar en Playa Tuquillo, Huarmey</title>
 <meta name="description" content="Hotel ecológico y pet friendly a 200 m de Playa Tuquillo, Huarmey (Áncash). Energía 100% renovable, Varadero 319 Rooftop con billar, sapito y dardos, y reserva en línea directa, sin comisiones de intermediarios.">
@@ -112,7 +112,7 @@
   d.documentElement.dataset.hora = estado(new Date());
 })(window, document);
 </script>
-<script src="assets/js/main.js?v=45b0bfbd" defer></script>
+<script src="assets/js/main.js?v=f5656d58" defer></script>
 
 <script type="application/ld+json">
 {
@@ -367,7 +367,7 @@
             <svg class="icon" aria-hidden="true"><use href="#i-paw"/></svg>
             Tu perro o tu gato entra contigo, sin costo extra.
           </p>
-          <a class="boton boton--rojo" data-veredicto="reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=matrimonial">
+          <a class="boton boton--rojo" data-veredicto="reservar" href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/reservar?tipo=matrimonial">
             <span>Reservar por S/&nbsp;<span data-veredicto="precio">220</span> la noche</span>
             <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
           </a>
@@ -389,7 +389,7 @@
           <p class="fila__desc">Silenciosa y cómoda para descansar o trabajar frente al mar.</p>
         </div>
         <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Individual">0</span><span class="fila__noche">por noche</span></p>
-        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=individual" data-reservar-tipo="individual">Reservar<span class="sr"> la habitación Individual</span></a>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/reservar?tipo=individual" data-reservar-tipo="individual">Reservar<span class="sr"> la habitación Individual</span></a>
       </li>
       <li class="fila" data-room="Matrimonial" data-cap="2">
         <figure class="fila__foto">
@@ -404,7 +404,7 @@
           <p class="fila__desc">Cálida y acogedora para desconectarse en pareja.</p>
         </div>
         <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Matrimonial">0</span><span class="fila__noche">por noche</span></p>
-        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=matrimonial" data-reservar-tipo="matrimonial">Reservar<span class="sr"> la habitación Matrimonial</span></a>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/reservar?tipo=matrimonial" data-reservar-tipo="matrimonial">Reservar<span class="sr"> la habitación Matrimonial</span></a>
       </li>
       <li class="fila" data-room="Doble" data-cap="3">
         <figure class="fila__foto">
@@ -419,7 +419,7 @@
           <p class="fila__desc">Buena distribución para compartir cómodamente.</p>
         </div>
         <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Doble">0</span><span class="fila__noche">por noche</span></p>
-        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=doble" data-reservar-tipo="doble">Reservar<span class="sr"> la habitación Doble</span></a>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/reservar?tipo=doble" data-reservar-tipo="doble">Reservar<span class="sr"> la habitación Doble</span></a>
       </li>
       <li class="fila" data-room="Triple" data-cap="4">
         <figure class="fila__foto">
@@ -434,7 +434,7 @@
           <p class="fila__desc">Cada uno en su cama: ideal para amigos o familias pequeñas.</p>
         </div>
         <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Triple">0</span><span class="fila__noche">por noche</span></p>
-        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=triple" data-reservar-tipo="triple">Reservar<span class="sr"> la habitación Triple</span></a>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/reservar?tipo=triple" data-reservar-tipo="triple">Reservar<span class="sr"> la habitación Triple</span></a>
       </li>
       <li class="fila" data-room="Familiar" data-cap="6">
         <figure class="fila__foto">
@@ -449,7 +449,7 @@
           <p class="fila__desc">Toda la familia descansa junta en un solo cuarto.</p>
         </div>
         <p class="fila__precio"><span class="fila__desde">desde</span> S/&nbsp;<span class="js-precio" data-tipo="Familiar">0</span><span class="fila__noche">por noche</span></p>
-        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.netlify.app/es/reservar?tipo=familiar" data-reservar-tipo="familiar">Reservar<span class="sr"> la habitación Familiar</span></a>
+        <a class="boton boton--rojo fila__reservar" href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/reservar?tipo=familiar" data-reservar-tipo="familiar">Reservar<span class="sr"> la habitación Familiar</span></a>
       </li>
     </ol>
   </div>
@@ -803,9 +803,9 @@
 
       <p class="boleto__legal">
         La tarifa es referencial. Al continuar aceptas los
-        <a href="https://bahia-cuba-app.netlify.app/es/terminos" target="_blank" rel="noopener">Términos y Condiciones</a>,
-        la <a href="https://bahia-cuba-app.netlify.app/es/privacidad" target="_blank" rel="noopener">Política de Privacidad</a>
-        y la <a href="https://bahia-cuba-app.netlify.app/es/cancelacion" target="_blank" rel="noopener">Política de Cancelación</a>.
+        <a href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/terminos" target="_blank" rel="noopener">Términos y Condiciones</a>,
+        la <a href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/privacidad" target="_blank" rel="noopener">Política de Privacidad</a>
+        y la <a href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/cancelacion" target="_blank" rel="noopener">Política de Cancelación</a>.
       </p>
     </form>
   </div>
@@ -898,11 +898,11 @@
       <div>
         <h2 class="pie__titulo">Legal</h2>
         <ul class="pie__lista">
-          <li><a href="https://bahia-cuba-app.netlify.app/es/terminos">Términos y Condiciones</a></li>
-          <li><a href="https://bahia-cuba-app.netlify.app/es/privacidad">Política de Privacidad</a></li>
-          <li><a href="https://bahia-cuba-app.netlify.app/es/cancelacion">Política de Cancelación</a></li>
+          <li><a href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/terminos">Términos y Condiciones</a></li>
+          <li><a href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/privacidad">Política de Privacidad</a></li>
+          <li><a href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/cancelacion">Política de Cancelación</a></li>
         </ul>
-        <a href="https://bahia-cuba-app.netlify.app/es/reclamos" class="pie__reclamos">
+        <a href="https://bahia-cuba-app.bahiadecuba.workers.dev/es/reclamos" class="pie__reclamos">
           <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg> Libro de reclamaciones
         </a>
       </div>

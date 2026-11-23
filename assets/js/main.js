@@ -11,7 +11,7 @@
   var WHATSAPP = "51908925065";
 
   /** Sistema de reservas. Es el único sitio donde se reserva de verdad. */
-  var URL_RESERVAS = "https://bahia-cuba-app.netlify.app/es/reservar";
+  var URL_RESERVAS = "https://bahia-cuba-app.bahiadecuba.workers.dev/es/reservar";
 
   /* Lectura de tarifas desde la base del hotel.
      La clave es la publicable (sb_publishable_): viaja al navegador por
