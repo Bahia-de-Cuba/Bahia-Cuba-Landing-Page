@@ -1,0 +1,32 @@
+# Comprobaciones en cada subida y pull request. Sin secretos ni red: solo
+# lógica del cotizador y coherencia de la política de seguridad publicada.
+name: Comprobaciones
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: Lógica del cotizador
+        run: node --test tools/test-cotizador.cjs
+      - name: La CSP autoriza los scripts en línea publicados
+        run: node tools/comprobar-csp.mjs
+      - name: Ninguna clave secreta en lo publicado
+        run: |
+          if grep -rEn "sb_secret_|service_role\"|eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]*cm9sZSI6InNlcnZpY2Vfcm9sZS" index.html assets/js src; then
+            echo "Hay una clave secreta en la web pública."; exit 1
+          fi

@@ -1,0 +1,13 @@
+# Todo el texto se guarda con saltos de línea LF, también al trabajar desde
+# Windows. Sin esto, el mismo archivo tiene bytes distintos según el sistema
+# de quien lo compila: cambian las huellas, los hashes de caché y los diffs.
+* text=auto eol=lf
+
+*.webp binary
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary
+*.xlsx binary
+*.jpg binary
+*.svg text
