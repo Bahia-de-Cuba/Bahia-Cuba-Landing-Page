@@ -1,0 +1,61 @@
+# Publica la landing en Cloudflare Pages, en la cuenta del hotel
+# (proyecto "bahiadecuba" -> https://bahiadecuba.pages.dev), en cada subida
+# a main. Tarea 2b.1 del plan (repo Bahia-Cuba-App).
+#
+# Por qué una Action y no la conexión de Git de Cloudflare: el repo ya está
+# conectado a otro proyecto de Pages (bahia-de-cuba.pages.dev) en una cuenta
+# que no es la del hotel, y Cloudflare no deja conectar el mismo repo a dos
+# cuentas. Subir los archivos con wrangler no tiene esa limitación.
+#
+# Secreto necesario: CLOUDFLARE_API_TOKEN (Settings -> Secrets and variables
+# -> Actions), un token de la cuenta del hotel con permiso "Cloudflare Pages:
+# Edit" y nada más. Se pega en GitHub directamente, nunca por un chat. Sin él
+# el workflow no falla: avisa y no publica.
+name: Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Un despliegue detrás de otro, sin cancelar el que está en curso.
+concurrency:
+  group: cloudflare-pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # No es secreto: identifica la cuenta del hotel.
+      CLOUDFLARE_ACCOUNT_ID: 0a25ef5c6ff478dd4490b0c8ab8a2f1d
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Falta el token
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: echo "::warning::Falta el secreto CLOUDFLARE_API_TOKEN; no se publica en Cloudflare Pages."
+
+      # Solo los archivos versionados: ni .git ni nada que no esté en el repo.
+      - name: Preparar la carpeta publicada
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: mkdir _site && git archive HEAD | tar -x -C _site
+
+      - name: Publicar
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: >
+          npx --yes wrangler@4.158.0 pages deploy _site
+          --project-name=bahiadecuba
+          --branch=main
+          --commit-hash="$GITHUB_SHA"
+          --commit-dirty=true
